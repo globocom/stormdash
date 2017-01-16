@@ -1,55 +1,54 @@
 .dash-alert-item {
-    display: block;
+  display: inline-block;
+  margin: 0 10px 10px 0;
 }
 
 .dash-alert-item .title {
-    display: table;
-    font-weight: bold;
-    color: white;
-
+  display: inline-block;
+  font-weight: bold;
+  color: white;
 }
 
 .dash-alert-item .value {
-    display: table;
-    background-color: black;
-
+  display: inline-block;
+  background-color: black;
 }
 
 .dash-alert-item.critical .title {
-    background-color: #d70c0c;
-    font-size: 54px;
-    padding: 15px;
-
+  background-color: #d70c0c;
+  font-size: 3rem;
+  letter-spacing: -0.2rem;
+  padding: 5px 12px;
 }
 
 .dash-alert-item.critical .value {
-    font-size: 98px;
-    color: #d70c0c;
-    padding: 20px;
+  font-size: 6rem;
+  color: #d70c0c;
+  line-height: 5rem;
+  letter-spacing: -0.4rem;
+  padding: 1rem 0.8rem 1rem 0.6rem;
 }
 
 .dash-alert-item.warning .title {
-    background-color: #d19a14;
-    font-size: 36px;
-    padding: 10px;
-
+  background-color: #d19a14;
+  font-size: 36px;
+  padding: 10px;
 }
 
 .dash-alert-item.warning .value {
-    font-size: 66px;
-    color: #d19a14;
-    padding: 15px;
+  font-size: 66px;
+  color: #d19a14;
+  padding: 15px;
 }
 
 .dash-alert-item.ok .title {
-    background-color: #438c07;
-    font-size: 25px;
-    padding: 5px;
-
+  background-color: #438c07;
+  font-size: 25px;
+  padding: 5px;
 }
 
 .dash-alert-item.ok .value {
-    font-size: 50px;
-    color: #438c07;
-    padding: 10px;
+  font-size: 50px;
+  color: #438c07;
+  padding: 10px;
 }
