@@ -1,11 +1,9 @@
 body {
-    /*background-color: #1e1e1e;*/
+    background: linear-gradient(to right, #1e1e1e, #2b2b2b, #1e1e1e);
 }
 
 .dash-sidebar {
 
 }
 
-.dash-alert-item {
 
-}
