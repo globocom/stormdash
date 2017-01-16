@@ -8,16 +8,14 @@ module.exports = {
     filename: 'bundle.js'
   },
   module: {
-    loaders: [{
-      exclude: /node_modules/,
-      loader: 'babel',
-      query: {
-        presets: ['react', 'es2015', 'stage-1']
-      }
-    }],
-    rules: [{
-        test: /\.css$/,
-        use: [ 'style-loader', 'css-loader' ]
+    loaders: [
+      {
+        exclude: /node_modules/,
+        loader: 'babel',
+        query: { presets: ['react', 'es2015', 'stage-1'] }
+      },
+      {
+        test: /\.css$/, loader: "style-loader!css-loader"
       }
     ]
   },
@@ -27,5 +25,6 @@ module.exports = {
   devServer: {
     historyApiFallback: true,
     contentBase: './'
-  }
+  },
+  debug: true
 };

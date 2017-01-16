@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import '../../style/alert_group.css';
 
 class AlertGroup extends Component {
 
