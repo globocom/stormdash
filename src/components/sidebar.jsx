@@ -9,7 +9,9 @@ class Sidebar extends Component {
 
   render() {
     return (
-      <div className="dash-sidebar{}"></div>
+      <div className="dash-sidebar {}">
+        <span class="title">Add Alert</span>
+      </div>
     )
   }
 

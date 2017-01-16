@@ -1,11 +1,19 @@
 body {
-    /*background-color: #1e1e1e;*/
+    background-color: #1e1e1e;
 }
 
 .dash-sidebar {
-
+    display: none;
+    position: absolute;
+    padding: 20px;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 430px;
+    background-color: #484b4c;
 }
 
-.dash-alert-item {
-
+.dash-sidebar .title {
+    font-size: 26px;
+    color: white;
 }

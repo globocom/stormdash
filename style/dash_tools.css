@@ -1,0 +1,28 @@
+.dash-tools {
+    position: absolute;
+    top: 45px;
+    right: 45px;
+    text-align: right;
+}
+
+.dash-tools .add-alert-btn {
+    width: 50px;
+    height: 50px;
+    border: 0;
+    color: white;
+    font-size: 18px;
+    border-radius: 50%;
+    background-color: #484b4c;
+    box-shadow: 8px 8px 16px rgba(0, 0, 0, 0.3);
+    opacity: .2;
+    cursor: pointer;
+    outline: none;
+}
+
+.dash-tools .add-alert-btn:hover {
+    opacity: 1;
+}
+
+.dash-tools .add-alert-btn:active {
+    opacity: .8;
+}
