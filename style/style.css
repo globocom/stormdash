@@ -1,19 +1,19 @@
 body {
-    background-color: #1e1e1e;
+  background: linear-gradient(to right, #1e1e1e, #2b2b2b, #1e1e1e);
 }
 
 .dash-sidebar {
-    display: none;
-    position: absolute;
-    padding: 20px;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    width: 430px;
-    background-color: #484b4c;
+  display: none;
+  position: absolute;
+  padding: 20px;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 430px;
+  background-color: #484b4c;
 }
 
 .dash-sidebar .title {
-    font-size: 26px;
-    color: white;
+  font-size: 26px;
+  color: white;
 }
