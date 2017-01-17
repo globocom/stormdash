@@ -4,4 +4,4 @@ import App from './components/app';
 
 import '../style/base.css';
 
-ReactDOM.render(<App />, document.querySelector('.container'));
+ReactDOM.render(<App />, document.querySelector('.dash-container'));

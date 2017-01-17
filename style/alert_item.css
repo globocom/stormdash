@@ -15,17 +15,18 @@
 
 .dash-alert-item.critical .title {
   background-color: #d70c0c;
-  font-size: 3rem;
+  font-size: 2.7rem;
+  line-height: 2.7rem;
   letter-spacing: -0.2rem;
-  padding: 5px 12px;
+  padding: 6px 14px 4px 8px;
 }
 
 .dash-alert-item.critical .value {
-  font-size: 6rem;
+  font-size: 5rem;
   color: #d70c0c;
-  line-height: 5rem;
-  letter-spacing: -0.4rem;
-  padding: 1rem 0.8rem 1rem 0.6rem;
+  line-height: 4rem;
+  letter-spacing: -0.35rem;
+  padding: 16px 14px 7px 7px;
 }
 
 .dash-alert-item.warning .title {

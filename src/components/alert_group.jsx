@@ -1,19 +1,21 @@
 import React, { Component } from 'react';
+import AlertItem from './alert_item';
+import { uuid, shuffle } from '../utils';
 import '../../style/alert_group.css';
 
-class AlertGroup extends Component {
+const AlertGroup = (props) => {
 
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
-  render() {
+  const alertItens = props.items.map((alert) => {
     return (
-      <div className="dash-alert-group"></div>
-    )
-  }
+      <AlertItem key={uuid()} alert={alert} />
+    );
+  });
 
+  return (
+    <div className="dash-alert-group">
+      {shuffle(alertItens)}
+    </div>
+  );
 }
 
 export default AlertGroup;

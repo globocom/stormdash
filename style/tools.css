@@ -3,6 +3,7 @@
   top: 45px;
   right: 45px;
   text-align: right;
+  z-index: 8;
 }
 
 .dash-tools .add-alert-btn {

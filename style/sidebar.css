@@ -1,5 +1,5 @@
 .dash-sidebar {
-  display: show;
+  display: none;
   position: absolute;
   padding: 20px;
   right: 0;
@@ -7,6 +7,11 @@
   bottom: 0;
   width: 25%;
   background-color: #484b4c;
+  z-index: 9;
+}
+
+.dash-sidebar.open {
+  display: block;
 }
 
 .dash-sidebar .title {
