@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
+import '../../style/tools.css';
 
-const Tools = () => {
+const Tools = (props) => {
+
   return (
     <div className="dash-tools">
-      <button className="add-alert-btn">Add</button>
+      <button onClick={() => props.onAddNewAlert()} className="add-alert-btn">Add</button>
     </div>
   );
+
 }
 
 export default Tools;

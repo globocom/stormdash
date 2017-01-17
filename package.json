@@ -19,6 +19,7 @@
     "jquery": "^2.2.1",
     "jsdom": "^8.1.0",
     "react-addons-test-utils": "^0.14.7",
+    "style-loader": "^0.13.1",
     "webpack": "^1.12.9",
     "webpack-dev-server": "^1.14.0"
   },

@@ -1,19 +1,13 @@
 import React, { Component } from 'react';
+import '../../style/sidebar.css';
 
-class Sidebar extends Component {
+const Sidebar = (props) => {
 
-  constructor(props) {
-    super(props);
-    this.state = { isOpen: false };
-  }
-
-  render() {
-    return (
-      <div className="dash-sidebar {}">
-        <span class="title">Add Alert</span>
-      </div>
-    )
-  }
+  return (
+    <div className={"dash-sidebar" + (props.isOpen ? " open" : "")}>
+      <span className="title">Add Alert</span>
+    </div>
+  );
 
 }
 
