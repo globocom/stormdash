@@ -8,6 +8,11 @@
   width: 25%;
   background-color: #484b4c;
   color: white;
+  z-index: 9;
+}
+
+.dash-sidebar.open {
+  display: block;
 }
 
 .dash-sidebar .title {
