@@ -6,7 +6,8 @@
   z-index: 8;
 }
 
-.dash-tools .add-alert-btn {
+.dash-tools .add-alert-btn,
+.dash-tools .edit-alert-btn {
   width: 50px;
   height: 50px;
   border: 0;
@@ -15,15 +16,18 @@
   border-radius: 50%;
   background-color: #484b4c;
   box-shadow: 8px 8px 16px rgba(0, 0, 0, 0.3);
-  opacity: .2;
+  opacity: .4;
   cursor: pointer;
   outline: none;
+  margin: 0 5px;
 }
 
-.dash-tools .add-alert-btn:hover {
+.dash-tools .add-alert-btn:hover,
+.dash-tools .edit-alert-btn:hover {
   opacity: 1;
 }
 
-.dash-tools .add-alert-btn:active {
+.dash-tools .add-alert-btn:active,
+.dash-tools .edit-alert-btn:active {
   opacity: .8;
 }

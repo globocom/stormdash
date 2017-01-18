@@ -1,6 +1,15 @@
 .dash-alert-item {
   display: inline-block;
   margin: 0 10px 10px 0;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.dash-alert-item.current {
+  border: 1px dotted white;
+  opacity: 0.75;
+  cursor: default;
+  background-color: rgba(255, 255, 255, 0.2);
 }
 
 .dash-alert-item .title {
