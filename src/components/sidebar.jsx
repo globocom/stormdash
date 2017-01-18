@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { uuid, shuffle } from '../utils';
 import '../../style/sidebar.css';
 
 class Sidebar extends Component {
@@ -76,7 +77,18 @@ class Sidebar extends Component {
 
   onCreate(event) {
     event.preventDefault();
-    console.log("Create");
+
+    let items = shuffle(
+      [{current: false, id: uuid(), namespace: "S3", title: "Max Con", value: "68%", status: "warning"},
+       {current: false, id: uuid(), namespace: "CI", title: "Vault", value: "Build Failed", status: "critical"},
+       {current: false, id: uuid(), namespace: "CI", title: "FaaS", value: "Build OK", status: "ok"},
+       {current: false, id: uuid(), namespace: "FaaS", title: "Used Size", value: "88%", status: "critical"},
+       {current: false, id: uuid(), namespace: "S3", title: "404 Status", value: "523 ", status: "warning"},
+       {current: false, id: uuid(), namespace: "CI", title: "Swift - QA", value: "Build OK", status: "ok"}]
+    );
+
+    this.props.addItem(items.shift());
+    this.props.handleSidebar("close");
   }
 
 }

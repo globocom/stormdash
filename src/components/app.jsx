@@ -9,7 +9,7 @@ class App extends Component {
     super(props);
     this.state = {
       visibleSidebar: false,
-      hasCurrentItem: false,
+      currentItem: null,
       items: store('alertItems')
     };
 
@@ -25,11 +25,13 @@ class App extends Component {
       <div className="dash-main">
         <Tools
           handleSidebar={this.handleSidebar}
-          hasCurrentItem={this.state.hasCurrentItem} />
+          deleteItem={this.deleteItem}
+          currentItem={this.state.currentItem} />
 
         <Sidebar
           isOpen={this.state.visibleSidebar}
-          handleSidebar={this.handleSidebar} />
+          handleSidebar={this.handleSidebar}
+          addItem={this.addItem} />
 
         <AlertGroup
           items={this.state.items}
@@ -61,6 +63,10 @@ class App extends Component {
       return elem.id === itemId;
     });
 
+    if (index < 0) {
+      return;
+    }
+
     currentItems.splice(index, 1);
     store('alertItems', currentItems);
     this.setState({items: currentItems});
@@ -77,7 +83,7 @@ class App extends Component {
       return item;
     });
 
-    this.setState({hasCurrentItem: true, items: currentItems});
+    this.setState({currentItem: itemId, items: currentItems});
   }
 
   clearCurrent() {
@@ -87,7 +93,7 @@ class App extends Component {
       return item;
     });
 
-    this.setState({hasCurrentItem: false, items: currentItems});
+    this.setState({currentItem: null, items: currentItems});
   }
 }
 
