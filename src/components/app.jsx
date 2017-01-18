@@ -28,7 +28,8 @@ class App extends Component {
           hasCurrentItem={this.state.hasCurrentItem} />
 
         <Sidebar
-          isOpen={this.state.visibleSidebar} />
+          isOpen={this.state.visibleSidebar}
+          handleSidebar={this.handleSidebar} />
 
         <AlertGroup
           items={this.state.items}

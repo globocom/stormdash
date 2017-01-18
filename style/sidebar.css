@@ -1,23 +1,63 @@
+@media (max-width: 640px) {
+  .dash-sidebar {
+    width: auto;
+  }
+}
+
+@media (min-width: 641px) {
+  .dash-sidebar {
+    width: 30%;
+  }
+}
+
 .dash-sidebar {
-  display: show;
+  display: none;
   position: absolute;
   padding: 20px;
   right: 0;
   top: 0;
   bottom: 0;
-  width: 25%;
   background-color: #484b4c;
   color: white;
   z-index: 9;
+  overflow-y: auto;
 }
 
 .dash-sidebar.open {
   display: block;
 }
 
+.dash-sidebar .close-btn {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+}
+
 .dash-sidebar .title {
   font-size: 26px;
   font-weight: normal;
   color: white;
+  margin: 0 0 20px;
 }
 
+.dash-sidebar .compare-item > div {
+  display: inline-block;
+}
+
+.dash-sidebar .compare-item > input {
+  width: 75%;
+  float: right;
+}
+
+.dash-sidebar form > div {
+  margin-bottom: 8px;
+}
+
+.dash-sidebar label {
+  font-size: 0.8rem;
+}
+
+.dash-sidebar form input,
+.dash-sidebar form textarea {
+  width: 100%;
+}
