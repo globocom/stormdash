@@ -1,5 +1,5 @@
 .dash-sidebar {
-  display: none;
+  display: show;
   position: absolute;
   padding: 20px;
   right: 0;
@@ -7,6 +7,7 @@
   bottom: 0;
   width: 25%;
   background-color: #484b4c;
+  color: white;
   z-index: 9;
 }
 
@@ -19,3 +20,4 @@
   font-weight: normal;
   color: white;
 }
+

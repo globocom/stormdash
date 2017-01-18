@@ -26,7 +26,7 @@ module.exports = {
     historyApiFallback: true,
     contentBase: './',
     host: '0.0.0.0',
-    port: '8080'
+    port: 8888
   },
   debug: true
 };
