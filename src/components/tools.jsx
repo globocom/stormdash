@@ -14,9 +14,19 @@ class Tools extends Component {
   render() {
     return (
       <div className="dash-tools">
-        {this.props.currentItem && <button onClick={this.onDeleteItem} className="tool-btn delete-alert">Del</button>}
-        {this.props.currentItem && <button onClick={this.onAddItem} className="tool-btn edit-alert">Edit</button>}
-        <button onClick={this.onEditItem} className="tool-btn add-alert">Add</button>
+        {this.props.currentItem &&
+          <button onClick={this.onDeleteItem} className="tool-btn delete-alert">
+            <i className="icon-trash"></i>
+          </button>}
+
+        {this.props.currentItem &&
+          <button onClick={this.onAddItem} className="tool-btn edit-alert">
+            <i className="icon-pencil"></i>
+          </button>}
+
+        <button onClick={this.onEditItem} className="tool-btn add-alert">
+          <i className="icon-plus"></i>
+        </button>
       </div>
     );
   }

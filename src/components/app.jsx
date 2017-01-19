@@ -24,13 +24,14 @@ class App extends Component {
     return (
       <div className="dash-main">
         <Tools
+          currentItem={this.state.currentItem}
           handleSidebar={this.handleSidebar}
-          deleteItem={this.deleteItem}
-          currentItem={this.state.currentItem} />
+          deleteItem={this.deleteItem} />
 
         <Sidebar
-          isOpen={this.state.visibleSidebar}
+          currentItem={this.state.currentItem}
           handleSidebar={this.handleSidebar}
+          isOpen={this.state.visibleSidebar}
           addItem={this.addItem} />
 
         <AlertGroup
@@ -47,6 +48,13 @@ class App extends Component {
       return;
     }
     this.setState({visibleSidebar: true});
+  }
+
+  handleKeyDown(event) {
+    if (event.which === 27) {
+      this.setState({visibleSidebar: false});
+      this.clearCurrent();
+    }
   }
 
   addItem(alertObj) {
