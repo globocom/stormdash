@@ -1,0 +1,26 @@
+{
+    "id": "fe653364-10fb-4e1e-bcfc-0668e4fae73f",
+    "current": false,
+    "status": "ok",
+    "namespace": "S3",
+    "title": "Max Con",
+    "jsonurl": "http://",
+    "key": "maxcon",
+    "ok": {
+        "compare": "=",
+        "value": "50",
+        "message": "Everything is alright"
+    },
+    "warning": {
+        "compare": ">",
+        "value": "50",
+        "message": "Something wrong"
+    },
+    "critical": {
+        "compare": ">",
+        "value": "200",
+        "message": "We have a problem"
+    },
+    "show": "value",
+    "description": "Check S3 Max Con status"
+}

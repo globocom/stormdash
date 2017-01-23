@@ -36,6 +36,19 @@ class App extends Component {
 
         <AlertGroup
           items={this.state.items}
+          itemsStatus={"critical"}
+          setCurrent={this.setCurrent}
+          clearCurrent={this.clearCurrent} />
+
+        <AlertGroup
+          items={this.state.items}
+          itemsStatus={"warning"}
+          setCurrent={this.setCurrent}
+          clearCurrent={this.clearCurrent} />
+
+        <AlertGroup
+          items={this.state.items}
+          itemsStatus={"ok"}
           setCurrent={this.setCurrent}
           clearCurrent={this.clearCurrent} />
       </div>
@@ -67,7 +80,7 @@ class App extends Component {
   deleteItem(itemId) {
     this.clearCurrent();
     let currentItems = this.state.items.slice();
-    let index = currentItems.findIndex((elem, i, arr) => {
+    const index = currentItems.findIndex((elem, i, arr) => {
       return elem.id === itemId;
     });
 
@@ -82,6 +95,7 @@ class App extends Component {
 
   setCurrent(itemId) {
     let currentItems = this.state.items.slice();
+
     currentItems.map((item) => {
       if(item.id !== itemId) {
         item.current = false;
@@ -91,17 +105,24 @@ class App extends Component {
       return item;
     });
 
-    this.setState({currentItem: itemId, items: currentItems});
+    this.setState({
+      currentItem: itemId,
+      items: currentItems
+    });
   }
 
   clearCurrent() {
     let currentItems = this.state.items.slice();
+
     currentItems.map((item) => {
       item.current = false;
       return item;
     });
 
-    this.setState({currentItem: null, items: currentItems});
+    this.setState({
+      currentItem: null,
+      items: currentItems
+    });
   }
 }
 
