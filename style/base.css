@@ -7,3 +7,22 @@ body {
   position: fixed;
   top: 0; right: 0; bottom: 0; left: 0;
 }
+
+.dash-main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: stretch;
+}
+
+.dash-main .main-title {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  font-size: 9rem;
+  line-height: 6rem;
+  letter-spacing: -0.7rem;
+  color: #111;
+  margin: 0;
+  opacity: .2;
+}

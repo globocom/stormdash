@@ -21,8 +21,8 @@
 .dash-alert-item.current .value:after,
 .dash-alert-item.current .value:before {
   position: absolute;
-  width: 10px;
-  height: 10px;
+  width: 6px;
+  height: 6px;
   border: 1px solid #76b7eb;
   content: "";
 }
@@ -44,33 +44,32 @@
 
 .dash-alert-item.critical .title {
   background-color: #d70c0c;
-  font-size: 2.7rem;
-  line-height: 2.7rem;
-  letter-spacing: -0.2rem;
+  font-size: 2.1rem;
+  line-height: 2.1rem;
+  letter-spacing: -0.1rem;
   padding: 6px 14px 4px 8px;
 }
 
 .dash-alert-item.critical .value {
-  font-size: 5rem;
+  font-size: 4rem;
   color: #d70c0c;
-  line-height: 4rem;
+  line-height: 3rem;
   letter-spacing: -0.35rem;
-  padding: 16px 14px 7px 7px;
+  padding: 13px 14px 7px 8px;
 }
 
 .dash-alert-item.warning .title {
   background-color: #d19a14;
-  font-size: 2rem;
-  padding: 0.4rem;
-  line-height: 1.7rem;
+  font-size: 1.6rem;
+  padding: 2px 7px;
 }
 
 .dash-alert-item.warning .value {
-  font-size: 3.5rem;
+  font-size: 3rem;
   color: #d19a14;
-  line-height: 3rem;
+  line-height: 2.8rem;
   letter-spacing: -0.1rem;
-  padding: 0.5rem 0.4rem 0.5rem 0.3rem;
+  padding: 6px 7px 3px;
 }
 
 .dash-alert-item.ok .title {

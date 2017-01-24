@@ -6,7 +6,21 @@ class Sidebar extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      "id": uuid(),
+      "current": false,
+      "status": "ok",
+      "namespace": "",
+      "title": "",
+      "jsonurl": "",
+      "mainkey": "",
+      "ok": {"compare": "", "value": "", "message": ""},
+      "warning": {"compare": "", "value": "", "message": ""},
+      "critical": {"compare": "", "value": "", "message": ""},
+      "show": "value", // "value" or "message"
+      "description": ""
+    };
+
     this.onCreate = this.onCreate.bind(this);
   }
 
@@ -14,13 +28,13 @@ class Sidebar extends Component {
     const compareButtons = (
       <div className="topcoat-button-bar">
         <div className="topcoat-button-bar__item">
-          <button className="topcoat-button-bar__button">=</button>
+          <button className="topcoat-button-bar__button--large">=</button>
         </div>
         <div className="topcoat-button-bar__item">
-          <button className="topcoat-button-bar__button">&lt;</button>
+          <button className="topcoat-button-bar__button--large">&lt;</button>
         </div>
         <div className="topcoat-button-bar__item">
-          <button className="topcoat-button-bar__button">&gt;</button>
+          <button className="topcoat-button-bar__button--large">&gt;</button>
         </div>
       </div>
     );
@@ -28,67 +42,159 @@ class Sidebar extends Component {
     return (
       <div className={"dash-sidebar" + (this.props.isOpen ? " open" : "")}>
         <h3 className="title">Add Alert</h3>
-        <button className="topcoat-button close-btn"
-                onClick={() => this.props.handleSidebar("close")}>Close</button>
+        <button className="close-btn" onClick={() => this.props.handleSidebar("close")}>
+          <i className="icon-cancel"></i>
+        </button>
 
-        <form action className="form-box add-alert" method="POST">
+        <section className="form-items">
           <div>
             <label htmlFor="namespace">Namespace</label><br />
-            <input type="text" className="topcoat-text-input" />
+            <input type="text" className="topcoat-text-input--large"
+              value={this.state.namespace}
+              onChange={e => this.setState({"namespace": e.target.value})} />
           </div>
           <div>
             <label htmlFor="title">Title</label><br />
-            <input type="text" className="topcoat-text-input" />
-          </div>
-          <div>
-            <label htmlFor="jsonUrl">Json url</label><br />
-            <input type="text" className="topcoat-text-input" />
-          </div>
-          <div>
-            <label htmlFor="key">Key</label><br />
-            <input type="text" className="topcoat-text-input" />
-          </div>
-          <div className="compare-item">
-            <label htmlFor="valueOk">Value OK</label><br />
-            {compareButtons}
-            <input type="text" className="topcoat-text-input" />
-          </div>
-          <div className="compare-item">
-            <label htmlFor="valueWarning">Value Warning</label><br />
-            {compareButtons}
-            <input type="text" className="topcoat-text-input" />
-          </div>
-          <div className="compare-item">
-            <label htmlFor="valueCritical">Value Critical</label><br />
-            {compareButtons}
-            <input type="text" className="topcoat-text-input" />
-          </div>
-          <div>
-            <label htmlFor="description">Description</label><br />
-            <textarea className="topcoat-textarea" rows="6" cols="36"></textarea>
+            <input type="text" className="topcoat-text-input--large"
+              value={this.state.title}
+              onChange={e => this.setState({"title": e.target.value})} />
           </div>
 
-          <button className="topcoat-button--large--cta" onClick={this.onCreate}>Create</button>
-        </form>
+          <div>
+            <label htmlFor="json-url">Json url</label><br />
+            <input type="text" className="topcoat-text-input--large"
+              value={this.state.jsonurl}
+              onChange={e => this.setState({"jsonurl": e.target.value})} />
+          </div>
+          <div>
+            <label htmlFor="main-key">Key</label><br />
+            <input type="text" className="topcoat-text-input--large"
+              value={this.state.mainkey}
+              onChange={e => this.setState({"mainkey": e.target.value})} />
+          </div>
+
+          <div className="compare-item">
+            <label htmlFor="valueOk">OK</label><br />
+            {compareButtons}
+            <input type="text" className="topcoat-text-input--large"
+              placeholder="value"
+              value={this.state.ok.value}
+              onChange={(e) => {
+                  const newState = this.state;
+                  newState.ok.value = e.target.value;
+                  this.setState(newState);
+              }} />
+
+            <input type="text" className="topcoat-text-input--large"
+              placeholder="default message"
+              value={this.state.ok.message}
+              onChange={(e) => {
+                  const newState = this.state;
+                  newState.ok.message = e.target.message;
+                  this.setState(newState);
+              }} />
+          </div>
+
+          <div className="compare-item">
+            <label htmlFor="valueWarning">Warning</label><br />
+            {compareButtons}
+            <input type="text" className="topcoat-text-input--large"
+              placeholder="value"
+              value={this.state.warning.value}
+              onChange={(e) => {
+                  const newState = this.state;
+                  newState.warning.value = e.target.value;
+                  this.setState(newState);
+              }} />
+
+            <input type="text" className="topcoat-text-input--large"
+              placeholder="default message"
+              value={this.state.warning.message}
+              onChange={(e) => {
+                  const newState = this.state;
+                  newState.warning.message = e.target.message;
+                  this.setState(newState);
+              }} />
+          </div>
+
+          <div className="compare-item">
+            <label htmlFor="valueCritical">Critical</label><br />
+            {compareButtons}
+            <input type="text" className="topcoat-text-input--large"
+              placeholder="value"
+              value={this.state.critical.value}
+              onChange={(e) => {
+                  const newState = this.state;
+                  newState.critical.value = e.target.value;
+                  this.setState(newState);
+              }} />
+
+            <input type="text" className="topcoat-text-input--large"
+              placeholder="default message"
+              value={this.state.critical.message}
+              onChange={(e) => {
+                  const newState = this.state;
+                  newState.critical.message = e.target.message;
+                  this.setState(newState);
+              }} />
+          </div>
+
+          <div>
+            <label className="topcoat-radio-button show-radio">
+              <input type="radio" name="alert-text" value="value"
+                checked={this.state.show === 'value'}
+                onChange={e => this.setState({"show": e.target.value})} />
+              <div className="topcoat-radio-button__checkmark"></div>
+              &nbsp;Show value
+            </label>
+
+            <label className="topcoat-radio-button show-radio">
+              <input type="radio" name="alert-text" value="message"
+                checked={this.state.show === 'message'}
+                onChange={e => this.setState({"show": e.target.value})} />
+              <div className="topcoat-radio-button__checkmark"></div>
+              &nbsp;Show message
+            </label>
+          </div>
+
+          <div>
+            <label htmlFor="description">Description</label><br />
+            <textarea className="topcoat-textarea"
+              value={this.state.description}
+              onChange={e => this.setState({"description": e.target.value})}></textarea>
+          </div>
+        </section>
+
+        <section className="form-base">
+          <button className="topcoat-button--large--cta" onClick={this.onCreate}>
+            Create New Alert
+          </button>
+        </section>
 
       </div>
     );
   }
 
+  onCompareChange(event, key, value) {
+
+  }
+
   onCreate(event) {
     event.preventDefault();
 
-    let items = shuffle(
-      [{current: false, id: uuid(), namespace: "S3", title: "Max Con", value: "68%", status: "warning"},
-       {current: false, id: uuid(), namespace: "CI", title: "Vault", value: "Build Failed", status: "critical"},
-       {current: false, id: uuid(), namespace: "CI", title: "FaaS", value: "Build OK", status: "ok"},
-       {current: false, id: uuid(), namespace: "FaaS", title: "Used Size", value: "88%", status: "critical"},
-       {current: false, id: uuid(), namespace: "S3", title: "404 Status", value: "523 ", status: "warning"},
-       {current: false, id: uuid(), namespace: "CI", title: "Swift - QA", value: "Build OK", status: "ok"}]
-    );
+    // let items = shuffle(
+    //   [{current: false, id: uuid(), namespace: "S3", title: "Max Con", value: "68%", status: "warning"},
+    //    {current: false, id: uuid(), namespace: "CI", title: "Vault", value: "Build Failed", status: "critical"},
+    //    {current: false, id: uuid(), namespace: "CI", title: "FaaS", value: "Build OK", status: "ok"},
+    //    {current: false, id: uuid(), namespace: "FaaS", title: "Used Size", value: "88%", status: "critical"},
+    //    {current: false, id: uuid(), namespace: "S3", title: "404 Status", value: "523 ", status: "warning"},
+    //    {current: false, id: uuid(), namespace: "S3", title: "HTTP Status", value: "200", status: "ok"}]
+    // );
 
-    this.props.addItem(items.shift());
-    this.props.handleSidebar("close");
+    // this.props.addItem(this.state);
+    // this.props.handleSidebar("close");
+
+    console.log(this.state);
   }
 
 }

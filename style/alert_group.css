@@ -5,8 +5,20 @@
   align-items: center;
   align-content: center;
 
-  position: absolute;
-  top: 5%; right: 5%; bottom: 5%; left: 5%;
-  /*background-color: rgba(0, 255, 255, 0.1);*/
-  z-index: 2;
+  min-height: 50%;
+  max-height: 85%;
+  flex-grow: 1;
+  margin: 10px;
+
+  z-index: 5;
+}
+
+.dash-alert-group.critical {
+  align-self: flex-start;
+  z-index: 6;
+}
+
+.dash-alert-group.ok {
+  align-self: flex-end;
+  z-index: 4;
 }

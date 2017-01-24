@@ -2,14 +2,16 @@ import React, { Component } from 'react';
 import Tools from './tools';
 import Sidebar from './sidebar';
 import AlertGroup from './alert_group';
-import { store } from '../utils';
+import { store, uuid } from '../utils';
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      mainTitle: 'Storm',
       visibleSidebar: false,
       currentItem: null,
+      groups: ['critical', 'warning', 'ok'],
       items: store('alertItems')
     };
 
@@ -21,36 +23,27 @@ class App extends Component {
   }
 
   render() {
+    const groups = this.state.groups.map((group) => {
+      return <AlertGroup
+              key={uuid()}
+              items={this.state.items}
+              itemsStatus={group}
+              setCurrent={this.setCurrent}
+              clearCurrent={this.clearCurrent} />
+    });
+
     return (
       <div className="dash-main">
-        <Tools
-          currentItem={this.state.currentItem}
-          handleSidebar={this.handleSidebar}
-          deleteItem={this.deleteItem} />
+        <Tools currentItem={this.state.currentItem}
+               handleSidebar={this.handleSidebar}
+               deleteItem={this.deleteItem} />
 
-        <Sidebar
-          currentItem={this.state.currentItem}
-          handleSidebar={this.handleSidebar}
-          isOpen={this.state.visibleSidebar}
-          addItem={this.addItem} />
-
-        <AlertGroup
-          items={this.state.items}
-          itemsStatus={"critical"}
-          setCurrent={this.setCurrent}
-          clearCurrent={this.clearCurrent} />
-
-        <AlertGroup
-          items={this.state.items}
-          itemsStatus={"warning"}
-          setCurrent={this.setCurrent}
-          clearCurrent={this.clearCurrent} />
-
-        <AlertGroup
-          items={this.state.items}
-          itemsStatus={"ok"}
-          setCurrent={this.setCurrent}
-          clearCurrent={this.clearCurrent} />
+        <Sidebar currentItem={this.state.currentItem}
+                 handleSidebar={this.handleSidebar}
+                 isOpen={this.state.visibleSidebar}
+                 addItem={this.addItem} />
+        {groups}
+        <h2 className="main-title">{this.state.mainTitle}</h2>
       </div>
     )
   }
@@ -85,7 +78,7 @@ class App extends Component {
     });
 
     if (index < 0) {
-      return;
+      return false;
     }
 
     currentItems.splice(index, 1);

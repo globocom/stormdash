@@ -31,33 +31,56 @@
   position: absolute;
   right: 20px;
   top: 20px;
+  width: 50px;
+  height: 40px;
+  border: 0;
+  color: white;
+  font-size: 24px;
+  background-color: transparent;
+  cursor: pointer;
+  outline: none;
+}
+
+.dash-sidebar .close-btn:hover {
+  color: #76b7eb;
 }
 
 .dash-sidebar .title {
   font-size: 26px;
   font-weight: normal;
   color: white;
-  margin: 0 0 20px;
+  margin: 0 0 15px;
+}
+
+.dash-sidebar .form-items > div {
+  margin-bottom: 6px;
+}
+
+.dash-sidebar .form-base {
+  margin: 20px 0 10px;
+  text-align: right;
 }
 
 .dash-sidebar .compare-item > div {
   display: inline-block;
+  margin-right: 5px;
 }
 
 .dash-sidebar .compare-item > input {
-  width: 75%;
-  float: right;
+  width: 30%;
+  margin: 0 5px;
 }
 
-.dash-sidebar form > div {
-  margin-bottom: 8px;
+.dash-sidebar .show-radio {
+  margin: 6px 15px 6px 0;
 }
 
 .dash-sidebar label {
   font-size: 0.8rem;
+  font-weight: lighter;
 }
 
-.dash-sidebar form input,
-.dash-sidebar form textarea {
+.dash-sidebar input,
+.dash-sidebar textarea {
   width: 100%;
 }
