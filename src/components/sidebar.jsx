@@ -191,10 +191,8 @@ class Sidebar extends Component {
     //    {current: false, id: uuid(), namespace: "S3", title: "HTTP Status", value: "200", status: "ok"}]
     // );
 
-    // this.props.addItem(this.state);
-    // this.props.handleSidebar("close");
-
-    console.log(this.state);
+    this.props.addItem(this.state);
+    this.props.handleSidebar("close");
   }
 
 }
