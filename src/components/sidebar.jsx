@@ -48,94 +48,94 @@ class Sidebar extends Component {
 
         <section className="form-items">
           <div>
-            <label htmlFor="namespace">Namespace</label><br />
+            <label>Namespace</label><br />
             <input type="text" className="topcoat-text-input--large"
               value={this.state.namespace}
               onChange={e => this.setState({"namespace": e.target.value})} />
           </div>
           <div>
-            <label htmlFor="title">Title</label><br />
+            <label>Title</label><br />
             <input type="text" className="topcoat-text-input--large"
               value={this.state.title}
               onChange={e => this.setState({"title": e.target.value})} />
           </div>
 
           <div>
-            <label htmlFor="json-url">Json url</label><br />
+            <label>Json url</label><br />
             <input type="text" className="topcoat-text-input--large"
               value={this.state.jsonurl}
               onChange={e => this.setState({"jsonurl": e.target.value})} />
           </div>
           <div>
-            <label htmlFor="main-key">Key</label><br />
+            <label>Key</label><br />
             <input type="text" className="topcoat-text-input--large"
               value={this.state.mainkey}
               onChange={e => this.setState({"mainkey": e.target.value})} />
           </div>
 
           <div className="compare-item">
-            <label htmlFor="valueOk">OK</label><br />
+            <label>OK</label><br />
             {compareButtons}
             <input type="text" className="topcoat-text-input--large"
               placeholder="value"
               value={this.state.ok.value}
               onChange={(e) => {
-                  const newState = this.state;
-                  newState.ok.value = e.target.value;
-                  this.setState(newState);
+                  let s = this.state;
+                  s.ok.value = e.target.value;
+                  this.setState(s);
               }} />
 
             <input type="text" className="topcoat-text-input--large"
               placeholder="default message"
               value={this.state.ok.message}
               onChange={(e) => {
-                  const newState = this.state;
-                  newState.ok.message = e.target.message;
-                  this.setState(newState);
+                  let s = this.state;
+                  s.ok.message = e.target.value;
+                  this.setState(s);
               }} />
           </div>
 
           <div className="compare-item">
-            <label htmlFor="valueWarning">Warning</label><br />
+            <label>Warning</label><br />
             {compareButtons}
             <input type="text" className="topcoat-text-input--large"
               placeholder="value"
               value={this.state.warning.value}
               onChange={(e) => {
-                  const newState = this.state;
-                  newState.warning.value = e.target.value;
-                  this.setState(newState);
+                  let s = this.state;
+                  s.warning.value = e.target.value;
+                  this.setState(s);
               }} />
 
             <input type="text" className="topcoat-text-input--large"
               placeholder="default message"
               value={this.state.warning.message}
               onChange={(e) => {
-                  const newState = this.state;
-                  newState.warning.message = e.target.message;
-                  this.setState(newState);
+                  let s = this.state;
+                  s.warning.message = e.target.value;
+                  this.setState(s);
               }} />
           </div>
 
           <div className="compare-item">
-            <label htmlFor="valueCritical">Critical</label><br />
+            <label>Critical</label><br />
             {compareButtons}
             <input type="text" className="topcoat-text-input--large"
               placeholder="value"
               value={this.state.critical.value}
               onChange={(e) => {
-                  const newState = this.state;
-                  newState.critical.value = e.target.value;
-                  this.setState(newState);
+                  let s = this.state;
+                  s.critical.value = e.target.value;
+                  this.setState(s);
               }} />
 
             <input type="text" className="topcoat-text-input--large"
               placeholder="default message"
               value={this.state.critical.message}
               onChange={(e) => {
-                  const newState = this.state;
-                  newState.critical.message = e.target.message;
-                  this.setState(newState);
+                  let s = this.state;
+                  s.critical.message = e.target.value;
+                  this.setState(s);
               }} />
           </div>
 
@@ -158,7 +158,7 @@ class Sidebar extends Component {
           </div>
 
           <div>
-            <label htmlFor="description">Description</label><br />
+            <label>Description</label><br />
             <textarea className="topcoat-textarea"
               value={this.state.description}
               onChange={e => this.setState({"description": e.target.value})}></textarea>
