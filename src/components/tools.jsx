@@ -20,11 +20,11 @@ class Tools extends Component {
           </button>}
 
         {this.props.currentItem &&
-          <button onClick={this.onAddItem} className="tool-btn edit-alert">
+          <button onClick={this.onEditItem} className="tool-btn edit-alert">
             <i className="icon-pencil"></i>
           </button>}
 
-        <button onClick={this.onEditItem} className="tool-btn add-alert">
+        <button onClick={this.onAddItem} className="tool-btn add-alert">
           <i className="icon-plus"></i>
         </button>
       </div>
@@ -33,6 +33,7 @@ class Tools extends Component {
 
   onAddItem(event) {
     event.stopPropagation();
+    this.props.clearCurrent();
     this.props.handleSidebar("open");
   }
 

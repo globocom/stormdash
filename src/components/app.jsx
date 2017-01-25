@@ -36,13 +36,16 @@ class App extends Component {
       <div className="dash-main">
         <Tools currentItem={this.state.currentItem}
                handleSidebar={this.handleSidebar}
-               deleteItem={this.deleteItem} />
+               deleteItem={this.deleteItem}
+               clearCurrent={this.clearCurrent} />
 
         {this.state.visibleSidebar &&
           <Sidebar currentItem={this.state.currentItem}
                    handleSidebar={this.handleSidebar}
                    addItem={this.addItem} />}
+
         {groups}
+
         <h2 className="main-title">{this.state.mainTitle}</h2>
       </div>
     )

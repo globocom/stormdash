@@ -29,7 +29,7 @@ class Sidebar extends Component {
   render() {
     return (
       <div className="dash-sidebar">
-        <h3 className="title">Add Alert</h3>
+        <h3 className="title">{this.props.currentItem ? 'Edit Alert' : 'Add Alert'}</h3>
 
         <button className="close-btn" onClick={() => this.props.handleSidebar("close")}>
           <i className="icon-cancel"></i>
