@@ -11,15 +11,15 @@
   background-color: rgba(40, 142, 223, 0.2);
 }
 
-.dash-alert-item.current .title,
-.dash-alert-item.current .value {
+.dash-alert-item.current .alert-title,
+.dash-alert-item.current .alert-value {
   opacity: 0.75;
 }
 
-.dash-alert-item.current .title:after,
-.dash-alert-item.current .title:before,
-.dash-alert-item.current .value:after,
-.dash-alert-item.current .value:before {
+.dash-alert-item.current .alert-title:after,
+.dash-alert-item.current .alert-title:before,
+.dash-alert-item.current .alert-value:after,
+.dash-alert-item.current .alert-value:before {
   position: absolute;
   width: 6px;
   height: 6px;
@@ -27,22 +27,22 @@
   content: "";
 }
 
-.dash-alert-item.current .title:before { top: -3px; left: -3px; border-width: 1px 0 0 1px; }
-.dash-alert-item.current .title:after { top: -3px; right: -3px; border-width: 1px 1px 0 0; }
-.dash-alert-item.current .value:before { bottom: -3px; left: -3px; border-width: 0 0 1px 1px; }
-.dash-alert-item.current .value:after { bottom: -3px; right: -3px; border-width: 0 1px 1px 0; }
+.dash-alert-item.current .alert-title:before { top: -3px; left: -3px; border-width: 1px 0 0 1px; }
+.dash-alert-item.current .alert-title:after { top: -3px; right: -3px; border-width: 1px 1px 0 0; }
+.dash-alert-item.current .alert-value:before { bottom: -3px; left: -3px; border-width: 0 0 1px 1px; }
+.dash-alert-item.current .alert-value:after { bottom: -3px; right: -3px; border-width: 0 1px 1px 0; }
 
-.dash-alert-item .title {
+.dash-alert-item .alert-title {
   display: inline-block;
   color: white;
 }
 
-.dash-alert-item .value {
+.dash-alert-item .alert-value {
   display: inline-block;
   background-color: black;
 }
 
-.dash-alert-item.critical .title {
+.dash-alert-item.critical .alert-title {
   background-color: #d70c0c;
   font-size: 2.1rem;
   line-height: 2.1rem;
@@ -50,7 +50,7 @@
   padding: 6px 14px 4px 8px;
 }
 
-.dash-alert-item.critical .value {
+.dash-alert-item.critical .alert-value {
   font-size: 4rem;
   color: #d70c0c;
   line-height: 3rem;
@@ -58,13 +58,13 @@
   padding: 13px 14px 7px 8px;
 }
 
-.dash-alert-item.warning .title {
+.dash-alert-item.warning .alert-title {
   background-color: #d19a14;
   font-size: 1.6rem;
   padding: 2px 7px;
 }
 
-.dash-alert-item.warning .value {
+.dash-alert-item.warning .alert-value {
   font-size: 3rem;
   color: #d19a14;
   line-height: 2.8rem;
@@ -72,14 +72,14 @@
   padding: 6px 7px 3px;
 }
 
-.dash-alert-item.ok .title {
+.dash-alert-item.ok .alert-title {
   background-color: #438c07;
   font-size: 1rem;
   padding: 0.2rem;
   line-height: 1rem;
 }
 
-.dash-alert-item.ok .value {
+.dash-alert-item.ok .alert-value {
   font-size: 2rem;
   color: #438c07;
   line-height: 1.7rem;

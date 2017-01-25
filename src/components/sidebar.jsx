@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import AlertItem from './alert_item';
 import { uuid, shuffle } from '../utils';
 import '../../style/sidebar.css';
 
@@ -22,26 +23,14 @@ class Sidebar extends Component {
     };
 
     this.onCreate = this.onCreate.bind(this);
+    this.onCheckStatus = this.onCheckStatus.bind(this);
   }
 
   render() {
-    const compareButtons = (
-      <div className="topcoat-button-bar">
-        <div className="topcoat-button-bar__item">
-          <button className="topcoat-button-bar__button--large">=</button>
-        </div>
-        <div className="topcoat-button-bar__item">
-          <button className="topcoat-button-bar__button--large">&lt;</button>
-        </div>
-        <div className="topcoat-button-bar__item">
-          <button className="topcoat-button-bar__button--large">&gt;</button>
-        </div>
-      </div>
-    );
-
     return (
-      <div className={"dash-sidebar" + (this.props.isOpen ? " open" : "")}>
+      <div className="dash-sidebar">
         <h3 className="title">Add Alert</h3>
+
         <button className="close-btn" onClick={() => this.props.handleSidebar("close")}>
           <i className="icon-cancel"></i>
         </button>
@@ -75,7 +64,18 @@ class Sidebar extends Component {
 
           <div className="compare-item">
             <label>OK</label><br />
-            {compareButtons}
+
+            <input type="text" className="topcoat-text-input--large"
+              placeholder="operator"
+              value={this.state.ok.compare}
+              onChange={(e) => {
+                  let s = this.state, o = ['=', '>', '<', '>=', '<=', ''];
+                  if(o.indexOf(e.target.value) >= 0) {
+                    s.ok.compare = e.target.value;
+                  }
+                  this.setState(s);
+              }} />
+
             <input type="text" className="topcoat-text-input--large"
               placeholder="value"
               value={this.state.ok.value}
@@ -97,7 +97,18 @@ class Sidebar extends Component {
 
           <div className="compare-item">
             <label>Warning</label><br />
-            {compareButtons}
+
+            <input type="text" className="topcoat-text-input--large"
+              placeholder="operator"
+              value={this.state.warning.compare}
+              onChange={(e) => {
+                  let s = this.state, o = ['=', '>', '<', '>=', '<=', ''];
+                  if(o.indexOf(e.target.value) >= 0) {
+                    s.warning.compare = e.target.value;
+                  }
+                  this.setState(s);
+              }} />
+
             <input type="text" className="topcoat-text-input--large"
               placeholder="value"
               value={this.state.warning.value}
@@ -119,7 +130,18 @@ class Sidebar extends Component {
 
           <div className="compare-item">
             <label>Critical</label><br />
-            {compareButtons}
+
+            <input type="text" className="topcoat-text-input--large"
+              placeholder="operator"
+              value={this.state.critical.compare}
+              onChange={(e) => {
+                  let s = this.state, o = ['=', '>', '<', '>=', '<=', ''];
+                  if(o.indexOf(e.target.value) >= 0) {
+                    s.critical.compare = e.target.value;
+                  }
+                  this.setState(s);
+              }} />
+
             <input type="text" className="topcoat-text-input--large"
               placeholder="value"
               value={this.state.critical.value}
@@ -166,35 +188,30 @@ class Sidebar extends Component {
         </section>
 
         <section className="form-base">
+          <button className="topcoat-button--large" onClick={this.onCheckStatus}>
+            Check Status
+          </button>
           <button className="topcoat-button--large--cta" onClick={this.onCreate}>
             Create New Alert
           </button>
         </section>
 
+        <div className="preview">
+          <AlertItem alert={this.state}  />
+        </div>
       </div>
     );
   }
 
-  onCompareChange(event, key, value) {
-
-  }
-
   onCreate(event) {
     event.preventDefault();
-
-    // let items = shuffle(
-    //   [{current: false, id: uuid(), namespace: "S3", title: "Max Con", value: "68%", status: "warning"},
-    //    {current: false, id: uuid(), namespace: "CI", title: "Vault", value: "Build Failed", status: "critical"},
-    //    {current: false, id: uuid(), namespace: "CI", title: "FaaS", value: "Build OK", status: "ok"},
-    //    {current: false, id: uuid(), namespace: "FaaS", title: "Used Size", value: "88%", status: "critical"},
-    //    {current: false, id: uuid(), namespace: "S3", title: "404 Status", value: "523 ", status: "warning"},
-    //    {current: false, id: uuid(), namespace: "S3", title: "HTTP Status", value: "200", status: "ok"}]
-    // );
-
     this.props.addItem(this.state);
     this.props.handleSidebar("close");
   }
 
+  onCheckStatus(event) {
+    this.setState({'status': shuffle(['ok', 'warning', 'critical']).shift()});
+  }
 }
 
 export default Sidebar;

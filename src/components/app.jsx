@@ -38,10 +38,10 @@ class App extends Component {
                handleSidebar={this.handleSidebar}
                deleteItem={this.deleteItem} />
 
-        <Sidebar currentItem={this.state.currentItem}
-                 handleSidebar={this.handleSidebar}
-                 isOpen={this.state.visibleSidebar}
-                 addItem={this.addItem} />
+        {this.state.visibleSidebar &&
+          <Sidebar currentItem={this.state.currentItem}
+                   handleSidebar={this.handleSidebar}
+                   addItem={this.addItem} />}
         {groups}
         <h2 className="main-title">{this.state.mainTitle}</h2>
       </div>

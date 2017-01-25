@@ -20,8 +20,8 @@ class AlertItem extends Component {
     return (
       <div className={"dash-alert-item " + alert.status + current}
            onClick={this.onItemSelect}>
-        <span className="title">{alert.namespace}: {alert.title}</span><br />
-        <strong className="value">{text}</strong>
+        <span className="alert-title">{alert.namespace}: {alert.title}</span><br />
+        <strong className="alert-value">{text}</strong>
       </div>
     );
   }
