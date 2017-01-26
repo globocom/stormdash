@@ -60,14 +60,14 @@
   margin-left: 10px;
 }
 
-.dash-sidebar .compare-item > div {
-  display: inline-block;
-  margin-right: 5px;
+.dash-sidebar .compare-item .rule {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
 }
 
-.dash-sidebar .compare-item > input {
+.dash-sidebar .compare-item .rule input {
   width: 30%;
-  margin: 0 5px;
 }
 
 .dash-sidebar .show-radio {
@@ -95,4 +95,5 @@
   height: 200px;
   border: 3px dashed #333434;
   background-color: #454646;
+  margin-bottom: 20px;
 }

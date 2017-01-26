@@ -48,7 +48,6 @@ class Sidebar extends Component {
               value={this.state.title}
               onChange={e => this.setState({"title": e.target.value})} />
           </div>
-
           <div>
             <label>Json url</label><br />
             <input type="text" className="topcoat-text-input--large"
@@ -63,102 +62,105 @@ class Sidebar extends Component {
           </div>
 
           <div className="compare-item">
-            <label>OK</label><br />
+            <label>OK</label>
+            <div className="rule">
+              <input type="text" className="topcoat-text-input--large"
+                placeholder="operator"
+                value={this.state.ok.compare}
+                onChange={(e) => {
+                    let s = this.state, o = ['=', '>', '<', '>=', '<=', ''];
+                    if(o.indexOf(e.target.value) >= 0) {
+                      s.ok.compare = e.target.value;
+                    }
+                    this.setState(s);
+                }} />
 
-            <input type="text" className="topcoat-text-input--large"
-              placeholder="operator"
-              value={this.state.ok.compare}
-              onChange={(e) => {
-                  let s = this.state, o = ['=', '>', '<', '>=', '<=', ''];
-                  if(o.indexOf(e.target.value) >= 0) {
-                    s.ok.compare = e.target.value;
-                  }
-                  this.setState(s);
-              }} />
+              <input type="text" className="topcoat-text-input--large"
+                placeholder="value"
+                value={this.state.ok.value}
+                onChange={(e) => {
+                    let s = this.state;
+                    s.ok.value = e.target.value;
+                    this.setState(s);
+                }} />
 
-            <input type="text" className="topcoat-text-input--large"
-              placeholder="value"
-              value={this.state.ok.value}
-              onChange={(e) => {
-                  let s = this.state;
-                  s.ok.value = e.target.value;
-                  this.setState(s);
-              }} />
-
-            <input type="text" className="topcoat-text-input--large"
-              placeholder="default message"
-              value={this.state.ok.message}
-              onChange={(e) => {
-                  let s = this.state;
-                  s.ok.message = e.target.value;
-                  this.setState(s);
-              }} />
+              <input type="text" className="topcoat-text-input--large"
+                placeholder="default message"
+                value={this.state.ok.message}
+                onChange={(e) => {
+                    let s = this.state;
+                    s.ok.message = e.target.value;
+                    this.setState(s);
+                }} />
+            </div>
           </div>
 
           <div className="compare-item">
-            <label>Warning</label><br />
+            <label>Warning</label>
+            <div className="rule">
+              <input type="text" className="topcoat-text-input--large"
+                placeholder="operator"
+                value={this.state.warning.compare}
+                onChange={(e) => {
+                    let s = this.state, o = ['=', '>', '<', '>=', '<=', ''];
+                    if(o.indexOf(e.target.value) >= 0) {
+                      s.warning.compare = e.target.value;
+                    }
+                    this.setState(s);
+                }} />
 
-            <input type="text" className="topcoat-text-input--large"
-              placeholder="operator"
-              value={this.state.warning.compare}
-              onChange={(e) => {
-                  let s = this.state, o = ['=', '>', '<', '>=', '<=', ''];
-                  if(o.indexOf(e.target.value) >= 0) {
-                    s.warning.compare = e.target.value;
-                  }
-                  this.setState(s);
-              }} />
+              <input type="text" className="topcoat-text-input--large"
+                placeholder="value"
+                value={this.state.warning.value}
+                onChange={(e) => {
+                    let s = this.state;
+                    s.warning.value = e.target.value;
+                    this.setState(s);
+                }} />
 
-            <input type="text" className="topcoat-text-input--large"
-              placeholder="value"
-              value={this.state.warning.value}
-              onChange={(e) => {
-                  let s = this.state;
-                  s.warning.value = e.target.value;
-                  this.setState(s);
-              }} />
-
-            <input type="text" className="topcoat-text-input--large"
-              placeholder="default message"
-              value={this.state.warning.message}
-              onChange={(e) => {
-                  let s = this.state;
-                  s.warning.message = e.target.value;
-                  this.setState(s);
-              }} />
+              <input type="text" className="topcoat-text-input--large"
+                placeholder="default message"
+                value={this.state.warning.message}
+                onChange={(e) => {
+                    let s = this.state;
+                    s.warning.message = e.target.value;
+                    this.setState(s);
+                }} />
+            </div>
           </div>
 
           <div className="compare-item">
             <label>Critical</label><br />
+            <div className="rule">
+              <input type="text" className="topcoat-text-input--large"
+                placeholder="operator"
+                value={this.state.critical.compare}
+                onChange={(e) => {
+                    let s = this.state, o = ['=', '>', '<', '>=', '<=', ''];
+                    if(o.indexOf(e.target.value) >= 0) {
+                      s.critical.compare = e.target.value;
+                    }
+                    this.setState(s);
+                }} />
 
-            <input type="text" className="topcoat-text-input--large"
-              placeholder="operator"
-              value={this.state.critical.compare}
-              onChange={(e) => {
-                  let s = this.state, o = ['=', '>', '<', '>=', '<=', ''];
-                  if(o.indexOf(e.target.value) >= 0) {
-                    s.critical.compare = e.target.value;
-                  }
-                  this.setState(s);
-              }} />
+              <input type="text" className="topcoat-text-input--large"
+                placeholder="value"
+                value={this.state.critical.value}
+                onChange={(e) => {
+                    let s = this.state;
+                    s.critical.value = e.target.value;
+                    this.setState(s);
+                }} />
 
-            <input type="text" className="topcoat-text-input--large"
-              placeholder="value"
-              value={this.state.critical.value}
-              onChange={(e) => {
-                  let s = this.state;
-                  s.critical.value = e.target.value;
-                  this.setState(s);
-              }} />
-
-            <input type="text" className="topcoat-text-input--large"
-              placeholder="default message"
-              value={this.state.critical.message}
-              onChange={(e) => {
-                  let s = this.state;
-                  s.critical.message = e.target.value;
-                  this.setState(s);
-              }} />
+              <input type="text" className="topcoat-text-input--large"
+                placeholder="default message"
+                value={this.state.critical.message}
+                onChange={(e) => {
+                    let s = this.state;
+                    s.critical.message = e.target.value;
+                    this.setState(s);
+                }} />
+            </div>
           </div>
 
           <div>
@@ -192,7 +194,7 @@ class Sidebar extends Component {
             Check Status
           </button>
           <button className="topcoat-button--large--cta" onClick={this.onCreate}>
-            Create New Alert
+            Create
           </button>
         </section>
 
