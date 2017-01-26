@@ -15,10 +15,16 @@ class App extends Component {
       items: store('alertItems')
     };
 
-    this.addItem = this.addItem.bind(this);
     this.handleSidebar = this.handleSidebar.bind(this);
-    this.setCurrent = this.setCurrent.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
+
+    this.getItemCopy = this.getItemCopy.bind(this);
+
+    this.addItem = this.addItem.bind(this);
+    this.editItem = this.editItem.bind(this);
     this.deleteItem = this.deleteItem.bind(this);
+
+    this.setCurrent = this.setCurrent.bind(this);
     this.clearCurrent = this.clearCurrent.bind(this);
   }
 
@@ -42,7 +48,9 @@ class App extends Component {
         {this.state.visibleSidebar &&
           <Sidebar currentItem={this.state.currentItem}
                    handleSidebar={this.handleSidebar}
-                   addItem={this.addItem} />}
+                   addItem={this.addItem}
+                   editItem={this.editItem}
+                   getItemCopy={this.getItemCopy} />}
 
         {groups}
 
@@ -66,11 +74,34 @@ class App extends Component {
     }
   }
 
+  getItemCopy(itemId) {
+    const currentItems = this.state.items.slice();
+    let item = currentItems.find((elem) => {
+      if(elem.id === itemId) {
+        return elem;
+      }
+    })
+    return item;
+  }
+
   addItem(alertObj) {
     this.clearCurrent();
     const newItems = this.state.items.concat([alertObj]);
     store('alertItems', newItems);
     this.setState({items: newItems});
+  }
+
+  editItem(itemId, newAlertObj) {
+    let currentItems = this.state.items.slice();
+    const index = currentItems.findIndex((elem, i, arr) => {
+      return elem.id === itemId;
+    });
+
+    if (index >= 0) {
+      currentItems[index] = newAlertObj;
+      store('alertItems', currentItems);
+      this.setState({items: currentItems});
+    }
   }
 
   deleteItem(itemId) {
@@ -80,13 +111,11 @@ class App extends Component {
       return elem.id === itemId;
     });
 
-    if (index < 0) {
-      return false;
+    if (index >= 0) {
+      currentItems.splice(index, 1);
+      store('alertItems', currentItems);
+      this.setState({items: currentItems});
     }
-
-    currentItems.splice(index, 1);
-    store('alertItems', currentItems);
-    this.setState({items: currentItems});
   }
 
   setCurrent(itemId) {

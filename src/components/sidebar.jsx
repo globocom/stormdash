@@ -7,7 +7,7 @@ class Sidebar extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {
+    this.blankState = {
       "id": uuid(),
       "current": false,
       "status": "ok",
@@ -22,7 +22,15 @@ class Sidebar extends Component {
       "description": ""
     };
 
+    if(props.currentItem) {
+      let editedItem = props.getItemCopy(props.currentItem);
+      this.state = editedItem;
+    } else {
+      this.state = this.blankState;
+    }
+
     this.onCreate = this.onCreate.bind(this);
+    this.onEdit = this.onEdit.bind(this);
     this.onCheckStatus = this.onCheckStatus.bind(this);
   }
 
@@ -193,9 +201,9 @@ class Sidebar extends Component {
           <button className="topcoat-button--large" onClick={this.onCheckStatus}>
             Check Status
           </button>
-          <button className="topcoat-button--large--cta" onClick={this.onCreate}>
-            Create
-          </button>
+          {this.props.currentItem
+            ? <button className="topcoat-button--large--cta" onClick={this.onEdit}>Save</button>
+            : <button className="topcoat-button--large--cta" onClick={this.onCreate}>Create</button>}
         </section>
 
         <div className="preview">
@@ -208,6 +216,12 @@ class Sidebar extends Component {
   onCreate(event) {
     event.preventDefault();
     this.props.addItem(this.state);
+    this.props.handleSidebar("close");
+  }
+
+  onEdit(event) {
+    event.preventDefault();
+    this.props.editItem(this.props.currentItem, this.state);
     this.props.handleSidebar("close");
   }
 
