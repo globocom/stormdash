@@ -25,7 +25,9 @@
   },
   "dependencies": {
     "babel-preset-stage-1": "^6.1.18",
+    "express": "^4.14.0",
     "lodash": "^3.10.1",
+    "nedb": "^1.8.0",
     "react": "^0.14.3",
     "react-dom": "^0.14.3",
     "react-router": "^2.0.1"
