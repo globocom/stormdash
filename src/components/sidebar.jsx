@@ -7,7 +7,8 @@ class Sidebar extends Component {
 
   constructor(props) {
     super(props);
-    this.blankState = {
+
+    const defaultState = {
       "id": uuid(),
       "current": false,
       "status": "ok",
@@ -21,13 +22,10 @@ class Sidebar extends Component {
       "show": "value", // "value" or "message"
       "description": ""
     };
-
-    if(props.currentItem) {
-      let editedItem = props.getItemCopy(props.currentItem);
-      this.state = editedItem;
-    } else {
-      this.state = this.blankState;
-    }
+    
+    this.currentId = props.currentItem;
+    this.itemToEdit = props.getItemCopy(this.currentId);   
+    this.state = this.currentId ? this.itemToEdit : defaultState;
 
     this.onCreate = this.onCreate.bind(this);
     this.onEdit = this.onEdit.bind(this);
@@ -37,7 +35,7 @@ class Sidebar extends Component {
   render() {
     return (
       <div className="dash-sidebar">
-        <h3 className="title">{this.props.currentItem ? 'Edit Alert' : 'Add Alert'}</h3>
+        <h3 className="title">{this.currentId ? 'Edit Alert' : 'Add Alert'}</h3>
 
         <button className="close-btn" onClick={() => this.props.handleSidebar("close")}>
           <i className="icon-cancel"></i>
@@ -201,7 +199,7 @@ class Sidebar extends Component {
           <button className="topcoat-button--large" onClick={this.onCheckStatus}>
             Check Status
           </button>
-          {this.props.currentItem
+          {this.currentId
             ? <button className="topcoat-button--large--cta" onClick={this.onEdit}>Save</button>
             : <button className="topcoat-button--large--cta" onClick={this.onCreate}>Create</button>}
         </section>
@@ -221,7 +219,7 @@ class Sidebar extends Component {
 
   onEdit(event) {
     event.preventDefault();
-    this.props.editItem(this.props.currentItem, this.state);
+    this.props.editItem(this.currentId, this.state);
     this.props.handleSidebar("close");
   }
 

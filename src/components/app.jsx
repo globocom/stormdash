@@ -30,20 +30,19 @@ class App extends Component {
 
   render() {
     const groups = this.state.groups.map((group) => {
-      return <AlertGroup
-              key={uuid()}
-              items={this.state.items}
-              itemsStatus={group}
-              setCurrent={this.setCurrent}
-              clearCurrent={this.clearCurrent} />
+      return <AlertGroup key={uuid()}
+                         items={this.state.items}
+                         itemsStatus={group}
+                         setCurrent={this.setCurrent}
+                         clearCurrent={this.clearCurrent} />
     });
 
     return (
       <div className="dash-main">
         <Tools currentItem={this.state.currentItem}
+               clearCurrent={this.clearCurrent}
                handleSidebar={this.handleSidebar}
-               deleteItem={this.deleteItem}
-               clearCurrent={this.clearCurrent} />
+               deleteItem={this.deleteItem} />
 
         {this.state.visibleSidebar &&
           <Sidebar currentItem={this.state.currentItem}
@@ -75,13 +74,12 @@ class App extends Component {
   }
 
   getItemCopy(itemId) {
-    const currentItems = this.state.items.slice();
-    let item = currentItems.find((elem) => {
+    const itens = store('alertItems');
+    return itens.find((elem) => {
       if(elem.id === itemId) {
         return elem;
       }
-    })
-    return item;
+    });
   }
 
   addItem(alertObj) {
@@ -92,7 +90,8 @@ class App extends Component {
   }
 
   editItem(itemId, newAlertObj) {
-    let currentItems = this.state.items.slice();
+    this.clearCurrent();
+    let currentItems = this.state.items.slice();    
     const index = currentItems.findIndex((elem, i, arr) => {
       return elem.id === itemId;
     });

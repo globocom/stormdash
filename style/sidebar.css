@@ -97,3 +97,7 @@
   background-color: #454646;
   margin-bottom: 20px;
 }
+
+.dash-sidebar .preview .dash-alert-item {
+  cursor: default;
+}
