@@ -1,21 +1,43 @@
 import React, { Component } from 'react';
 import '../../style/tools.css';
 
+class ConfirmDelete extends Component {
+  render() {
+    return (
+      <div className="confirm-delete">
+        <span className="warn-message">Are you sure?</span>
+        <button onClick={this.props.onDeleteItem} className="delete-yes">Yes</button>
+        <button onClick={this.props.disableConfirm} className="delete-cancel">Cancel</button>
+      </div>
+    );
+  }
+
+  componentWillUnmount() {
+    this.props.disableConfirm();
+  }
+}
+
 class Tools extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
-
+    this.state = {
+      confirmDelete: false
+    };
     this.onAddItem = this.onAddItem.bind(this);
     this.onEditItem = this.onEditItem.bind(this);
     this.onDeleteItem = this.onDeleteItem.bind(this);
+    this.disableConfirm = this.disableConfirm.bind(this);
   }
 
   render() {
     return (
       <div className="dash-tools">
+        {this.state.confirmDelete && this.props.currentItem &&
+          <ConfirmDelete disableConfirm={this.disableConfirm}
+                         onDeleteItem={this.onDeleteItem} />}
+
         {this.props.currentItem &&
-          <button onClick={this.onDeleteItem} className="tool-btn delete-alert">
+          <button onClick={() => this.setState({confirmDelete: true})} className="tool-btn delete-alert">
             <i className="icon-trash"></i>
           </button>}
 
@@ -45,6 +67,11 @@ class Tools extends Component {
   onDeleteItem(event) {
     event.stopPropagation();
     this.props.deleteItem(this.props.currentItem);
+    this.disableConfirm();
+  }
+
+  disableConfirm() {
+    this.setState({confirmDelete: false});
   }
 }
 

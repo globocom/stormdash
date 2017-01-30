@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import AlertItem from './alert_item';
-import { uuid, shuffle } from '../utils';
+import { store, uuid, shuffle } from '../utils';
 import '../../style/sidebar.css';
 
 class Sidebar extends Component {
@@ -22,9 +22,9 @@ class Sidebar extends Component {
       "show": "value", // "value" or "message"
       "description": ""
     };
-    
+
     this.currentId = props.currentItem;
-    this.itemToEdit = props.getItemCopy(this.currentId);   
+    this.itemToEdit = this.getItemCopy(this.currentId);
     this.state = this.currentId ? this.itemToEdit : defaultState;
 
     this.onCreate = this.onCreate.bind(this);
@@ -205,7 +205,8 @@ class Sidebar extends Component {
         </section>
 
         <div className="preview">
-          <AlertItem alert={this.state}  />
+          <AlertItem alert={this.state}
+                     setCurrent={() => false} />
         </div>
       </div>
     );
@@ -223,7 +224,17 @@ class Sidebar extends Component {
     this.props.handleSidebar("close");
   }
 
+  getItemCopy(itemId) {
+    const itens = store('alertItems');
+    return itens.find((elem) => {
+      if(elem.id === itemId) {
+        return elem;
+      }
+    });
+  }
+
   onCheckStatus(event) {
+    event.preventDefault();
     this.setState({'status': shuffle(['ok', 'warning', 'critical']).shift()});
   }
 }

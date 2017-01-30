@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import Tools from './tools';
 import Sidebar from './sidebar';
 import AlertGroup from './alert_group';
-import { store, uuid } from '../utils';
+import { store, uuid, shuffle } from '../utils';
 
-class App extends Component {
+class StormDash extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -17,13 +17,9 @@ class App extends Component {
 
     this.handleSidebar = this.handleSidebar.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
-
-    this.getItemCopy = this.getItemCopy.bind(this);
-
     this.addItem = this.addItem.bind(this);
     this.editItem = this.editItem.bind(this);
     this.deleteItem = this.deleteItem.bind(this);
-
     this.setCurrent = this.setCurrent.bind(this);
     this.clearCurrent = this.clearCurrent.bind(this);
   }
@@ -48,8 +44,7 @@ class App extends Component {
           <Sidebar currentItem={this.state.currentItem}
                    handleSidebar={this.handleSidebar}
                    addItem={this.addItem}
-                   editItem={this.editItem}
-                   getItemCopy={this.getItemCopy} />}
+                   editItem={this.editItem} />}
 
         {groups}
 
@@ -66,22 +61,6 @@ class App extends Component {
     this.setState({visibleSidebar: true});
   }
 
-  handleKeyDown(event) {
-    if (event.which === 27) {
-      this.setState({visibleSidebar: false});
-      this.clearCurrent();
-    }
-  }
-
-  getItemCopy(itemId) {
-    const itens = store('alertItems');
-    return itens.find((elem) => {
-      if(elem.id === itemId) {
-        return elem;
-      }
-    });
-  }
-
   addItem(alertObj) {
     this.clearCurrent();
     const newItems = this.state.items.concat([alertObj]);
@@ -91,7 +70,7 @@ class App extends Component {
 
   editItem(itemId, newAlertObj) {
     this.clearCurrent();
-    let currentItems = this.state.items.slice();    
+    let currentItems = this.state.items.slice();
     const index = currentItems.findIndex((elem, i, arr) => {
       return elem.id === itemId;
     });
@@ -148,6 +127,39 @@ class App extends Component {
       items: currentItems
     });
   }
+
+  doStatusCheck() {
+    let currentItems = this.state.items.slice();
+
+    currentItems.map((item) => {
+      item.status = this.checkItemStatus(item);
+    });
+
+    store('alertItems', currentItems);
+    this.setState({items: currentItems});
+  }
+
+  checkItemStatus(itemObj) {
+    return shuffle(['ok', 'warning', 'critical']).shift();
+  }
+
+  handleKeyDown = (event) => {
+    let { key } = event;
+
+    if (key === 'Escape') {
+      event.preventDefault();
+      this.clearCurrent();
+      this.setState({visibleSidebar: false});
+    }
+  };
+
+  componentDidMount() {
+    document.addEventListener('keydown', this.handleKeyDown)
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.handleKeyDown)
+  }
 }
 
-export default App;
+export default StormDash;

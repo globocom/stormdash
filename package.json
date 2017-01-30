@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js"
+    "start": "node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js",
+    "test": "mocha --compilers js:babel-core/register --require ./test/test_helper.js --recursive ./test"
   },
   "author": "",
   "license": "ISC",
@@ -18,12 +19,14 @@
     "css-loader": "^0.26.1",
     "jquery": "^2.2.1",
     "jsdom": "^8.1.0",
+    "mocha": "^2.4.5",
     "react-addons-test-utils": "^0.14.7",
     "style-loader": "^0.13.1",
     "webpack": "^1.12.9",
     "webpack-dev-server": "^1.14.0"
   },
   "dependencies": {
+    "axios": "^0.15.3",
     "babel-preset-stage-1": "^6.1.18",
     "express": "^4.14.0",
     "lodash": "^3.10.1",

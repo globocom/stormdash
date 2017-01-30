@@ -30,3 +30,42 @@
 .dash-tools .tool-btn:active {
   opacity: .8;
 }
+
+.dash-tools .confirm-delete {
+  float: left;
+  height: 50px;
+  line-height: 50px;
+  margin: 0 5px;
+  border-radius: 25px;
+  padding: 0;
+  background-color: #484b4c;
+  box-shadow: 3px 3px 9px rgba(0, 0, 0, 0.2);
+}
+
+.dash-tools .confirm-delete .warn-message {
+  display: inline-block;
+  margin: 0 15px 0 20px;
+  color: white;
+  font-weight: bold;
+  font-size: 22px;
+}
+
+.dash-tools .confirm-delete .delete-yes,
+.dash-tools .confirm-delete .delete-cancel {
+  height: 30px;
+  border: 0;
+  border-radius: 15px;
+  padding: 3px 12px 0;
+  margin-right: 10px;
+  color: white;
+  background-color: #777;
+  cursor: pointer;
+}
+
+.dash-tools .confirm-delete .delete-yes:hover {
+  background-color: #d70c0c;
+}
+
+.dash-tools .confirm-delete .delete-cancel:hover {
+  background-color: #438c07;
+}
