@@ -7,9 +7,13 @@ class ConfirmDelete extends Component {
       <div className="confirm-delete">
         <span className="warn-message">Are you sure?</span>
         <button onClick={this.props.onDeleteItem} className="delete-yes">Yes</button>
-        <button onClick={this.props.disableConfirm} className="delete-cancel">Cancel</button>
+        <button onClick={this.props.disableConfirm} className="delete-no">No</button>
       </div>
     );
+  }
+
+  componentDidUpdate() {
+    this.props.disableConfirm();
   }
 
   componentWillUnmount() {

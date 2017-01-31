@@ -51,21 +51,19 @@
 }
 
 .dash-tools .confirm-delete .delete-yes,
-.dash-tools .confirm-delete .delete-cancel {
+.dash-tools .confirm-delete .delete-no {
   height: 30px;
+  line-height: 30px;
   border: 0;
   border-radius: 15px;
-  padding: 3px 12px 0;
+  padding: 1px 12px 0;
   margin-right: 10px;
   color: white;
   background-color: #777;
   cursor: pointer;
 }
 
-.dash-tools .confirm-delete .delete-yes:hover {
-  background-color: #d70c0c;
-}
-
-.dash-tools .confirm-delete .delete-cancel:hover {
-  background-color: #438c07;
+.dash-tools .confirm-delete .delete-yes:hover,
+.dash-tools .confirm-delete .delete-no:hover {
+  background-color: #76b7eb;
 }

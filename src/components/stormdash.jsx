@@ -16,7 +16,6 @@ class StormDash extends Component {
     };
 
     this.handleSidebar = this.handleSidebar.bind(this);
-    this.handleKeyDown = this.handleKeyDown.bind(this);
     this.addItem = this.addItem.bind(this);
     this.editItem = this.editItem.bind(this);
     this.deleteItem = this.deleteItem.bind(this);
@@ -25,7 +24,9 @@ class StormDash extends Component {
   }
 
   render() {
-    const groups = this.state.groups.map((group) => {
+    let { visibleSidebar, groups } = this.state;
+
+    groups = groups.map((group) => {
       return <AlertGroup key={uuid()}
                          items={this.state.items}
                          itemsStatus={group}
@@ -35,12 +36,13 @@ class StormDash extends Component {
 
     return (
       <div className="dash-main">
-        <Tools currentItem={this.state.currentItem}
-               clearCurrent={this.clearCurrent}
-               handleSidebar={this.handleSidebar}
-               deleteItem={this.deleteItem} />
+        {!visibleSidebar &&
+          <Tools currentItem={this.state.currentItem}
+                 clearCurrent={this.clearCurrent}
+                 handleSidebar={this.handleSidebar}
+                 deleteItem={this.deleteItem} />}
 
-        {this.state.visibleSidebar &&
+        {visibleSidebar &&
           <Sidebar currentItem={this.state.currentItem}
                    handleSidebar={this.handleSidebar}
                    addItem={this.addItem}

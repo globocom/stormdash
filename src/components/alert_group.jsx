@@ -28,7 +28,9 @@ class AlertGroup extends Component {
     }
 
     const allItems = alertItems.map((alert) => {
-      return <AlertItem key={alert.id} alert={alert} setCurrent={this.props.setCurrent} />
+      return <AlertItem key={alert.id}
+                        alert={alert}
+                        setCurrent={this.props.setCurrent} />
     });
 
     if(allItems.length < 1) {
