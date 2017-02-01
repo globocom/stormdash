@@ -22,6 +22,7 @@ class StormDash extends Component {
     this.deleteItem = this.deleteItem.bind(this);
     this.setCurrent = this.setCurrent.bind(this);
     this.clearCurrent = this.clearCurrent.bind(this);
+    this.doStatusCheck = this.doStatusCheck.bind(this);
   }
 
   render() {
@@ -41,7 +42,8 @@ class StormDash extends Component {
           <Tools currentItem={this.state.currentItem}
                  clearCurrent={this.clearCurrent}
                  handleSidebar={this.handleSidebar}
-                 deleteItem={this.deleteItem} />}
+                 deleteItem={this.deleteItem}
+                 doStatusCheck={this.doStatusCheck} />}
 
         {visibleSidebar &&
           <Sidebar currentItem={this.state.currentItem}
@@ -135,11 +137,9 @@ class StormDash extends Component {
     currentItems.map((item) => {
       this.checkItemValue(item, (value) => {
         item.currentValue = value;
+        this.editItem(item.id, item);
       });
     });
-
-    store('alertItems', currentItems);
-    this.setState({items: currentItems});
   }
 
   checkItemValue(itemObj, func) {

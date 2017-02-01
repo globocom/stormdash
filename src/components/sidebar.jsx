@@ -11,7 +11,7 @@ class Sidebar extends Component {
     const defaultState = {
       id: uuid(),
       current: false,
-      currentValue: null,
+      currentValue: "",
       status: "ok",
       namespace: "",
       title: "",
