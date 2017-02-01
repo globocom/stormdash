@@ -11,11 +11,11 @@ class AlertItem extends Component {
   render() {
     let alert = this.props.alert,
         { namespace, title, current } = alert,
-        status = this.checkItemStatus(),
-        value = alert.currentValue;
+        status = this.checkItemStatus();
 
+    let value = alert.currentValue;
     if(alert.show === 'message') {
-      value = alert['ok'].message;
+      value = alert[status].message;
     }
 
     return (
@@ -35,13 +35,9 @@ class AlertItem extends Component {
       'critical': alert.critical
     };
 
-    if(alert.currentValue === "") {
-      return '';
-    }
-
     for(let s in status) {
       let c = status[s].compare === '=' ? '==' : status[s].compare;
-      if(c !== "" &&
+      if(c !== "" && alert.currentValue === "" &&
          eval('"'+ alert.currentValue +'"'+ c +'"'+ status[s].value +'"')) {
         return s;
       }
