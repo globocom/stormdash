@@ -38,4 +38,13 @@ function store(namespace, data) {
   return (store && JSON.parse(store)) || [];
 }
 
-export { uuid, shuffle, store };
+function traverse(obj, func) {
+  for (var i in obj) {
+    func.apply(this, [i, obj[i]]);
+    if (obj[i] !== null && typeof(obj[i]) == "object") {
+      traverse(obj[i],func);
+    }
+  }
+}
+
+export { uuid, shuffle, store, traverse };

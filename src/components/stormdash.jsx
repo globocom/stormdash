@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import Tools from './tools';
 import Sidebar from './sidebar';
 import AlertGroup from './alert_group';
-import { store, uuid, shuffle } from '../utils';
+import axios from 'axios';
+import { uuid, shuffle, store, traverse } from '../utils';
 
 class StormDash extends Component {
   constructor(props) {
@@ -46,7 +47,8 @@ class StormDash extends Component {
           <Sidebar currentItem={this.state.currentItem}
                    handleSidebar={this.handleSidebar}
                    addItem={this.addItem}
-                   editItem={this.editItem} />}
+                   editItem={this.editItem}
+                   checkItemValue={this.checkItemValue} />}
 
         {groups}
 
@@ -100,7 +102,6 @@ class StormDash extends Component {
 
   setCurrent(itemId) {
     let currentItems = this.state.items.slice();
-
     currentItems.map((item) => {
       if(item.id !== itemId) {
         item.current = false;
@@ -118,7 +119,6 @@ class StormDash extends Component {
 
   clearCurrent() {
     let currentItems = this.state.items.slice();
-
     currentItems.map((item) => {
       item.current = false;
       return item;
@@ -132,22 +132,33 @@ class StormDash extends Component {
 
   doStatusCheck() {
     let currentItems = this.state.items.slice();
-
     currentItems.map((item) => {
-      item.status = this.checkItemStatus(item);
+      this.checkItemValue(item, (value) => {
+        item.currentValue = value;
+      });
     });
 
     store('alertItems', currentItems);
     this.setState({items: currentItems});
   }
 
-  checkItemStatus(itemObj) {
-    return shuffle(['ok', 'warning', 'critical']).shift();
+  checkItemValue(itemObj, func) {
+    let { jsonurl, mainkey } = itemObj;
+    if(jsonurl !== "") {
+      axios.get(jsonurl).then((response) => {
+        traverse(response.data, (key, value) => {
+          if(key === mainkey) {
+            func(value);
+          }
+        });
+      }).catch((error) => {
+          console.log(error);
+      });
+    }
   }
 
   handleKeyDown = (event) => {
     let { key } = event;
-
     if (key === 'Escape') {
       event.preventDefault();
       this.clearCurrent();

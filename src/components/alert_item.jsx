@@ -9,19 +9,21 @@ class AlertItem extends Component {
   }
 
   render() {
-    const alert = this.props.alert,
-          current = alert.current ? " current" : "";
+    let alert = this.props.alert;
+    let { namespace, title, current, status, show } = alert,
+        value = alert[status].message;
 
-    let text = alert[alert.status].message;
-    if(alert.show === 'value') {
-      text = alert[alert.status].value;
+    if(show === 'value') {
+      value = alert.currentValue;
     }
 
+    console.log(alert);
+
     return (
-      <div className={"dash-alert-item " + alert.status + current}
+      <div className={"dash-alert-item " + status + (current ? " current" : "")}
            onClick={this.onItemSelect}>
-        <span className="alert-title">{alert.namespace}: {alert.title}</span><br />
-        <strong className="alert-value">{text}</strong>
+        <span className="alert-title">{namespace}: {title}</span><br />
+        <strong className="alert-value">{value}</strong>
       </div>
     );
   }

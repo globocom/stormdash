@@ -9,18 +9,19 @@ class Sidebar extends Component {
     super(props);
 
     const defaultState = {
-      "id": uuid(),
-      "current": false,
-      "status": "ok",
-      "namespace": "",
-      "title": "",
-      "jsonurl": "",
-      "mainkey": "",
-      "ok": {"compare": "", "value": "", "message": ""},
-      "warning": {"compare": "", "value": "", "message": ""},
-      "critical": {"compare": "", "value": "", "message": ""},
-      "show": "value", // "value" or "message"
-      "description": ""
+      id: uuid(),
+      current: false,
+      currentValue: null,
+      status: "ok",
+      namespace: "",
+      title: "",
+      jsonurl: "",
+      mainkey: "",
+      ok: {compare: "", value: "", message: ""},
+      warning: {compare: "", value: "", message: ""},
+      critical: {compare: "", value: "", message: ""},
+      show: "value",
+      description: ""
     };
 
     this.currentId = props.currentItem;
@@ -29,7 +30,7 @@ class Sidebar extends Component {
 
     this.onCreate = this.onCreate.bind(this);
     this.onEdit = this.onEdit.bind(this);
-    this.onCheckStatus = this.onCheckStatus.bind(this);
+    this.onCheckValue = this.onCheckValue.bind(this);
   }
 
   render() {
@@ -46,25 +47,25 @@ class Sidebar extends Component {
             <label>Namespace</label><br />
             <input type="text" className="topcoat-text-input--large"
               value={this.state.namespace}
-              onChange={e => this.setState({"namespace": e.target.value})} />
+              onChange={e => this.setState({namespace: e.target.value})} />
           </div>
           <div>
             <label>Title</label><br />
             <input type="text" className="topcoat-text-input--large"
               value={this.state.title}
-              onChange={e => this.setState({"title": e.target.value})} />
+              onChange={e => this.setState({title: e.target.value})} />
           </div>
           <div>
             <label>Json url</label><br />
             <input type="text" className="topcoat-text-input--large"
               value={this.state.jsonurl}
-              onChange={e => this.setState({"jsonurl": e.target.value})} />
+              onChange={e => this.setState({jsonurl: e.target.value})} />
           </div>
           <div>
             <label>Key</label><br />
             <input type="text" className="topcoat-text-input--large"
               value={this.state.mainkey}
-              onChange={e => this.setState({"mainkey": e.target.value})} />
+              onChange={e => this.setState({mainkey: e.target.value})} />
           </div>
 
           <div className="compare-item">
@@ -173,7 +174,7 @@ class Sidebar extends Component {
             <label className="topcoat-radio-button show-radio">
               <input type="radio" name="alert-text" value="value"
                 checked={this.state.show === 'value'}
-                onChange={e => this.setState({"show": e.target.value})} />
+                onChange={e => this.setState({show: e.target.value})} />
               <div className="topcoat-radio-button__checkmark"></div>
               &nbsp;Show value
             </label>
@@ -181,7 +182,7 @@ class Sidebar extends Component {
             <label className="topcoat-radio-button show-radio">
               <input type="radio" name="alert-text" value="message"
                 checked={this.state.show === 'message'}
-                onChange={e => this.setState({"show": e.target.value})} />
+                onChange={e => this.setState({show: e.target.value})} />
               <div className="topcoat-radio-button__checkmark"></div>
               &nbsp;Show message
             </label>
@@ -191,12 +192,12 @@ class Sidebar extends Component {
             <label>Description</label><br />
             <textarea className="topcoat-textarea"
               value={this.state.description}
-              onChange={e => this.setState({"description": e.target.value})}></textarea>
+              onChange={e => this.setState({description: e.target.value})}></textarea>
           </div>
         </section>
 
         <section className="form-base">
-          <button className="topcoat-button--large" onClick={this.onCheckStatus}>
+          <button className="topcoat-button--large" onClick={this.onCheckValue}>
             Check Status
           </button>
           {this.currentId
@@ -233,9 +234,11 @@ class Sidebar extends Component {
     });
   }
 
-  onCheckStatus(event) {
+  onCheckValue(event) {
     event.preventDefault();
-    this.setState({'status': shuffle(['ok', 'warning', 'critical']).shift()});
+    this.props.checkItemValue(this.state, (value) => {
+      this.setState({'currentValue': value});
+    });
   }
 }
 
