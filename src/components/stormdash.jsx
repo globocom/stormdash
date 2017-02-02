@@ -12,7 +12,7 @@ class StormDash extends Component {
       mainTitle: 'Storm',
       visibleSidebar: false,
       currentItem: null,
-      groups: ['critical', 'warning', 'ok'],
+      groupStatus: ['critical', 'warning', 'ok'],
       items: store('alertItems')
     };
 
@@ -23,12 +23,13 @@ class StormDash extends Component {
     this.setCurrent = this.setCurrent.bind(this);
     this.clearCurrent = this.clearCurrent.bind(this);
     this.doStatusCheck = this.doStatusCheck.bind(this);
+
+    this.startStatusCheck();
   }
 
   render() {
-    let { visibleSidebar, groups } = this.state;
-
-    groups = groups.map((group) => {
+    let { visibleSidebar, groupStatus } = this.state;
+    let groups = groupStatus.map((group) => {
       return <AlertGroup key={uuid()}
                          items={this.state.items}
                          itemsStatus={group}
@@ -132,14 +133,54 @@ class StormDash extends Component {
     });
   }
 
+  startStatusCheck() {
+    setInterval(() => {
+      this.doStatusCheck();
+    }, 10000);
+  }
+
   doStatusCheck() {
+    this.state.items.map((item) => {
+      this.updateItemStatus(item.id);
+    });
+  }
+
+  updateItemStatus(itemId) {
     let currentItems = this.state.items.slice();
-    currentItems.map((item) => {
+    const index = currentItems.findIndex((elem, i, arr) => {
+      return elem.id === itemId;
+    });
+
+    let item = currentItems[index];
+    if (index >= 0) {
       this.checkItemValue(item, (value) => {
         item.currentValue = value;
+        item.status = this.checkItemStatus(item);
         this.editItem(item.id, item);
       });
-    });
+    }
+  }
+
+  checkItemStatus(itemObj) {
+    let final = '',
+        status = {'ok': itemObj.ok,
+                  'warning': itemObj.warning,
+                  'critical': itemObj.critical};
+
+    for(let s in status) {
+      let v1 = itemObj.currentValue,
+          v2 = status[s].value,
+          c = status[s].compare === '=' ? '==' : status[s].compare;
+
+      v1 = !!parseInt(v1) ? parseInt(v1) : '"'+ v1 +'"';
+      v2 = !!parseInt(v2) ? parseInt(v2) : '"'+ v2 +'"';
+
+      if(c !== "" && eval(v1 + c + v2)) {
+        final = s;
+      }
+    }
+
+    return final;
   }
 
   checkItemValue(itemObj, func) {

@@ -53,10 +53,9 @@ class Tools extends Component {
         <button onClick={this.onAddItem} className="tool-btn add-alert">
           <i className="icon-plus"></i>
         </button>
-
-        <button onClick={this.props.doStatusCheck} className="tool-btn check-status">
+        {/*<button onClick={this.props.doStatusCheck} className="tool-btn check-status">
           <i className="icon-check"></i>
-        </button>
+        </button>*/}
       </div>
     );
   }

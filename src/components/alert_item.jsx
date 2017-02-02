@@ -10,8 +10,7 @@ class AlertItem extends Component {
 
   render() {
     let alert = this.props.alert,
-        { namespace, title, current } = alert,
-        status = this.checkItemStatus();
+        { namespace, title, current, status } = alert;
 
     let value = alert.currentValue;
     if(alert.show === 'message') {
@@ -25,25 +24,6 @@ class AlertItem extends Component {
         <strong className="alert-value">{value}</strong>
       </div>
     );
-  }
-
-  checkItemStatus() {
-    let alert = this.props.alert;
-    let status = {
-      'ok': alert.ok,
-      'warning': alert.warning,
-      'critical': alert.critical
-    };
-
-    for(let s in status) {
-      let c = status[s].compare === '=' ? '==' : status[s].compare;
-      if(c !== "" && alert.currentValue === "" &&
-         eval('"'+ alert.currentValue +'"'+ c +'"'+ status[s].value +'"')) {
-        return s;
-      }
-    }
-
-    return '';
   }
 
   onItemSelect(event) {

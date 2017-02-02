@@ -75,7 +75,7 @@ class Sidebar extends Component {
                 placeholder="operator"
                 value={this.state.ok.compare}
                 onChange={(e) => {
-                    let s = this.state, o = ['=', '>', '<', '>=', '<=', ''];
+                    let s = this.state, o = ['=', '!=', '>', '<', '>=', '<=', ''];
                     if(o.indexOf(e.target.value) >= 0) {
                       s.ok.compare = e.target.value;
                     }
@@ -109,7 +109,7 @@ class Sidebar extends Component {
                 placeholder="operator"
                 value={this.state.warning.compare}
                 onChange={(e) => {
-                    let s = this.state, o = ['=', '>', '<', '>=', '<=', ''];
+                    let s = this.state, o = ['=', '!=', '>', '<', '>=', '<=', ''];
                     if(o.indexOf(e.target.value) >= 0) {
                       s.warning.compare = e.target.value;
                     }
@@ -143,7 +143,7 @@ class Sidebar extends Component {
                 placeholder="operator"
                 value={this.state.critical.compare}
                 onChange={(e) => {
-                    let s = this.state, o = ['=', '>', '<', '>=', '<=', ''];
+                    let s = this.state, o = ['=', '!=', '>', '<', '>=', '<=', ''];
                     if(o.indexOf(e.target.value) >= 0) {
                       s.critical.compare = e.target.value;
                     }
