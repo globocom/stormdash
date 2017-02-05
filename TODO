@@ -1,0 +1,16 @@
++ Server build a new dashboard instance
+	- dashboard configuration
+	- store: save alert items, config, alert auth
+
+
+
+Reference:
+https://webpack.js.org/guides/migrating/
+http://jamesknelson.com/writing-happy-stylesheets-with-webpack/
+
+
+curl -X GET http://status.s3.globoi.com/api/v1/services/info \
+	-H "X-Auth-Token:608936ad-0258-415c-b8b2-5e2d1c9600b5" \
+	-H "X-Auth-Secret:qK8YVE2gHJxV1AOcx1TUzYSIE4Cyrz" \
+	-H "Content-Type: application/json" \
+	-d '{"service": "http-auth-s3"}'

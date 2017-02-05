@@ -1,3 +1,5 @@
+'use strict';
+
 function uuid() {
   var i, random;
   var uuid = '';
@@ -47,4 +49,26 @@ function traverse(obj, func) {
   }
 }
 
-export { uuid, shuffle, store, traverse };
+function checkStatus(item) {
+  let final = '',
+      status = {'ok': item.ok,
+                'warning': item.warning,
+                'critical': item.critical};
+
+  for(let s in status) {
+    let v1 = item.currentValue,
+        v2 = status[s].value,
+        c = status[s].compare === '=' ? '==' : status[s].compare;
+
+    v1 = !!parseInt(v1) ? parseInt(v1) : '"'+ v1 +'"';
+    v2 = !!parseInt(v2) ? parseInt(v2) : '"'+ v2 +'"';
+
+    if(c !== "" && eval(v1 + c + v2)) {
+      final = s;
+    }
+  }
+
+  return final;
+}
+
+export { uuid, shuffle, store, traverse, checkStatus };

@@ -1,27 +1,25 @@
+'use strict';
+
 import React, { Component } from 'react';
-import AlertItem from './alert_item';
-import '../../style/alert_group.css';
+import AlertItem from './AlertItem';
+import { checkStatus } from '../utils';
+import '../static/css/AlertGroup.css';
 
 class AlertGroup extends Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
   render() {
-    const status = this.props.itemsStatus,
-          statusOptions = ["critical", "warning", "ok"];
+    const gStatus = this.props.groupStatus,
+          options = ["critical", "warning", "ok"];
     let alertItems = this.props.items;
 
-    if(status && statusOptions.indexOf(status) < 0) {
-      console.log(`Invalid item status: ${status}`);
+    if(gStatus && options.indexOf(gStatus) < 0) {
+      console.log(`Invalid item status: ${gStatus}`);
       return <div className="dash-alert-group" />;
     }
 
-    if(status && statusOptions.indexOf(status) >= 0) {
+    if(gStatus && options.indexOf(gStatus) >= 0) {
       alertItems = this.props.items.filter((alert) => {
-        if(alert.status === status) {
+        if(checkStatus(alert) === gStatus) {
           return true;
         }
       });
@@ -38,7 +36,7 @@ class AlertGroup extends Component {
     }
 
     return (
-      <div className={"dash-alert-group" + (status ? " "+ status : "")}
+      <div className={"dash-alert-group" + (gStatus ? " "+ gStatus : "")}
            onClick={() => this.props.clearCurrent()}>
         {allItems}
       </div>

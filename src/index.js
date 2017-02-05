@@ -1,8 +1,10 @@
+'use strict';
+
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import StormDash from './components/stormdash';
+import StormDash from './components/StormDash';
 
-import '../style/base.css';
+import './static/css/base.css';
 
 ReactDOM.render(
   <StormDash />,

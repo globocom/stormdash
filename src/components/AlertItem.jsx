@@ -1,16 +1,19 @@
+'use strict';
+
 import React, { Component } from 'react';
-import '../../style/alert_item.css';
+import { checkStatus } from '../utils';
+import '../static/css/AlertItem.css';
 
 class AlertItem extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
     this.onItemSelect = this.onItemSelect.bind(this);
   }
 
   render() {
     let alert = this.props.alert,
-        { namespace, title, current, status } = alert;
+        { namespace, title, current } = alert;
+    let status = checkStatus(alert);
 
     let value = alert.currentValue;
     if(alert.show === 'message') {

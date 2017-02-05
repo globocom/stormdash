@@ -1,7 +1,9 @@
+'use strict';
+
 import React, { Component } from 'react';
-import AlertItem from './alert_item';
-import { store, uuid, shuffle } from '../utils';
-import '../../style/sidebar.css';
+import AlertItem from './AlertItem';
+import { store, uuid, shuffle, checkStatus } from '../utils';
+import '../static/css/Sidebar.css';
 
 class Sidebar extends Component {
 
@@ -12,7 +14,6 @@ class Sidebar extends Component {
       id: uuid(),
       current: false,
       currentValue: "",
-      status: "ok",
       namespace: "",
       title: "",
       jsonurl: "",
@@ -31,6 +32,10 @@ class Sidebar extends Component {
     this.onCreate = this.onCreate.bind(this);
     this.onEdit = this.onEdit.bind(this);
     this.onCheckValue = this.onCheckValue.bind(this);
+  }
+
+  componentDidUpdate() {
+    this.setState({status: this.props.checkItemStatus(this.state)});
   }
 
   render() {
@@ -237,7 +242,7 @@ class Sidebar extends Component {
   onCheckValue(event) {
     event.preventDefault();
     this.props.checkItemValue(this.state, (value) => {
-      this.setState({'currentValue': value});
+      this.setState({currentValue: value});
     });
   }
 }

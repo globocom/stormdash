@@ -1,10 +1,20 @@
+"use strict";
+
+const webpack = require('webpack');
+const path = require('path');
+const debug = process.env.NODE_ENV !== "production";
+
 module.exports = {
-  entry: [
-    './src/index.js'
-  ],
+  entry: path.join(__dirname, 'src', 'index.js'),
+  devServer: {
+    historyApiFallback: true,
+    contentBase: 'src/static',
+    host: '0.0.0.0',
+    port: 8888
+  },
   output: {
-    path: __dirname,
-    publicPath: '/',
+    path: path.join(__dirname, 'src', 'static', 'js'),
+    publicPath: '/js/',
     filename: 'bundle.js'
   },
   module: {
@@ -22,11 +32,18 @@ module.exports = {
   resolve: {
     extensions: ['', '.js', '.jsx']
   },
-  devServer: {
-    historyApiFallback: true,
-    contentBase: './',
-    host: '0.0.0.0',
-    port: 8888
-  },
-  debug: true
+  plugins: debug ? [] : [
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+    }),
+    new webpack.optimize.DedupePlugin(),
+    new webpack.optimize.OccurenceOrderPlugin(),
+    new webpack.optimize.UglifyJsPlugin({
+      compress: { warnings: false },
+      mangle: true,
+      sourcemap: false,
+      beautify: false,
+      dead_code: true
+    }),
+  ]
 };

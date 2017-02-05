@@ -1,9 +1,11 @@
+'use strict';
+
 import React, { Component } from 'react';
-import Tools from './tools';
-import Sidebar from './sidebar';
-import AlertGroup from './alert_group';
+import Tools from './Tools';
+import Sidebar from './Sidebar';
+import AlertGroup from './AlertGroup';
 import axios from 'axios';
-import { uuid, shuffle, store, traverse } from '../utils';
+import { uuid, shuffle, store, traverse, checkStatus } from '../utils';
 
 class StormDash extends Component {
   constructor(props) {
@@ -22,17 +24,17 @@ class StormDash extends Component {
     this.deleteItem = this.deleteItem.bind(this);
     this.setCurrent = this.setCurrent.bind(this);
     this.clearCurrent = this.clearCurrent.bind(this);
-    this.doStatusCheck = this.doStatusCheck.bind(this);
+    this.doUpdate = this.doUpdate.bind(this);
 
-    this.startStatusCheck();
+    // this.startUpdate();
   }
 
   render() {
     let { visibleSidebar, groupStatus } = this.state;
-    let groups = groupStatus.map((group) => {
+    let alertGroups = groupStatus.map((group) => {
       return <AlertGroup key={uuid()}
                          items={this.state.items}
-                         itemsStatus={group}
+                         groupStatus={group}
                          setCurrent={this.setCurrent}
                          clearCurrent={this.clearCurrent} />
     });
@@ -44,7 +46,7 @@ class StormDash extends Component {
                  clearCurrent={this.clearCurrent}
                  handleSidebar={this.handleSidebar}
                  deleteItem={this.deleteItem}
-                 doStatusCheck={this.doStatusCheck} />}
+                 doUpdate={this.doUpdate} />}
 
         {visibleSidebar &&
           <Sidebar currentItem={this.state.currentItem}
@@ -53,7 +55,7 @@ class StormDash extends Component {
                    editItem={this.editItem}
                    checkItemValue={this.checkItemValue} />}
 
-        {groups}
+        {alertGroups}
 
         <h2 className="main-title">{this.state.mainTitle}</h2>
       </div>
@@ -133,19 +135,19 @@ class StormDash extends Component {
     });
   }
 
-  startStatusCheck() {
+  startUpdate() {
     setInterval(() => {
-      this.doStatusCheck();
+      this.doUpdate();
     }, 10000);
   }
 
-  doStatusCheck() {
+  doUpdate() {
     this.state.items.map((item) => {
-      this.updateItemStatus(item.id);
+      this.updateItem(item.id);
     });
   }
 
-  updateItemStatus(itemId) {
+  updateItem(itemId) {
     let currentItems = this.state.items.slice();
     const index = currentItems.findIndex((elem, i, arr) => {
       return elem.id === itemId;
@@ -155,32 +157,9 @@ class StormDash extends Component {
     if (index >= 0) {
       this.checkItemValue(item, (value) => {
         item.currentValue = value;
-        item.status = this.checkItemStatus(item);
         this.editItem(item.id, item);
       });
     }
-  }
-
-  checkItemStatus(itemObj) {
-    let final = '',
-        status = {'ok': itemObj.ok,
-                  'warning': itemObj.warning,
-                  'critical': itemObj.critical};
-
-    for(let s in status) {
-      let v1 = itemObj.currentValue,
-          v2 = status[s].value,
-          c = status[s].compare === '=' ? '==' : status[s].compare;
-
-      v1 = !!parseInt(v1) ? parseInt(v1) : '"'+ v1 +'"';
-      v2 = !!parseInt(v2) ? parseInt(v2) : '"'+ v2 +'"';
-
-      if(c !== "" && eval(v1 + c + v2)) {
-        final = s;
-      }
-    }
-
-    return final;
   }
 
   checkItemValue(itemObj, func) {
