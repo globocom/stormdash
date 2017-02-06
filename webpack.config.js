@@ -20,12 +20,15 @@ module.exports = {
   module: {
     loaders: [
       {
+        test: path.join(__dirname, 'src'),
         exclude: /node_modules/,
-        loader: 'babel',
-        query: { presets: ['react', 'es2015', 'stage-1'] }
-      },
-      {
-        test: /\.css$/, loader: "style-loader!css-loader"
+        loader: ['babel-loader'],
+        query: {
+          cacheDirectory: 'babel_cache',
+          presets: debug
+                   ? ['react', 'es2015', 'react-hmre']
+                   : ['react', 'es2015']
+        }
       }
     ]
   },

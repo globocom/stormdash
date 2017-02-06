@@ -1,12 +1,23 @@
+// 'use strict';
+
+// import React, { Component } from 'react';
+// import ReactDOM from 'react-dom';
+// import StormDash from './components/StormDash';
+
+
+// ReactDOM.render(
+//   <StormDash />,
+//   document.querySelector('.dash-container')
+// );
+
 'use strict';
 
-import React, { Component } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
-import StormDash from './components/StormDash';
+import AppRoutes from './components/AppRoutes';
 
-import './static/css/base.css';
 
 ReactDOM.render(
-  <StormDash />,
+  <AppRoutes />,
   document.querySelector('.dash-container')
 );

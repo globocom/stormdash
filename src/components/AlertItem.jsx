@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react';
 import { checkStatus } from '../utils';
-import '../static/css/AlertItem.css';
+
 
 class AlertItem extends Component {
   constructor(props) {
@@ -16,7 +16,7 @@ class AlertItem extends Component {
     let status = checkStatus(alert);
 
     let value = alert.currentValue;
-    if(alert.show === 'message') {
+    if(alert.show === 'message' && status !== null) {
       value = alert[status].message;
     }
 

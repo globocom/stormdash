@@ -32,12 +32,37 @@ function shuffle(array) {
 }
 
 function store(namespace, data) {
-  if (data) {
-    return localStorage.setItem(namespace, JSON.stringify(data));
+  var Datastore = require('nedb'),
+      db = new Datastore({
+        filename: __dirname + '/stormdash',
+        autoload: true
+      });
+
+  if(data) {
+    db.update(
+      {name: namespace},
+      {name: namespace, items: data},
+      {upsert: true},
+      function(err, numAffected, affectedDocuments, upsert) {
+        return;
+      }
+    );
   }
 
-  var store = localStorage.getItem(namespace);
-  return (store && JSON.parse(store)) || [];
+  db.findOne({name: namespace}, function(err, doc) {
+    if(doc) {
+      return doc.items;
+    }
+  });
+
+  return [];
+
+  // if (data) {
+  //   return localStorage.setItem(namespace, JSON.stringify(data));
+  // }
+
+  // var store = localStorage.getItem(namespace);
+  // return (store && JSON.parse(store)) || [];
 }
 
 function traverse(obj, func) {
@@ -50,7 +75,7 @@ function traverse(obj, func) {
 }
 
 function checkStatus(item) {
-  let final = '',
+  let final = null,
       status = {'ok': item.ok,
                 'warning': item.warning,
                 'critical': item.critical};

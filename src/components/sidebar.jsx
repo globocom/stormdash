@@ -3,7 +3,7 @@
 import React, { Component } from 'react';
 import AlertItem from './AlertItem';
 import { store, uuid, shuffle, checkStatus } from '../utils';
-import '../static/css/Sidebar.css';
+
 
 class Sidebar extends Component {
 
@@ -32,10 +32,6 @@ class Sidebar extends Component {
     this.onCreate = this.onCreate.bind(this);
     this.onEdit = this.onEdit.bind(this);
     this.onCheckValue = this.onCheckValue.bind(this);
-  }
-
-  componentDidUpdate() {
-    this.setState({status: this.props.checkItemStatus(this.state)});
   }
 
   render() {

@@ -3,7 +3,7 @@
 import React, { Component } from 'react';
 import AlertItem from './AlertItem';
 import { checkStatus } from '../utils';
-import '../static/css/AlertGroup.css';
+
 
 class AlertGroup extends Component {
 

@@ -4,12 +4,24 @@ import React, { Component } from 'react';
 import Tools from './Tools';
 import Sidebar from './Sidebar';
 import AlertGroup from './AlertGroup';
+import NotFoundPage from './NotFoundPage';
 import axios from 'axios';
-import { uuid, shuffle, store, traverse, checkStatus } from '../utils';
+import { uuid, shuffle, store, traverse } from '../utils';
+
+import io from 'socket.io-client';
+
 
 class StormDash extends Component {
   constructor(props) {
     super(props);
+
+    // const dashId = this.props.params.id;
+    // Search for dashId in store,
+    // if not found, on render return a <NotFoundPage />
+
+    const host = window.location.origin.replace(/^http/, 'ws');
+    const socket = io.connect(host);
+
     this.state = {
       mainTitle: 'Storm',
       visibleSidebar: false,
@@ -17,6 +29,8 @@ class StormDash extends Component {
       groupStatus: ['critical', 'warning', 'ok'],
       items: store('alertItems')
     };
+
+    console.log(this.state.items);
 
     this.handleSidebar = this.handleSidebar.bind(this);
     this.addItem = this.addItem.bind(this);
@@ -177,7 +191,7 @@ class StormDash extends Component {
     }
   }
 
-  handleKeyDown = (event) => {
+  handleKeyDown(event) {
     let { key } = event;
     if (key === 'Escape') {
       event.preventDefault();

@@ -1,7 +1,7 @@
 'use strict';
 
 import React, { Component } from 'react';
-import '../static/css/Tools.css';
+
 
 class ConfirmDelete extends Component {
   render() {
