@@ -1,8 +1,8 @@
-'use strict';
-
 import React, { Component } from 'react';
 import AlertItem from './AlertItem';
-import { store, uuid, shuffle, checkStatus } from '../utils';
+import { store, uuid } from '../utils';
+
+import './Sidebar.css';
 
 
 class Sidebar extends Component {
@@ -232,6 +232,7 @@ class Sidebar extends Component {
       if(elem.id === itemId) {
         return elem;
       }
+      return null;
     });
   }
 

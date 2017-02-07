@@ -1,5 +1,3 @@
-'use strict';
-
 function uuid() {
   var i, random;
   var uuid = '';
@@ -85,8 +83,8 @@ function checkStatus(item) {
         v2 = status[s].value,
         c = status[s].compare === '=' ? '==' : status[s].compare;
 
-    v1 = !!parseInt(v1) ? parseInt(v1) : '"'+ v1 +'"';
-    v2 = !!parseInt(v2) ? parseInt(v2) : '"'+ v2 +'"';
+    v1 = !!parseInt(v1, 10) ? parseInt(v1, 10) : '"'+ v1 +'"';
+    v2 = !!parseInt(v2, 10) ? parseInt(v2, 10) : '"'+ v2 +'"';
 
     if(c !== "" && eval(v1 + c + v2)) {
       final = s;

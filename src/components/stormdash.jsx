@@ -1,26 +1,24 @@
-'use strict';
-
 import React, { Component } from 'react';
 import Tools from './Tools';
 import Sidebar from './Sidebar';
 import AlertGroup from './AlertGroup';
-import NotFoundPage from './NotFoundPage';
+// import NotFound from './NotFound';
 import axios from 'axios';
-import { uuid, shuffle, store, traverse } from '../utils';
+import { uuid, store, traverse } from '../utils';
 
-import io from 'socket.io-client';
+// import io from 'socket.io-client';
 
 
 class StormDash extends Component {
   constructor(props) {
     super(props);
 
-    // const dashId = this.props.params.id;
+    // const dashId = this.props.dashId;
     // Search for dashId in store,
-    // if not found, on render return a <NotFoundPage />
+    // if not found, on render return a <NotFound />
 
-    const host = window.location.origin.replace(/^http/, 'ws');
-    const socket = io.connect(host);
+    // const host = window.location.origin.replace(/^http/, 'ws');
+    // const socket = io.connect(host);
 
     this.state = {
       mainTitle: 'Storm',
@@ -29,8 +27,6 @@ class StormDash extends Component {
       groupStatus: ['critical', 'warning', 'ok'],
       items: store('alertItems')
     };
-
-    console.log(this.state.items);
 
     this.handleSidebar = this.handleSidebar.bind(this);
     this.addItem = this.addItem.bind(this);
@@ -156,8 +152,9 @@ class StormDash extends Component {
   }
 
   doUpdate() {
-    this.state.items.map((item) => {
-      this.updateItem(item.id);
+    let currentItems = this.state.items.slice();
+    currentItems.map((item) => {
+      return this.updateItem(item.id);
     });
   }
 

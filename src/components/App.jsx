@@ -1,9 +1,7 @@
-'use strict';
-
 import React, { Component } from 'react';
 
 
-class IndexPage extends Component {
+class App extends Component {
   render() {
     return (
       <section className="index">
@@ -12,4 +10,4 @@ class IndexPage extends Component {
   }
 }
 
-export default IndexPage;
+export default App;

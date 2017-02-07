@@ -1,7 +1,7 @@
-'use strict';
-
 import React, { Component } from 'react';
 import { checkStatus } from '../utils';
+
+import './AlertItem.css';
 
 
 class AlertItem extends Component {

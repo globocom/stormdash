@@ -1,8 +1,8 @@
-'use strict';
-
 import React, { Component } from 'react';
 import AlertItem from './AlertItem';
 import { checkStatus } from '../utils';
+
+import './AlertGroup.css';
 
 
 class AlertGroup extends Component {
@@ -22,6 +22,7 @@ class AlertGroup extends Component {
         if(checkStatus(alert) === gStatus) {
           return true;
         }
+        return false;
       });
     }
 
