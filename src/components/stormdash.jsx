@@ -13,12 +13,12 @@ class StormDash extends Component {
   constructor(props) {
     super(props);
 
-    // const dashId = this.props.dashId;
+    // const dashId = this.props.params.dashId;
     // Search for dashId in store,
     // if not found, on render return a <NotFound />
 
-    // const host = window.location.origin.replace(/^http/, 'ws');
-    // const socket = io.connect(host);
+    // const socket = io();
+    // socket.emit('dash conn', dashId);
 
     this.state = {
       mainTitle: 'Storm',

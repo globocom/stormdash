@@ -94,4 +94,4 @@ function checkStatus(item) {
   return final;
 }
 
-export { uuid, shuffle, store, traverse, checkStatus };
+module.exports  = { uuid, shuffle, store, traverse, checkStatus };
