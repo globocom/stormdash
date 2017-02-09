@@ -6,27 +6,26 @@ import AlertGroup from './AlertGroup';
 import axios from 'axios';
 import { uuid, store, traverse } from '../utils';
 
-// import io from 'socket.io-client';
+import io from 'socket.io-client';
 
 
 class StormDash extends Component {
   constructor(props) {
     super(props);
 
-    // const dashId = this.props.params.dashId;
-    // Search for dashId in store,
-    // if not found, on render return a <NotFound />
-
-    // const socket = io();
-    // socket.emit('dash conn', dashId);
+    const dashId = this.props.params.dashId;
+    this.socket = io();
 
     this.state = {
+      dashId: dashId,
       mainTitle: 'Storm',
       visibleSidebar: false,
       currentItem: null,
       groupStatus: ['critical', 'warning', 'ok'],
-      items: store('alertItems')
+      items: []
     };
+
+    this.getDashContent();
 
     this.handleSidebar = this.handleSidebar.bind(this);
     this.addItem = this.addItem.bind(this);
@@ -72,6 +71,17 @@ class StormDash extends Component {
     )
   }
 
+  getDashContent() {
+    this.socket.emit('dash:get', {dashId: this.state.dashId}, (data) => {
+      if(!data) {
+        this.props.router.push('/notfound');
+      }
+      this.setState({items: data.items});
+    });
+
+    // this.socket.on('dash:delivered', (data) => {});
+  }
+
   handleSidebar(action="open") {
     if (action === "close") {
       this.setState({visibleSidebar: false});
@@ -83,7 +93,11 @@ class StormDash extends Component {
   addItem(alertObj) {
     this.clearCurrent();
     const newItems = this.state.items.concat([alertObj]);
-    store('alertItems', newItems);
+
+    this.socket.emit('dash:update', {
+      dashId: this.state.dashId,
+      items: newItems
+    });
     this.setState({items: newItems});
   }
 
@@ -96,7 +110,10 @@ class StormDash extends Component {
 
     if (index >= 0) {
       currentItems[index] = newAlertObj;
-      store('alertItems', currentItems);
+      this.socket.emit('dash:update', {
+        dashId: this.state.dashId,
+        items: currentItems
+      });
       this.setState({items: currentItems});
     }
   }
@@ -110,7 +127,10 @@ class StormDash extends Component {
 
     if (index >= 0) {
       currentItems.splice(index, 1);
-      store('alertItems', currentItems);
+      this.socket.emit('dash:update', {
+        dashId: this.state.dashId,
+        items: currentItems
+      });
       this.setState({items: currentItems});
     }
   }
@@ -164,8 +184,8 @@ class StormDash extends Component {
       return elem.id === itemId;
     });
 
-    let item = currentItems[index];
     if (index >= 0) {
+      let item = currentItems[index];
       this.checkItemValue(item, (value) => {
         item.currentValue = value;
         this.editItem(item.id, item);
@@ -183,7 +203,7 @@ class StormDash extends Component {
           }
         });
       }).catch((error) => {
-          console.log(error);
+        console.log(error);
       });
     }
   }

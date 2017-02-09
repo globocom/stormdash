@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import io from 'socket.io-client';
-// import { uuid } from '../utils';
 
 
 class App extends Component {
@@ -19,9 +18,8 @@ class App extends Component {
   }
 
   createNewDash() {
-    this.socket.emit('dash:create');
-    this.socket.on('dash:created', (data) => {
-      console.log(data.id);
+    this.socket.emit('dash:create', {}, (data) => {
+      console.log(data);
     });
   }
 }
