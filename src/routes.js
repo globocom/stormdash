@@ -10,7 +10,7 @@ const Routes = (props) => (
   <Router {...props}>
     <Route path="/" component={App} />
     <Route path="/dash/:dashName" component={StormDash} />
-    <Route path="*" component={NotFound} />
+    <Route path="*" status={404} component={NotFound} />
   </Router>
 );
 

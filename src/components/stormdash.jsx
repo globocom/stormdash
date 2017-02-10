@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Tools from './Tools';
 import Sidebar from './Sidebar';
 import AlertGroup from './AlertGroup';
+import NotFound from './NotFound';
 import axios from 'axios';
 import { uuid, store, traverse } from '../utils';
 import io from 'socket.io-client';
@@ -19,7 +20,9 @@ class StormDash extends Component {
       visibleSidebar: false,
       currentItem: null,
       groupStatus: ['critical', 'warning', 'ok'],
-      items: []
+      items: [],
+      show: false,
+      notFound: false
     };
 
     this.getDashContent();
@@ -36,37 +39,45 @@ class StormDash extends Component {
   }
 
   render() {
-    let { visibleSidebar, groupStatus } = this.state;
-    let alertGroups = groupStatus.map((group) => {
-      return <AlertGroup key={uuid()}
-                         items={this.state.items}
-                         groupStatus={group}
-                         setCurrent={this.setCurrent}
-                         clearCurrent={this.clearCurrent} />
-    });
+    if(this.state.notFound) {
+      return <NotFound />;
+    }
 
-    return (
-      <div className="dash-main">
-        {!visibleSidebar &&
-          <Tools currentItem={this.state.currentItem}
-                 clearCurrent={this.clearCurrent}
-                 handleSidebar={this.handleSidebar}
-                 deleteItem={this.deleteItem}
-                 doUpdate={this.doUpdate} />}
+    if(this.state.show) {
+      let { visibleSidebar, groupStatus } = this.state;
+      let alertGroups = groupStatus.map((group) => {
+        return <AlertGroup key={uuid()}
+                           items={this.state.items}
+                           groupStatus={group}
+                           setCurrent={this.setCurrent}
+                           clearCurrent={this.clearCurrent} />
+      });
 
-        {visibleSidebar &&
-          <Sidebar currentItem={this.state.currentItem}
+      return (
+        <div className="dash-main">
+          {!visibleSidebar &&
+            <Tools currentItem={this.state.currentItem}
+                   clearCurrent={this.clearCurrent}
                    handleSidebar={this.handleSidebar}
-                   addItem={this.addItem}
-                   editItem={this.editItem}
-                   dashName={this.state.dashName}
-                   checkItemValue={this.checkItemValue} />}
+                   deleteItem={this.deleteItem}
+                   doUpdate={this.doUpdate} />}
 
-        {alertGroups}
+          {visibleSidebar &&
+            <Sidebar currentItem={this.state.currentItem}
+                     handleSidebar={this.handleSidebar}
+                     addItem={this.addItem}
+                     editItem={this.editItem}
+                     dashName={this.state.dashName}
+                     checkItemValue={this.checkItemValue} />}
 
-        <h2 className="main-title">{this.state.dashName}</h2>
-      </div>
-    )
+          {alertGroups}
+
+          <h2 className="main-title">{this.state.dashName}</h2>
+        </div>
+      )
+    }
+
+    return <div className="dash-main">loading</div>
   }
 
   getDashContent() {
@@ -74,10 +85,15 @@ class StormDash extends Component {
       'dash:get',
       {name: this.state.dashName},
       (data) => {
-        // if(!data) {
-        //   this.props.router.push('/notfound');
-        // }
-        this.setState({ items: data.items, mainTitle: data.name });
+        if(!data) {
+          this.setState({ notFound: true });
+          return;
+        }
+        this.setState({
+          items: data.items,
+          mainTitle: data.name,
+          show: true
+        });
       }
     );
   }
