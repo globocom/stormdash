@@ -228,7 +228,7 @@ class Sidebar extends Component {
   }
 
   setEditItem(itemId) {
-    this.socket.emit('dash:get', {dashId: this.props.dashId}, (data) => {
+    this.socket.emit('dash:get', {name: this.props.dashName}, (data) => {
       data.items.find((elem) => {
         if(elem.id === itemId) {
           return this.setState(elem);

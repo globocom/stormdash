@@ -10,13 +10,12 @@ import io from 'socket.io-client';
 class StormDash extends Component {
   constructor(props) {
     super(props);
-
-    const dashId = this.props.params.dashId;
     this.socket = io();
 
+    const dashName = this.props.params.dashName;
+
     this.state = {
-      dashId: dashId,
-      mainTitle: 'Storm',
+      dashName: dashName,
       visibleSidebar: false,
       currentItem: null,
       groupStatus: ['critical', 'warning', 'ok'],
@@ -60,23 +59,27 @@ class StormDash extends Component {
                    handleSidebar={this.handleSidebar}
                    addItem={this.addItem}
                    editItem={this.editItem}
-                   dashId={this.state.dashId}
+                   dashName={this.state.dashName}
                    checkItemValue={this.checkItemValue} />}
 
         {alertGroups}
 
-        <h2 className="main-title">{this.state.mainTitle}</h2>
+        <h2 className="main-title">{this.state.dashName}</h2>
       </div>
     )
   }
 
   getDashContent() {
-    this.socket.emit('dash:get', {dashId: this.state.dashId}, (data) => {
-      if(!data) {
-        this.props.router.push('/notfound');
+    this.socket.emit(
+      'dash:get',
+      {name: this.state.dashName},
+      (data) => {
+        // if(!data) {
+        //   this.props.router.push('/notfound');
+        // }
+        this.setState({ items: data.items, mainTitle: data.name });
       }
-      this.setState({items: data.items});
-    });
+    );
   }
 
   handleSidebar(action="open") {
@@ -92,7 +95,7 @@ class StormDash extends Component {
     const newItems = this.state.items.concat([alertObj]);
     this.socket.emit(
       'dash:update',
-      { dashId: this.state.dashId, items: newItems },
+      { name: this.state.dashName, items: newItems },
       (updated) => {
         return updated && this.setState({items: newItems});
       }
@@ -110,7 +113,7 @@ class StormDash extends Component {
       currentItems[index] = newAlertObj;
       this.socket.emit(
         'dash:update',
-        { dashId: this.state.dashId, items: currentItems },
+        { name: this.state.dashName, items: currentItems },
         (updated) => {
           return updated && this.setState({items: currentItems});
         }
@@ -129,7 +132,7 @@ class StormDash extends Component {
       currentItems.splice(index, 1);
       this.socket.emit(
         'dash:update',
-        { dashId: this.state.dashId, items: currentItems },
+        { name: this.state.dashName, items: currentItems },
         (updated) => {
           return updated && this.setState({items: currentItems});
         }

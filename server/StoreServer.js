@@ -8,7 +8,7 @@ class StoreServer {
       // add to app log something like 'StoreServer connected'
 
       socket.on('dash:create', (data, fn) => {
-        this.createDash((newDash) => { fn(newDash); });
+        this.createDash(data, (newDash) => { fn(newDash); });
       });
 
       socket.on('dash:update', (data, fn) => {
@@ -29,16 +29,23 @@ class StoreServer {
       filename: __dirname + '/stormdash.db',
       autoload: true
     });
+    this.dashDB.ensureIndex({fieldName: 'name', unique: true}, (err) => {
+      return err && console.log(err);
+    })
 
     this.authDB = new Datastore({
       filename: __dirname + '/stormdash_auth.db',
       autoload: true
     });
+    this.authDB.ensureIndex({fieldName: 'name', unique: true}, (err) => {
+      return err && console.log(err);
+    })
   }
 
-  createDash(fn) {
+  createDash(data, fn) {
+    const name = utils.uuid().split('-')[0];
     const newDash = {
-      dashId: utils.uuid(),
+      name: data.name !== '' ? data.name : name,
       createdAt: new Date(),
       items: []
     };
@@ -49,7 +56,7 @@ class StoreServer {
 
   updateDash(data, fn) {
     this.dashDB.update(
-      {dashId: data.dashId},
+      {name: data.name},
       { $set: { items: data.items} },
       (err, numAffected, affectedDocuments, upsert) => {
         return numAffected > 0 ? fn(true): fn(false);
@@ -57,8 +64,8 @@ class StoreServer {
     );
   }
 
-  getDash({dashId}, fn) {
-    this.dashDB.findOne({dashId: dashId}, (err, doc) => {
+  getDash(data, fn) {
+    this.dashDB.findOne({name: data.name}, (err, doc) => {
       return doc ? fn(doc) : fn(false);
     });
     return false;

@@ -9,7 +9,7 @@ import NotFound from './components/NotFound';
 const Routes = (props) => (
   <Router {...props}>
     <Route path="/" component={App} />
-    <Route path="/dash/:dashId" component={StormDash} />
+    <Route path="/dash/:dashName" component={StormDash} />
     <Route path="*" component={NotFound} />
   </Router>
 );
