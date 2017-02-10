@@ -15,7 +15,7 @@ class App extends Component {
   render() {
     let dashboards = this.state.dashs.map((dash) => {
       return (
-        <li><Link to={`/dash/${dash.dashId}`}>{dash.dashId}</Link></li>
+        <li><Link to={`/dash/${dash.dashId}`}>{dash.dashId}</Link> - {dash.createdAt}</li>
       )
     })
 

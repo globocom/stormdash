@@ -65,7 +65,7 @@ class StoreServer {
   }
 
   getAll(fn) {
-    this.dashDB.find({}, (err, docs) => {
+    this.dashDB.find({}).sort({ createdAt: -1 }).exec((err, docs) => {
       return fn(docs);
     });
   }
