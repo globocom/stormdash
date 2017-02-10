@@ -8,28 +8,21 @@ class StoreServer {
       // add to app log something like 'StoreServer connected'
 
       socket.on('dash:create', (data, fn) => {
-        this.createDash((newDash) => {
-          fn(newDash);
-
-          // socket.emit('dash:created', newDash);
-        });
+        this.createDash((newDash) => { fn(newDash); });
       });
 
       socket.on('dash:update', (data, fn) => {
-        this.updateDash(data, (updated) => {
-          fn(updated);
-
-          // socket.emit('dash:updated', {updated: updated});
-        });
+        this.updateDash(data, (updated) => { fn(updated); });
       });
 
       socket.on('dash:get', (data, fn) => {
-        this.getDash(data, (data) => {
-          fn(data);
-
-          // socket.emit('dash:delivered', data);
-        });
+        this.getDash(data, (data) => { fn(data); });
       });
+
+      socket.on('dash:getall', (data, fn) => {
+        this.getAll((data) => { fn(data); });
+      });
+
     });
 
     this.dashDB = new Datastore({
@@ -44,17 +37,20 @@ class StoreServer {
   }
 
   createDash(fn) {
-    const dashId = utils.uuid();
-    this.dashDB.insert({ dashId: dashId, items: [] }, (err, newDoc) => {
+    const newDash = {
+      dashId: utils.uuid(),
+      createdAt: new Date(),
+      items: []
+    };
+    this.dashDB.insert(newDash, (err, newDoc) => {
       return newDoc ? fn(newDoc) : fn(false);
     });
   }
 
-  updateDash({dashId, items}, fn) {
+  updateDash(data, fn) {
     this.dashDB.update(
-      {dashId: dashId},
-      {dashId: dashId, items: items},
-      {upsert: true},
+      {dashId: data.dashId},
+      { $set: { items: data.items} },
       (err, numAffected, affectedDocuments, upsert) => {
         return numAffected > 0 ? fn(true): fn(false);
       }
@@ -66,6 +62,12 @@ class StoreServer {
       return doc ? fn(doc) : fn(false);
     });
     return false;
+  }
+
+  getAll(fn) {
+    this.dashDB.find({}, (err, docs) => {
+      return fn(docs);
+    });
   }
 }
 

@@ -2,10 +2,8 @@ import React, { Component } from 'react';
 import Tools from './Tools';
 import Sidebar from './Sidebar';
 import AlertGroup from './AlertGroup';
-// import NotFound from './NotFound';
 import axios from 'axios';
 import { uuid, store, traverse } from '../utils';
-
 import io from 'socket.io-client';
 
 
@@ -62,6 +60,7 @@ class StormDash extends Component {
                    handleSidebar={this.handleSidebar}
                    addItem={this.addItem}
                    editItem={this.editItem}
+                   dashId={this.state.dashId}
                    checkItemValue={this.checkItemValue} />}
 
         {alertGroups}
@@ -78,8 +77,6 @@ class StormDash extends Component {
       }
       this.setState({items: data.items});
     });
-
-    // this.socket.on('dash:delivered', (data) => {});
   }
 
   handleSidebar(action="open") {
@@ -93,12 +90,13 @@ class StormDash extends Component {
   addItem(alertObj) {
     this.clearCurrent();
     const newItems = this.state.items.concat([alertObj]);
-
-    this.socket.emit('dash:update', {
-      dashId: this.state.dashId,
-      items: newItems
-    });
-    this.setState({items: newItems});
+    this.socket.emit(
+      'dash:update',
+      { dashId: this.state.dashId, items: newItems },
+      (updated) => {
+        return updated && this.setState({items: newItems});
+      }
+    );
   }
 
   editItem(itemId, newAlertObj) {
@@ -110,11 +108,13 @@ class StormDash extends Component {
 
     if (index >= 0) {
       currentItems[index] = newAlertObj;
-      this.socket.emit('dash:update', {
-        dashId: this.state.dashId,
-        items: currentItems
-      });
-      this.setState({items: currentItems});
+      this.socket.emit(
+        'dash:update',
+        { dashId: this.state.dashId, items: currentItems },
+        (updated) => {
+          return updated && this.setState({items: currentItems});
+        }
+      );
     }
   }
 
@@ -127,11 +127,13 @@ class StormDash extends Component {
 
     if (index >= 0) {
       currentItems.splice(index, 1);
-      this.socket.emit('dash:update', {
-        dashId: this.state.dashId,
-        items: currentItems
-      });
-      this.setState({items: currentItems});
+      this.socket.emit(
+        'dash:update',
+        { dashId: this.state.dashId, items: currentItems },
+        (updated) => {
+          return updated && this.setState({items: currentItems});
+        }
+      );
     }
   }
 

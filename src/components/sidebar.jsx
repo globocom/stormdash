@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import AlertItem from './AlertItem';
-import { store, uuid } from '../utils';
+import { uuid } from '../utils';
+import io from 'socket.io-client';
 
 import './Sidebar.css';
 
@@ -9,8 +10,9 @@ class Sidebar extends Component {
 
   constructor(props) {
     super(props);
+    this.socket = io();
 
-    const defaultState = {
+    this.state = {
       id: uuid(),
       current: false,
       currentValue: "",
@@ -26,8 +28,7 @@ class Sidebar extends Component {
     };
 
     this.currentId = props.currentItem;
-    this.itemToEdit = this.getItemCopy(this.currentId);
-    this.state = this.currentId ? this.itemToEdit : defaultState;
+    this.setEditItem(this.currentId);
 
     this.onCreate = this.onCreate.bind(this);
     this.onEdit = this.onEdit.bind(this);
@@ -226,13 +227,13 @@ class Sidebar extends Component {
     this.props.handleSidebar("close");
   }
 
-  getItemCopy(itemId) {
-    const itens = store('alertItems');
-    return itens.find((elem) => {
-      if(elem.id === itemId) {
-        return elem;
-      }
-      return null;
+  setEditItem(itemId) {
+    this.socket.emit('dash:get', {dashId: this.props.dashId}, (data) => {
+      data.items.find((elem) => {
+        if(elem.id === itemId) {
+          return this.setState(elem);
+        }
+      });
     });
   }
 
