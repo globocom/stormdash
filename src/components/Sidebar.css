@@ -1,6 +1,7 @@
 @media (max-width: 640px) {
   .dash-sidebar {
     width: auto;
+    left: 0;
   }
 }
 

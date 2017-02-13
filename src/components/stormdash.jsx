@@ -36,6 +36,7 @@ class StormDash extends Component {
     this.setCurrent = this.setCurrent.bind(this);
     this.clearCurrent = this.clearCurrent.bind(this);
     this.doUpdate = this.doUpdate.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
 
     // this.startUpdate();
   }

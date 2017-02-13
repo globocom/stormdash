@@ -1,6 +1,7 @@
 @media (max-width: 640px) {
   .dash-list {
     width: auto;
+    left: 0;
   }
 }
 
@@ -54,18 +55,35 @@
 }
 
 .dash-list .list-container li {
-  margin-bottom: 15px;
+  margin: 0;
+  border-top: 1px dotted #777;
+  border-bottom: 1px dotted #222;
 }
 
-.dash-list .list-container li a {
-  color: white;
-  font-size: 2rem;
+.dash-list .list-container li:first-child { border-top: 0;}
+.dash-list .list-container li:last-child { border-bottom: 0;}
+
+.dash-list .list-container a {
+  display: block;
+  padding: 8px;
+  color: #76b7eb;
+  font-size: 1.3rem;
   text-decoration: none;
+}
+
+.dash-list .list-container a:hover {
+  background-color: #4e5152;
 }
 
 .dash-list .list-container .dash-items-count,
 .dash-list .list-container .dash-created-at {
-  font-size: 0.8rem;
-  color: #888;
+  font-size: 0.9rem;
+  color: #999;
+  margin-right: 10px;
 }
 
+.dash-list .list-container a:hover .dash-items-count,
+.dash-list .list-container a:hover .dash-created-at {
+  color: #ccc;
+  text-decoration: none;
+}

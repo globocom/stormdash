@@ -18,6 +18,7 @@ class App extends Component {
 
     this.createNewDash = this.createNewDash.bind(this);
     this.handleList = this.handleList.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
 
     this.getDashoboards();
   }
@@ -64,13 +65,23 @@ class App extends Component {
     this.setState({visibleList: true});
   }
 
-  createNewDash() {
-    this.socket.emit('dash:create', {name: this.state.dashName}, (data) => {
+  createNewDash(event) {
+    let btn = event.target,
+        name = this.state.dashName;
+
+    btn.disabled = true;
+
+    this.socket.emit('dash:create', {name: name}, (data) => {
       if(!data) {
-        this.state.input.setCustomValidity("Name already exists");
+        const msg = `Name ${name} already exists`;
+        this.state.input.setCustomValidity(msg);
+        console.log(msg);
+
+        btn.disabled = false;
         return false;
       }
-      this.getDashoboards();
+
+      this.props.router.push(`/dash/${data.name}`);
     });
   }
 
