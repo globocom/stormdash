@@ -1,0 +1,23 @@
+.dash-not-found {
+  display: flex;
+  padding: 20px;
+}
+
+.not-found-title h1 {
+  font-size: 4rem;
+  letter-spacing: -0.3rem;
+  margin: 0;
+}
+
+.not-found-title h1 .status {
+  display: inline-block;
+  background-color: #76b7eb;
+  padding: 0 20px 0 15px;
+}
+
+.not-found-title h1 .message {
+  display: inline-block;
+  color: #76b7eb;
+  background-color: black;
+  padding: 0 20px 0 15px;
+}

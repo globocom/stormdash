@@ -1,3 +1,44 @@
 .dash-index {
-  color: white;
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+
+  position: fixed;
+  top: 0; right: 0; bottom: 0; left: 0;
+}
+
+.dash-index-title h1 {
+  display: inline-block;
+  font-size: 6rem;
+  margin: 0;
+  letter-spacing: -0.3rem;
+}
+
+.dash-index-title h1 .storm {
+  color: black;
+  background-color: #288edf;
+  padding: 0 20px 0 15px;
+}
+
+.dash-index-title h1 .dash {
+  color: #288edf;
+  background-color: black;
+  padding: 0 20px 0 15px;
+}
+
+.dash-index-form {
+  display: inline-block;
+  background-color: #484b4c;
+  padding: 15px;
+  margin: 20px 0;
+}
+
+.dash-index-form .create-dash-name {
+  min-width: 200px;
+}
+
+.dash-index-form .create-dash-btn {
+  margin-left: 10px;
 }

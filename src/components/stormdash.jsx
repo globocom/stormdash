@@ -7,6 +7,8 @@ import axios from 'axios';
 import { uuid, store, traverse } from '../utils';
 import io from 'socket.io-client';
 
+import './StormDash.css';
+
 
 class StormDash extends Component {
   constructor(props) {
@@ -77,7 +79,7 @@ class StormDash extends Component {
       )
     }
 
-    return <div className="dash-main">loading</div>
+    return <div className="dash-main"></div>
   }
 
   getDashContent() {
@@ -230,11 +232,10 @@ class StormDash extends Component {
   }
 
   handleKeyDown(event) {
-    let { key } = event;
-    if (key === 'Escape') {
+    if (event.key === 'Escape') {
       event.preventDefault();
       this.clearCurrent();
-      this.setState({visibleSidebar: false});
+      this.handleSidebar('close');
     }
   };
 

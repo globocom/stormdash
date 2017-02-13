@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router';
 import io from 'socket.io-client';
+import DashList from './DashList';
 
 import './App.css';
 
@@ -12,36 +12,40 @@ class App extends Component {
     this.state = {
       dashs: [],
       dashName: "",
-      input: null
+      input: null,
+      visibleList: false
     };
+
     this.createNewDash = this.createNewDash.bind(this);
+    this.handleList = this.handleList.bind(this);
+
     this.getDashoboards();
   }
 
   render() {
-    let dashboards = this.state.dashs.map((dash) => {
-      return (<li>
-                <Link to={`/dash/${dash.name}`}>{dash.name}</Link>
-                <span className="dash-created-at">{dash.createdAt}</span>
-              </li>);
-    });
-
     return (
       <section className="dash-index">
-        <div className="dash-index-name">
-          <span>Storm</span><br />
-          <strong>Dash</strong>
+        <div className="dash-index-title">
+          <h1>
+            <span className="storm">Storm</span>
+            <span className="dash">Dash</span>
+          </h1>
         </div>
         <div className="dash-index-form">
-          <label>Name</label><br />
-          <input type="text" className="topcoat-text-input--large"
+          <input type="text" className="create-dash-name topcoat-text-input--large"
             value={this.state.dashName}
-            onChange={e => this.defineName(e.target)} />
-          <button onClick={this.createNewDash}>Create</button>
+            onChange={e => this.defineName(e.target)}
+            placeholder="Dashboard name" />
+          <button className="create-dash-btn topcoat-button--large--cta"
+                  onClick={this.createNewDash}>Create</button>
         </div>
-        <ul className="dash-index-list">
-          {dashboards}
-        </ul>
+
+        <button className="show-all-btn topcoat-button--large--quiet"
+                onClick={this.handleList}>Show all</button>
+
+        {this.state.visibleList &&
+          <DashList dashboards={this.state.dashs}
+                    handleList={this.handleList} />}
       </section>
     );
   }
@@ -50,6 +54,14 @@ class App extends Component {
     this.socket.emit('dash:getall', {}, (data) => {
       this.setState({dashs: data});
     });
+  }
+
+  handleList(action="open") {
+    if (action === "close") {
+      this.setState({visibleList: false});
+      return;
+    }
+    this.setState({visibleList: true});
   }
 
   createNewDash() {
@@ -66,6 +78,22 @@ class App extends Component {
     elem.setCustomValidity('');
     this.setState({dashName: elem.value, input: elem});
   }
+
+  handleKeyDown(event) {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      this.handleList('close');
+    }
+  };
+
+  componentDidMount() {
+    document.addEventListener('keydown', this.handleKeyDown)
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.handleKeyDown)
+  }
+
 }
 
 export default App;

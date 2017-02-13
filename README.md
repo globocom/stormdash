@@ -3,11 +3,17 @@
 A unique dashboard to show simple alerts
 
 ###Getting Started###
-Clone this repo, install dependencies, then start the app:
-
 ```
+  # Clone this repo
 	> git clone https://github.com/globocom/stormdash.git
 	> cd stormdash
+
+  # Install dependencies
 	> npm install
-	> npm start
+
+  # Build
+	> npm build
+
+  # Start the server
+  > npm start:server
 ```
