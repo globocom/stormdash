@@ -53,6 +53,10 @@ function checkStatus(item) {
                 'warning': item.warning,
                 'critical': item.critical};
 
+  if(item.currentValue == '__jsonurl_error') {
+    return 'critical';
+  }
+
   for(let s in status) {
     let v1 = item.currentValue,
         v2 = status[s].value,

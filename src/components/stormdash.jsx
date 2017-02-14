@@ -37,6 +37,7 @@ class StormDash extends Component {
     this.clearCurrent = this.clearCurrent.bind(this);
     this.doUpdate = this.doUpdate.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
+    this.checkItemValue = this.checkItemValue.bind(this);
 
     // this.startUpdate();
   }
@@ -210,26 +211,17 @@ class StormDash extends Component {
 
     if (index >= 0) {
       let item = currentItems[index];
-      this.checkItemValue(item, (value) => {
+      this.socket.emit('item:check', item, (value) => {
         item.currentValue = value;
         this.editItem(item.id, item);
       });
     }
   }
 
-  checkItemValue(itemObj, func) {
-    let { jsonurl, mainkey } = itemObj;
-    if(jsonurl !== "") {
-      axios.get(jsonurl).then((response) => {
-        traverse(response.data, (key, value) => {
-          if(key === mainkey) {
-            func(value);
-          }
-        });
-      }).catch((error) => {
-        console.log(error);
-      });
-    }
+  checkItemValue(itemObj, fn) {
+    this.socket.emit('item:check', itemObj, (value) => {
+      return fn(value);
+    });
   }
 
   handleKeyDown(event) {

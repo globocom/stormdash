@@ -1,9 +1,9 @@
 const app = require('./app');
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
-const StoreServer = require('./StoreServer');
+const IOServer = require('./IOServer');
 
-const store = new StoreServer(io);
+const ioserver = new IOServer(io);
 const PORT = process.env.PORT || 8888;
 
 http.listen(PORT, () => {
