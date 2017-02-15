@@ -2,33 +2,32 @@ const axios = require('axios');
 const Datastore = require('nedb');
 const utils = require('../src/utils');
 
-
 class IOServer {
   constructor(io) {
     this.dashDB = new Datastore({
       filename: __dirname + '/stormdash.db',
       autoload: true
     });
+    this.dashDB.persistence.setAutocompactionInterval(300000) // 5 min
     this.dashDB.ensureIndex({fieldName: 'name', unique: true}, (err) => {
       return err && console.log(err);
-    })
+    });
 
     this.authDB = new Datastore({
       filename: __dirname + '/stormdash_auth.db',
       autoload: true
     });
-    this.authDB.ensureIndex({fieldName: 'name', unique: true}, (err) => {
+    this.authDB.persistence.setAutocompactionInterval(600000) // 10 min
+    this.authDB.ensureIndex({fieldName: 'itemId', unique: true}, (err) => {
       return err && console.log(err);
-    })
+    });
 
     if(io === undefined) {
       return;
     }
 
     io.on('connection', (socket) => {
-      // console.log('IOServer connected');
-
-      // Dashboard persistence events
+      // Dashboard events
       socket.on('dash:create', (data, fn) => {
         this.createDash(data, (result) => { fn(result); });
       });
@@ -42,17 +41,35 @@ class IOServer {
       });
 
       socket.on('dash:getall', (data, fn) => {
-        this.getAll((result) => { fn(result); });
+        this.getAll(data, (result) => { fn(result); });
+      });
+
+      socket.on('dash:deletedash', (data, fn) => {
+        this.deleteDash(data, (result) => { fn(result); });
       });
 
       // Alert item events
-      socket.on('items:update', (data, fn) => {
-        this.startUpdate(data, (result) => { fn(result) });
+      socket.on('item:checkall', (data, fn) => {
+        this.checkAllItems(data, (result) => { fn(result) });
       });
 
       socket.on('item:check', (data, fn) => {
-        this.checkItemValue(data, (result) => { fn(result) });
+        this.checkItem(data, (result) => { fn(result) });
       });
+
+      // Authentication events
+      socket.on('auth:save', (data, fn) => {
+        this.saveAuth(data, (result) => { fn(result); });
+      });
+
+      socket.on('auth:get', (data, fn) => {
+        this.getAuth(data, (result) => { fn(result); });
+      });
+
+      socket.on('auth:delete', (data, fn) => {
+        this.deleteAuth(data, (result) => { fn(result); });
+      });
+
     });
   }
 
@@ -82,64 +99,99 @@ class IOServer {
     this.dashDB.findOne({name: data.name}, (err, doc) => {
       return doc ? fn(doc) : fn(false);
     });
-    return false;
   }
 
-  getAll(fn) {
+  getAll(data, fn) {
     this.dashDB.find({}).sort({ createdAt: -1 }).exec((err, docs) => {
       return fn(docs);
     });
   }
 
-  // startUpdate(data, fn) {
-  //   this.getDash({ name: data.name }, (dash) => {
-  //     if(!dash) {
-  //       return fn(false);
-  //     }
+  deleteDash(data, fn) {}
 
-  //     setInterval(() => {
-  //       this.updateItems(dash.items);
-  //     }, data.interval*1000);
-  //   });
-  // }
+  saveAuth(data, fn) {
+    const newAuth = {
+      itemId: data.itemId,
+      username: data.username,
+      password: data.password,
+      authHeaders: data.authHeaders,
+      createdAt: new Date()
+    };
+    this.authDB.insert(newAuth, (err, newDoc) => {
+      return newDoc ? fn(true) : fn(false);
+    });
+  }
 
-  // updateItems(items) {
-  //   items.map((item) => {
-  //     this.checkItemValue(item, (value) => {
-  //       item.currentValue = value;
+  getAuth(data, fn) {
+    this.authDB.findOne({itemId: data.itemId}, (err, doc) => {
+      return doc ? fn(doc) : fn(false);
+    });
+  }
 
+  deleteAuth(data, fn) {}
 
-  //       this.updateDash(item.id, item);
+  checkAllItems(data, fn) {
+    this.getDash({ name: data.name }, (dash) => {
+      if(!dash) {
+        return fn(false);
+      }
 
-
-  //     });
-  //   });
-
-  //   this.checkItemValue(item, (value) => {
-  //     item.currentValue = value;
-  //     this.editItem(item.id, item);
-  //   });
-  // }
-
-  checkItemValue(itemObj, fn) {
-    let { jsonurl, mainkey } = itemObj;
-    if(jsonurl !== '') {
-      axios.get(jsonurl, {responseType: 'json'}).then((response) => {
-        console.log(response);
-
-        if(response.data === null) {
-          return fn('__jsonurl_error');
-        }
-        utils.traverse(response.data, (key, value) => {
-          if(key === mainkey) {
-            return fn(value);
-          }
+      let items = dash.items.slice();
+      items.map((item) => {
+        let p = new Promise((resolve, reject) => {
+          this.checkItem(item, (value) => {
+            resolve(value);
+          });
         });
-      }).catch((error) => {
-        console.log(error);
-        return fn('__jsonurl_error');
+        p.then((val) => { item.currentValue = val; });
+        return item;
+      });
+
+      this.updateDash({name: data.name, items: items}, (result) => {
+        fn(result);
+      });
+    });
+  }
+
+  checkItem(item, fn) {
+    let headers = {};
+    if(item.reqBody && item.reqBody !== '') {
+      headers['Content-Type'] = item.reqBodyContentType;
+    }
+    if(item.hasAuth) {
+      this.getAuth({itemId: item.id}, (auth) => {
+        item.headers = utils.extend({}, headers, JSON.parse(auth.authHeaders));
+        this._requestJSON(item, (value) => {
+          return fn(value);
+        });
+      });
+    } else {
+      this._requestJSON(item, (value) => {
+        return fn(value);
       });
     }
+  }
+
+  _requestJSON(item, fn) {
+    axios.get(item.jsonurl, {
+      responseType: 'json',
+      headers: item.headers,
+      data: item.reqBody
+    })
+    .then((response) => {
+      if((typeof response.data) !== 'object') {
+        return fn('__jsonurl_error');
+      }
+      utils.traverse(response.data, (key, value) => {
+        if(key === item.mainkey) {
+          return fn(value);
+        }
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+      return fn('__jsonurl_error');
+    });
   }
 }
 

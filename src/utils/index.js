@@ -1,3 +1,16 @@
+function extend() {
+  var newObj = {};
+  for (var i = 0; i < arguments.length; i++) {
+    var obj = arguments[i];
+    for (var key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        newObj[key] = obj[key];
+      }
+    }
+  }
+  return newObj;
+}
+
 function uuid() {
   var i, random;
   var uuid = '';
@@ -73,4 +86,11 @@ function checkStatus(item) {
   return final;
 }
 
-module.exports  = { uuid, shuffle, store, traverse, checkStatus };
+module.exports = {
+  extend,
+  uuid,
+  shuffle,
+  store,
+  traverse,
+  checkStatus
+};
