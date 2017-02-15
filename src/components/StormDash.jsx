@@ -24,11 +24,11 @@ class StormDash extends Component {
       groupStatus: ['critical', 'warning', 'ok'],
       items: [],
       show: false,
-      notFound: false
+      notFound: false,
+      intervalId: null
     };
 
     this.getDashContent();
-    this.startUpdate();
 
     this.handleSidebar = this.handleSidebar.bind(this);
     this.addItem = this.addItem.bind(this);
@@ -180,7 +180,7 @@ class StormDash extends Component {
   }
 
   startUpdate() {
-    setInterval(() => {
+    return setInterval(() => {
       this.socket.emit(
         'item:checkall',
         {name: this.state.dashName}, (data) => {
@@ -198,10 +198,13 @@ class StormDash extends Component {
   };
 
   componentDidMount() {
+    let intervalId = this.startUpdate();
+    this.setState({intervalId: intervalId});
     document.addEventListener('keydown', this.handleKeyDown)
   }
 
   componentWillUnmount() {
+    clearInterval(this.state.intervalId);
     document.removeEventListener('keydown', this.handleKeyDown)
   }
 }
