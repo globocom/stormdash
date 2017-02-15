@@ -77,6 +77,7 @@ class StormDash extends Component {
   }
 
   getDashContent() {
+    const current = this.state.currentItem;
     this.socket.emit('dash:get', {name: this.state.dashName}, (data) => {
       if(!data) {
         this.setState({ notFound: true });
@@ -87,6 +88,9 @@ class StormDash extends Component {
         mainTitle: data.name,
         show: true
       });
+      if(current) {
+        this.setCurrent(current);
+      }
     });
   }
 
