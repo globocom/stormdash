@@ -99,7 +99,7 @@ class IOServer {
       let items = dash.items.slice();
       items.map((item) => {
         let p = new Promise((resolve, reject) => {
-          this.checkItemValue(item, (value) => {
+          this.checkItem(item, (value) => {
             resolve(value);
           });
         });
