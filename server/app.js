@@ -1,15 +1,12 @@
 const express = require('express');
 const path = require('path');
 
-
 const app = express();
-const IOServer = require('./IOServer');
 
 app.use(express.static(path.resolve(__dirname, '..', 'build')));
 
 app.get('/dash/:dashName/info', (req, res) => {
-  const ioserver = new IOServer();
-  ioserver.getDash({name: req.params.dashName}, (dash) => {
+  global.ioserver.getDash({name: req.params.dashName}, (dash) => {
     if(dash) {
       return res.json({
         "status": "OK",

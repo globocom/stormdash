@@ -2,32 +2,31 @@ const axios = require('axios');
 const Datastore = require('nedb');
 const utils = require('../src/utils');
 
-
 class IOServer {
   constructor(io) {
     this.dashDB = new Datastore({
       filename: __dirname + '/stormdash.db',
       autoload: true
     });
+    this.dashDB.persistence.setAutocompactionInterval(300000) // 5 min
     this.dashDB.ensureIndex({fieldName: 'name', unique: true}, (err) => {
       return err && console.log(err);
-    })
+    });
 
     this.authDB = new Datastore({
       filename: __dirname + '/stormdash_auth.db',
       autoload: true
     });
+    this.authDB.persistence.setAutocompactionInterval(1800000) // 30 min
     this.authDB.ensureIndex({fieldName: 'name', unique: true}, (err) => {
       return err && console.log(err);
-    })
+    });
 
     if(io === undefined) {
       return;
     }
 
     io.on('connection', (socket) => {
-      // console.log('IOServer connected');
-
       // Dashboard persistence events
       socket.on('dash:create', (data, fn) => {
         this.createDash(data, (result) => { fn(result); });
@@ -46,12 +45,12 @@ class IOServer {
       });
 
       // Alert item events
-      socket.on('items:update', (data, fn) => {
-        this.startUpdate(data, (result) => { fn(result) });
+      socket.on('item:checkall', (data, fn) => {
+        this.checkAllItems(data, (result) => { fn(result) });
       });
 
       socket.on('item:check', (data, fn) => {
-        this.checkItemValue(data, (result) => { fn(result) });
+        this.checkItem(data, (result) => { fn(result) });
       });
     });
   }
@@ -91,43 +90,34 @@ class IOServer {
     });
   }
 
-  // startUpdate(data, fn) {
-  //   this.getDash({ name: data.name }, (dash) => {
-  //     if(!dash) {
-  //       return fn(false);
-  //     }
+  checkAllItems(data, fn) {
+    this.getDash({ name: data.name }, (dash) => {
+      if(!dash) {
+        return fn(false);
+      }
 
-  //     setInterval(() => {
-  //       this.updateItems(dash.items);
-  //     }, data.interval*1000);
-  //   });
-  // }
+      let items = dash.items.slice();
+      items.map((item) => {
+        let p = new Promise((resolve, reject) => {
+          this.checkItemValue(item, (value) => {
+            resolve(value);
+          });
+        });
+        p.then((val) => { item.currentValue = val; });
+        return item;
+      });
 
-  // updateItems(items) {
-  //   items.map((item) => {
-  //     this.checkItemValue(item, (value) => {
-  //       item.currentValue = value;
+      this.updateDash({name: data.name, items: items}, (result) => {
+        fn(result);
+      });
+    });
+  }
 
-
-  //       this.updateDash(item.id, item);
-
-
-  //     });
-  //   });
-
-  //   this.checkItemValue(item, (value) => {
-  //     item.currentValue = value;
-  //     this.editItem(item.id, item);
-  //   });
-  // }
-
-  checkItemValue(itemObj, fn) {
+  checkItem(itemObj, fn) {
     let { jsonurl, mainkey } = itemObj;
     if(jsonurl !== '') {
       axios.get(jsonurl, {responseType: 'json'}).then((response) => {
-        console.log(response);
-
-        if(response.data === null) {
+        if((typeof response.data) !== 'object') {
           return fn('__jsonurl_error');
         }
         utils.traverse(response.data, (key, value) => {

@@ -28,6 +28,7 @@ class StormDash extends Component {
     };
 
     this.getDashContent();
+    this.startUpdate();
 
     this.handleSidebar = this.handleSidebar.bind(this);
     this.addItem = this.addItem.bind(this);
@@ -35,11 +36,7 @@ class StormDash extends Component {
     this.deleteItem = this.deleteItem.bind(this);
     this.setCurrent = this.setCurrent.bind(this);
     this.clearCurrent = this.clearCurrent.bind(this);
-    this.doUpdate = this.doUpdate.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
-    this.checkItemValue = this.checkItemValue.bind(this);
-
-    // this.startUpdate();
   }
 
   render() {
@@ -61,18 +58,16 @@ class StormDash extends Component {
         <div className="dash-main">
           {!visibleSidebar &&
             <Tools currentItem={this.state.currentItem}
-                   clearCurrent={this.clearCurrent}
                    handleSidebar={this.handleSidebar}
                    deleteItem={this.deleteItem}
-                   doUpdate={this.doUpdate} />}
+                   clearCurrent={this.clearCurrent} />}
 
           {visibleSidebar &&
             <Sidebar currentItem={this.state.currentItem}
                      handleSidebar={this.handleSidebar}
                      addItem={this.addItem}
                      editItem={this.editItem}
-                     dashName={this.state.dashName}
-                     checkItemValue={this.checkItemValue} />}
+                     dashName={this.state.dashName} />}
 
           {alertGroups}
 
@@ -85,21 +80,17 @@ class StormDash extends Component {
   }
 
   getDashContent() {
-    this.socket.emit(
-      'dash:get',
-      {name: this.state.dashName},
-      (data) => {
-        if(!data) {
-          this.setState({ notFound: true });
-          return;
-        }
-        this.setState({
-          items: data.items,
-          mainTitle: data.name,
-          show: true
-        });
+    this.socket.emit('dash:get', {name: this.state.dashName}, (data) => {
+      if(!data) {
+        this.setState({ notFound: true });
+        return;
       }
-    );
+      this.setState({
+        items: data.items,
+        mainTitle: data.name,
+        show: true
+      });
+    });
   }
 
   handleSidebar(action="open") {
@@ -170,7 +161,6 @@ class StormDash extends Component {
       }
       return item;
     });
-
     this.setState({
       currentItem: itemId,
       items: currentItems
@@ -183,7 +173,6 @@ class StormDash extends Component {
       item.current = false;
       return item;
     });
-
     this.setState({
       currentItem: null,
       items: currentItems
@@ -192,36 +181,12 @@ class StormDash extends Component {
 
   startUpdate() {
     setInterval(() => {
-      this.doUpdate();
-    }, 10000);
-  }
-
-  doUpdate() {
-    let currentItems = this.state.items.slice();
-    currentItems.map((item) => {
-      return this.updateItem(item.id);
-    });
-  }
-
-  updateItem(itemId) {
-    let currentItems = this.state.items.slice();
-    const index = currentItems.findIndex((elem, i, arr) => {
-      return elem.id === itemId;
-    });
-
-    if (index >= 0) {
-      let item = currentItems[index];
-      this.socket.emit('item:check', item, (value) => {
-        item.currentValue = value;
-        this.editItem(item.id, item);
-      });
-    }
-  }
-
-  checkItemValue(itemObj, fn) {
-    this.socket.emit('item:check', itemObj, (value) => {
-      return fn(value);
-    });
+      this.socket.emit(
+        'item:checkall',
+        {name: this.state.dashName}, (data) => {
+          return data && this.getDashContent();
+        });
+    }, 10 * 1000);
   }
 
   handleKeyDown(event) {

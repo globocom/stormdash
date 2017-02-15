@@ -239,7 +239,7 @@ class Sidebar extends Component {
 
   onCheckValue(event) {
     event.preventDefault();
-    this.props.checkItemValue(this.state, (value) => {
+    this.socket.emit('item:check', this.state, (value) => {
       this.setState({currentValue: value});
     });
   }
