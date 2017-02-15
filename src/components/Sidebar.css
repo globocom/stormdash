@@ -41,6 +41,12 @@
   color: #76b7eb;
 }
 
+.dash-sidebar hr {
+  border: 0;
+  border-top: 1px dotted #777;
+  margin: 20px 0;
+}
+
 .dash-sidebar .title {
   font-size: 26px;
   font-weight: normal;
@@ -49,7 +55,7 @@
 }
 
 .dash-sidebar .form-items > div {
-  margin-bottom: 6px;
+  margin-bottom: 10px;
 }
 
 .dash-sidebar .form-base {
@@ -71,8 +77,13 @@
   width: 30%;
 }
 
-.dash-sidebar .show-radio {
+.dash-sidebar .show-radio,
+.dash-sidebar .has-auth-checkbox {
   margin: 6px 15px 6px 0;
+}
+
+.dash-sidebar .req-body-radio {
+  margin-right: 20px;
 }
 
 .dash-sidebar label {
