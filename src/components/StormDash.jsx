@@ -9,16 +9,13 @@ import io from 'socket.io-client';
 
 import './StormDash.css';
 
-
 class StormDash extends Component {
   constructor(props) {
     super(props);
     this.socket = io();
 
-    const dashName = this.props.params.dashName;
-
     this.state = {
-      dashName: dashName,
+      dashName: this.props.params.dashName,
       visibleSidebar: false,
       currentItem: null,
       groupStatus: ['critical', 'warning', 'ok'],
@@ -180,13 +177,19 @@ class StormDash extends Component {
   }
 
   startUpdate() {
-    return setInterval(() => {
-      this.socket.emit(
-        'item:checkall',
-        {name: this.state.dashName}, (data) => {
-          return data && this.getDashContent();
-        });
+    this.stopUpdate();
+
+    let intervalId = setInterval(() => {
+      this.socket.emit('item:checkall', {name: this.state.dashName}, (data) => {
+        return data && this.getDashContent();
+      });
     }, 10 * 1000);
+
+    this.setState({intervalId: intervalId});
+  }
+
+  stopUpdate() {
+    clearInterval(this.state.intervalId);
   }
 
   handleKeyDown(event) {
@@ -198,13 +201,12 @@ class StormDash extends Component {
   };
 
   componentDidMount() {
-    let intervalId = this.startUpdate();
-    this.setState({intervalId: intervalId});
+    this.startUpdate();
     document.addEventListener('keydown', this.handleKeyDown)
   }
 
   componentWillUnmount() {
-    clearInterval(this.state.intervalId);
+    this.stopUpdate();
     document.removeEventListener('keydown', this.handleKeyDown)
   }
 }

@@ -27,7 +27,7 @@ class IOServer {
     }
 
     io.on('connection', (socket) => {
-      // Dashboard persistence events
+      // Dashboard events
       socket.on('dash:create', (data, fn) => {
         this.createDash(data, (result) => { fn(result); });
       });
@@ -41,7 +41,11 @@ class IOServer {
       });
 
       socket.on('dash:getall', (data, fn) => {
-        this.getAll((result) => { fn(result); });
+        this.getAll(data, (result) => { fn(result); });
+      });
+
+      socket.on('dash:deletedash', (data, fn) => {
+        this.deleteDash(data, (result) => { fn(result); });
       });
 
       // Alert item events
@@ -52,6 +56,20 @@ class IOServer {
       socket.on('item:check', (data, fn) => {
         this.checkItem(data, (result) => { fn(result) });
       });
+
+      // Authentication events
+      socket.on('auth:save', (data, fn) => {
+        this.saveAuth(data, (result) => { fn(result); });
+      });
+
+      socket.on('auth:get', (data, fn) => {
+        this.getAuth(data, (result) => { fn(result); });
+      });
+
+      socket.on('auth:delete', (data, fn) => {
+        this.deleteAuth(data, (result) => { fn(result); });
+      });
+
     });
   }
 
@@ -81,14 +99,36 @@ class IOServer {
     this.dashDB.findOne({name: data.name}, (err, doc) => {
       return doc ? fn(doc) : fn(false);
     });
-    return false;
   }
 
-  getAll(fn) {
+  getAll(data, fn) {
     this.dashDB.find({}).sort({ createdAt: -1 }).exec((err, docs) => {
       return fn(docs);
     });
   }
+
+  deleteDash(data, fn) {}
+
+  saveAuth(data, fn) {
+    const newAuth = {
+      name: data.name,
+      username: data.username,
+      password: data.password,
+      authHeaders: data.authHeaders,
+      createdAt: new Date()
+    };
+    this.authDB.insert(newAuth, (err, newDoc) => {
+      return newDoc ? fn(true) : fn(false);
+    });
+  }
+
+  getAuth(data, fn) {
+    this.authDB.findOne({name: data.name}, (err, doc) => {
+      return doc ? fn(doc) : fn(false);
+    });
+  }
+
+  deleteAuth(data, fn) {}
 
   checkAllItems(data, fn) {
     this.getDash({ name: data.name }, (dash) => {
@@ -114,22 +154,32 @@ class IOServer {
   }
 
   checkItem(itemObj, fn) {
-    let { jsonurl, mainkey } = itemObj;
-    if(jsonurl !== '') {
-      axios.get(jsonurl, {responseType: 'json'}).then((response) => {
-        if((typeof response.data) !== 'object') {
-          return fn('__jsonurl_error');
-        }
-        utils.traverse(response.data, (key, value) => {
-          if(key === mainkey) {
-            return fn(value);
-          }
-        });
-      }).catch((error) => {
-        console.log(error);
-        return fn('__jsonurl_error');
-      });
+    const { jsonurl, mainkey,
+            reqBody, reqBodyContentType } = itemObj;
+    const headers = {};
+
+    if(reqBody && reqBody !== '') {
+      headers['Content-Type'] = reqBodyContentType;
     }
+
+    axios.get(jsonurl, {
+      responseType: 'json',
+      headers: headers
+    })
+    .then((response) => {
+      if((typeof response.data) !== 'object') {
+        return fn('__jsonurl_error');
+      }
+      utils.traverse(response.data, (key, value) => {
+        if(key === mainkey) {
+          return fn(value);
+        }
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+      return fn('__jsonurl_error');
+    });
   }
 }
 
