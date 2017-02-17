@@ -125,29 +125,30 @@ class Sidebar extends Component {
                 placeholder="operator"
                 value={this.state.ok.compare}
                 onChange={(e) => {
-                    let s = this.state, o = ['=', '!', '!=', '>', '<', '>=', '<=', ''];
-                    if(o.indexOf(e.target.value) >= 0) {
-                      s.ok.compare = e.target.value;
-                    }
-                    this.setState(s);
+                  let s = this.state,
+                      o = ['=', '!', '!=', '>', '<', '>=', '<=', ''];
+                  if(o.indexOf(e.target.value) >= 0) {
+                    s.ok.compare = e.target.value;
+                  }
+                  this.setState(s);
                 }} />
 
               <input type="text" className="topcoat-text-input--large"
                 placeholder="value"
                 value={this.state.ok.value}
                 onChange={(e) => {
-                    let s = this.state;
-                    s.ok.value = e.target.value;
-                    this.setState(s);
+                  let s = this.state;
+                  s.ok.value = e.target.value;
+                  this.setState(s);
                 }} />
 
               <input type="text" className="topcoat-text-input--large"
                 placeholder="default message"
                 value={this.state.ok.message}
                 onChange={(e) => {
-                    let s = this.state;
-                    s.ok.message = e.target.value;
-                    this.setState(s);
+                  let s = this.state;
+                  s.ok.message = e.target.value;
+                  this.setState(s);
                 }} />
             </div>
           </div>
@@ -159,29 +160,30 @@ class Sidebar extends Component {
                 placeholder="operator"
                 value={this.state.warning.compare}
                 onChange={(e) => {
-                    let s = this.state, o = ['=', '!', '!=', '>', '<', '>=', '<=', ''];
-                    if(o.indexOf(e.target.value) >= 0) {
-                      s.warning.compare = e.target.value;
-                    }
-                    this.setState(s);
+                  let s = this.state,
+                      o = ['=', '!', '!=', '>', '<', '>=', '<=', ''];
+                  if(o.indexOf(e.target.value) >= 0) {
+                    s.warning.compare = e.target.value;
+                  }
+                  this.setState(s);
                 }} />
 
               <input type="text" className="topcoat-text-input--large"
                 placeholder="value"
                 value={this.state.warning.value}
                 onChange={(e) => {
-                    let s = this.state;
-                    s.warning.value = e.target.value;
-                    this.setState(s);
+                  let s = this.state;
+                  s.warning.value = e.target.value;
+                  this.setState(s);
                 }} />
 
               <input type="text" className="topcoat-text-input--large"
                 placeholder="default message"
                 value={this.state.warning.message}
                 onChange={(e) => {
-                    let s = this.state;
-                    s.warning.message = e.target.value;
-                    this.setState(s);
+                  let s = this.state;
+                  s.warning.message = e.target.value;
+                  this.setState(s);
                 }} />
             </div>
           </div>
@@ -193,29 +195,30 @@ class Sidebar extends Component {
                 placeholder="operator"
                 value={this.state.critical.compare}
                 onChange={(e) => {
-                    let s = this.state, o = ['=', '!', '!=', '>', '<', '>=', '<=', ''];
-                    if(o.indexOf(e.target.value) >= 0) {
-                      s.critical.compare = e.target.value;
-                    }
-                    this.setState(s);
+                  let s = this.state,
+                      o = ['=', '!', '!=', '>', '<', '>=', '<=', ''];
+                  if(o.indexOf(e.target.value) >= 0) {
+                    s.critical.compare = e.target.value;
+                  }
+                  this.setState(s);
                 }} />
 
               <input type="text" className="topcoat-text-input--large"
                 placeholder="value"
                 value={this.state.critical.value}
                 onChange={(e) => {
-                    let s = this.state;
-                    s.critical.value = e.target.value;
-                    this.setState(s);
+                  let s = this.state;
+                  s.critical.value = e.target.value;
+                  this.setState(s);
                 }} />
 
               <input type="text" className="topcoat-text-input--large"
                 placeholder="default message"
                 value={this.state.critical.message}
                 onChange={(e) => {
-                    let s = this.state;
-                    s.critical.message = e.target.value;
-                    this.setState(s);
+                  let s = this.state;
+                  s.critical.message = e.target.value;
+                  this.setState(s);
                 }} />
             </div>
           </div>
@@ -276,7 +279,8 @@ class Sidebar extends Component {
     this.socket.emit(
       'auth:save',
       {
-        name: this.props.dashName,
+        itemId: this.state.id,
+        dashName: this.props.dashName,
         username: this.state.username,
         password: this.state.password,
         authHeaders: this.state.authHeaders

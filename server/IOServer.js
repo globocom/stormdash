@@ -17,8 +17,8 @@ class IOServer {
       filename: __dirname + '/stormdash_auth.db',
       autoload: true
     });
-    this.authDB.persistence.setAutocompactionInterval(1800000) // 30 min
-    this.authDB.ensureIndex({fieldName: 'name', unique: true}, (err) => {
+    this.authDB.persistence.setAutocompactionInterval(600000) // 10 min
+    this.authDB.ensureIndex({fieldName: 'itemId', unique: true}, (err) => {
       return err && console.log(err);
     });
 
@@ -111,7 +111,7 @@ class IOServer {
 
   saveAuth(data, fn) {
     const newAuth = {
-      name: data.name,
+      itemId: data.itemId,
       username: data.username,
       password: data.password,
       authHeaders: data.authHeaders,
@@ -123,7 +123,7 @@ class IOServer {
   }
 
   getAuth(data, fn) {
-    this.authDB.findOne({name: data.name}, (err, doc) => {
+    this.authDB.findOne({itemId: data.itemId}, (err, doc) => {
       return doc ? fn(doc) : fn(false);
     });
   }
@@ -153,25 +153,37 @@ class IOServer {
     });
   }
 
-  checkItem(itemObj, fn) {
-    const { jsonurl, mainkey,
-            reqBody, reqBodyContentType } = itemObj;
-    const headers = {};
-
-    if(reqBody && reqBody !== '') {
-      headers['Content-Type'] = reqBodyContentType;
+  checkItem(item, fn) {
+    let headers = {};
+    if(item.reqBody && item.reqBody !== '') {
+      headers['Content-Type'] = item.reqBodyContentType;
     }
+    if(item.hasAuth) {
+      this.getAuth({itemId: item.id}, (auth) => {
+        item.headers = utils.extend({}, headers, JSON.parse(auth.authHeaders));
+        this._requestJSON(item, (value) => {
+          return fn(value);
+        });
+      });
+    } else {
+      this._requestJSON(item, (value) => {
+        return fn(value);
+      });
+    }
+  }
 
-    axios.get(jsonurl, {
+  _requestJSON(item, fn) {
+    axios.get(item.jsonurl, {
       responseType: 'json',
-      headers: headers
+      headers: item.headers,
+      data: item.reqBody
     })
     .then((response) => {
       if((typeof response.data) !== 'object') {
         return fn('__jsonurl_error');
       }
       utils.traverse(response.data, (key, value) => {
-        if(key === mainkey) {
+        if(key === item.mainkey) {
           return fn(value);
         }
       });
