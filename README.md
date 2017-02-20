@@ -12,8 +12,8 @@ A unique dashboard to show simple alerts
 	> npm install
 
   # Build
-	> npm build
+	> npm run build
 
   # Start the server
-  > npm start:server
+  > npm run start:server
 ```
