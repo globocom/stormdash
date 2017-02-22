@@ -1,26 +1,14 @@
 const axios = require('axios');
-const Datastore = require('nedb');
+const mongoose = require('mongoose');
+
+const model = require('./model');
 const utils = require('../src/utils');
+
+const mongoUri = process.env.MONGOURI || 'mongodb://localhost:27017/stormdash';
 
 class IOServer {
   constructor(io) {
-    this.dashDB = new Datastore({
-      filename: __dirname + '/stormdash.db',
-      autoload: true
-    });
-    this.dashDB.persistence.setAutocompactionInterval(300000) // 5 min
-    this.dashDB.ensureIndex({fieldName: 'name', unique: true}, (err) => {
-      return err && console.log(err);
-    });
-
-    this.authDB = new Datastore({
-      filename: __dirname + '/stormdash_auth.db',
-      autoload: true
-    });
-    this.authDB.persistence.setAutocompactionInterval(600000) // 10 min
-    this.authDB.ensureIndex({fieldName: 'itemId', unique: true}, (err) => {
-      return err && console.log(err);
-    });
+    mongoose.connect(mongoUri);
 
     if(io === undefined) {
       return;
@@ -74,35 +62,39 @@ class IOServer {
   }
 
   createDash(data, fn) {
-    const name = utils.uuid().split('-')[0];
-    const newDash = {
-      name: data.name !== '' ? data.name : name,
-      createdAt: new Date(),
-      items: []
-    };
-    this.dashDB.insert(newDash, (err, newDoc) => {
-      return newDoc ? fn(newDoc) : fn(false);
+    const name = data.name !== ''
+                 ? data.name
+                 : utils.uuid().split('-')[0];
+
+    let dash = new model.Dash({name: name});
+    dash.save((err, doc) => {
+      if (err) { console.log(err); }
+      return doc ? fn(doc) : fn(false);
     });
   }
 
   updateDash(data, fn) {
-    this.dashDB.update(
-      {name: data.name},
+    model.Dash.findOneAndUpdate(
+      { name: data.name},
       { $set: { items: data.items} },
-      (err, numAffected, affectedDocuments, upsert) => {
-        return numAffected > 0 ? fn(true): fn(false);
+      { upsert: true },
+      (err, doc) => {
+        if (err) { console.log(err); }
+        return err === null ? fn(true) : fn(false);
       }
     );
   }
 
   getDash(data, fn) {
-    this.dashDB.findOne({name: data.name}, (err, doc) => {
+    model.Dash.findOne({ name: data.name }, (err, doc) => {
+      if (err) { console.log(err); }
       return doc ? fn(doc) : fn(false);
     });
   }
 
   getAll(data, fn) {
-    this.dashDB.find({}).sort({ createdAt: -1 }).exec((err, docs) => {
+    model.Dash.find({}).sort({ createdAt: -1 }).exec((err, docs) => {
+      if (err) { console.log(err); }
       return fn(docs);
     });
   }
@@ -110,20 +102,22 @@ class IOServer {
   deleteDash(data, fn) {}
 
   saveAuth(data, fn) {
-    const newAuth = {
+    let auth = new model.ItemAuth({
       itemId: data.itemId,
       username: data.username,
       password: data.password,
-      authHeaders: data.authHeaders,
-      createdAt: new Date()
-    };
-    this.authDB.insert(newAuth, (err, newDoc) => {
-      return newDoc ? fn(true) : fn(false);
+      authHeaders: data.authHeaders
+    });
+
+    auth.save((err, doc) => {
+      if (err) { console.log(err); }
+      return doc ? fn(true) : fn(false);
     });
   }
 
   getAuth(data, fn) {
-    this.authDB.findOne({itemId: data.itemId}, (err, doc) => {
+    model.ItemAuth.findOne({itemId: data.itemId}, (err, doc) => {
+      if (err) { console.log(err); }
       return doc ? fn(doc) : fn(false);
     });
   }
@@ -136,19 +130,27 @@ class IOServer {
         return fn(false);
       }
 
-      let items = dash.items.slice();
-      items.map((item) => {
+      let nItems = dash.items.slice(),
+          stage = 0;
+
+      nItems.map((item) => {
         let p = new Promise((resolve, reject) => {
           this.checkItem(item, (value) => {
             resolve(value);
           });
         });
-        p.then((val) => { item.currentValue = val; });
-        return item;
-      });
 
-      this.updateDash({name: data.name, items: items}, (result) => {
-        fn(result);
+        p.then((val) => {
+          item.currentValue = val;
+          ++stage;
+          if(stage === nItems.length) {
+            this.updateDash({name: data.name, items: nItems}, (result) => {
+              fn(result);
+            });
+          }
+        });
+
+        return item;
       });
     });
   }
@@ -160,6 +162,8 @@ class IOServer {
     }
     if(item.hasAuth) {
       this.getAuth({itemId: item.id}, (auth) => {
+        console.log(auth);
+
         item.headers = utils.extend({}, headers, JSON.parse(auth.authHeaders));
         this._requestJSON(item, (value) => {
           return fn(value);
