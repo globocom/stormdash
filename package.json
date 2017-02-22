@@ -17,7 +17,6 @@
     "axios": "^0.15.3",
     "express": "^4.14.0",
     "mongoose": "^4.8.4",
-    "nedb": "^1.8.0",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
     "react-router": "^3.0.2",
