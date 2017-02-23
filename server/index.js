@@ -10,6 +10,6 @@ global.ioserver = new IOServer(io);
 
 const PORT = process.env.PORT || 8888;
 
-http.listen(PORT, '0.0.0.0', () => {
+httpServer.listen(PORT, '0.0.0.0', () => {
   console.log(`App listening on port ${PORT}!`);
 });
