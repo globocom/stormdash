@@ -162,8 +162,6 @@ class IOServer {
     }
     if(item.hasAuth) {
       this.getAuth({itemId: item.id}, (auth) => {
-        console.log(auth);
-
         item.headers = utils.extend({}, headers, JSON.parse(auth.authHeaders));
         this._requestJSON(item, (value) => {
           return fn(value);
