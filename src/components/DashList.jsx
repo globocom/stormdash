@@ -35,7 +35,7 @@ class DashList extends Component {
               Created at {dashDate.toLocaleDateString()}
             </span>
             <span className="dash-items-count">
-              {numItems} {numItems == 1 ? 'Item' : 'Items'}
+              {numItems} {numItems === 1 ? 'Item' : 'Items'}
             </span>
           </Link>
         </li>

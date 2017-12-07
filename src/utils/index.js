@@ -70,7 +70,7 @@ function store(namespace, data) {
 function traverse(obj, func) {
   for (var i in obj) {
     func.apply(this, [i, obj[i]]);
-    if (obj[i] !== null && typeof(obj[i]) == "object") {
+    if (obj[i] !== null && typeof(obj[i]) === "object") {
       traverse(obj[i],func);
     }
   }
@@ -82,7 +82,7 @@ function checkStatus(item) {
                 'warning': item.warning,
                 'critical': item.critical};
 
-  if(item.currentValue == '__jsonurl_error') {
+  if(item.currentValue === '__jsonurl_error') {
     return 'critical';
   }
 
