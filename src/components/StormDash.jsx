@@ -19,8 +19,7 @@ import Tools from './Tools';
 import Sidebar from './Sidebar';
 import AlertGroup from './AlertGroup';
 import NotFound from './NotFound';
-import axios from 'axios';
-import { uuid, store, traverse } from '../utils';
+import { uuid } from '../utils';
 import io from 'socket.io-client';
 
 import './StormDash.css';

@@ -318,6 +318,7 @@ class Sidebar extends Component {
         if(elem.id === itemId) {
           return this.setState(elem);
         }
+        return null;
       });
     });
   }
