@@ -24,56 +24,37 @@ const mongoUri = process.env.MONGOURI || 'mongodb://localhost:27017/stormdash';
 
 class IOServer {
   constructor(io) {
-    mongoose.connect(mongoUri);
+    mongoose.connect(mongoUri, { useMongoClient: true });
 
     if(io === undefined) {
       return;
     }
 
+    let eventList = [
+      // Dashboard
+      { event: 'dash:create', fn: this.createDash },
+      { event: 'dash:update', fn: this.updateDash },
+      { event: 'dash:get', fn: this.getDash },
+      { event: 'dash:getall', fn: this.getAll },
+      { event: 'dash:deletedash', fn: this.deleteDash },
+
+      // Alert item
+      { event: 'item:checkall', fn: this.checkAllItems },
+      { event: 'item:check', fn: this.checkItem },
+
+      // Alert item auth
+      { event: 'auth:save', fn: this.getAuth },
+      { event: 'auth:get', fn: this.getAuth },
+      { event: 'auth:delete', fn: this.deleteAuth }
+    ];
+
     io.on('connection', (socket) => {
-      // Dashboard events
-      socket.on('dash:create', (data, fn) => {
-        this.createDash(data, (result) => { fn(result); });
-      });
-
-      socket.on('dash:update', (data, fn) => {
-        this.updateDash(data, (result) => { fn(result); });
-      });
-
-      socket.on('dash:get', (data, fn) => {
-        this.getDash(data, (result) => { fn(result); });
-      });
-
-      socket.on('dash:getall', (data, fn) => {
-        this.getAll(data, (result) => { fn(result); });
-      });
-
-      socket.on('dash:deletedash', (data, fn) => {
-        this.deleteDash(data, (result) => { fn(result); });
-      });
-
-      // Alert item events
-      socket.on('item:checkall', (data, fn) => {
-        this.checkAllItems(data, (result) => { fn(result) });
-      });
-
-      socket.on('item:check', (data, fn) => {
-        this.checkItem(data, (result) => { fn(result) });
-      });
-
-      // Authentication events
-      socket.on('auth:save', (data, fn) => {
-        this.saveAuth(data, (result) => { fn(result); });
-      });
-
-      socket.on('auth:get', (data, fn) => {
-        this.getAuth(data, (result) => { fn(result); });
-      });
-
-      socket.on('auth:delete', (data, fn) => {
-        this.deleteAuth(data, (result) => { fn(result); });
-      });
-
+      for(let i=0, l=eventList.length; i<l; ++i) {
+        let item = eventList[i];
+        socket.on(item.event, (data, callback) => {
+          item.fn.apply(this, [data, (result) => { callback(result); }]);
+        });
+      }
     });
   }
 
