@@ -89,12 +89,18 @@ function checkStatus(item) {
   for(let s in status) {
     let v1 = item.currentValue,
         v2 = status[s].value,
-        c = status[s].compare === '=' ? '==' : status[s].compare;
+        c = status[s].compare === '=' ? '==' : status[s].compare,
+        condition = false;
 
     v1 = !!parseInt(v1, 10) ? parseInt(v1, 10) : '"'+ v1 +'"';
     v2 = !!parseInt(v2, 10) ? parseInt(v2, 10) : '"'+ v2 +'"';
 
-    if(c !== "" && eval(v1 + c + v2)) {
+    try {
+      condition = eval(v1 + c + v2);
+    }
+    catch(err) {}
+
+    if(c !== "" && condition) {
       final = s;
     }
   }
