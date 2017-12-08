@@ -13,6 +13,8 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+'use strict';
+var crypto = require('crypto');
 
 function extend() {
   var newObj = {};
@@ -102,11 +104,15 @@ function checkStatus(item) {
   return final;
 }
 
-module.exports = {
-  extend,
-  uuid,
-  shuffle,
-  store,
-  traverse,
-  checkStatus
-};
+function genSalt(length) {
+    return crypto.randomBytes(Math.ceil(length/2)).toString('hex').slice(0,length);
+}
+
+function sha512(password, salt) {
+    var hash = crypto.createHmac('sha512', salt);
+    hash.update(password);
+    return { salt: salt, passwordHash: hash.digest('hex') };
+}
+
+module.exports = { extend, uuid, shuffle, store, traverse,
+                   checkStatus, genSalt, sha512 };
