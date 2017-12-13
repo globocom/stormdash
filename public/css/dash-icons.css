@@ -9,6 +9,7 @@
     url("../fonts/dash-icons.svg#dash-icons") format("svg");
   font-weight: normal;
   font-style: normal;
+
 }
 
 [data-icon]:before {
@@ -51,4 +52,7 @@
 }
 .icon-pencil:before {
   content: "\65";
+}
+.icon-left-open-big:before {
+  content: "\66";
 }
