@@ -16,18 +16,19 @@ limitations under the License.
 
 import React, { Component } from 'react';
 import Tools from './Tools';
+import Navigator from './Navigator';
 import Sidebar from './Sidebar';
 import AlertGroup from './AlertGroup';
 import NotFound from './NotFound';
+import { uiSocket } from './App';
 import { uuid } from '../utils';
-import io from 'socket.io-client';
 
 import './StormDash.css';
 
 class StormDash extends Component {
   constructor(props) {
     super(props);
-    this.socket = io();
+    this.socket = uiSocket();
 
     this.state = {
       dashName: this.props.params.dashName,
@@ -49,6 +50,12 @@ class StormDash extends Component {
     this.setCurrent = this.setCurrent.bind(this);
     this.clearCurrent = this.clearCurrent.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
+
+    this.socket.on('dash:update', (data) => {
+      if (data === this.props.params.dashName) {
+        this.getDashContent();
+      }
+    });
   }
 
   render() {
@@ -68,6 +75,8 @@ class StormDash extends Component {
 
       return (
         <div className="dash-main">
+          <Navigator />
+
           {!visibleSidebar &&
             <Tools currentItem={this.state.currentItem}
                    handleSidebar={this.handleSidebar}
@@ -94,7 +103,7 @@ class StormDash extends Component {
   getDashContent() {
     const current = this.state.currentItem;
     this.socket.emit('dash:get', {name: this.state.dashName}, (data) => {
-      if(!data) {
+      if (!data) {
         this.setState({ notFound: true });
         return;
       }
@@ -103,7 +112,8 @@ class StormDash extends Component {
         mainTitle: data.name,
         show: true
       });
-      if(current) {
+
+      if (current) {
         this.setCurrent(current);
       }
     });
@@ -195,22 +205,6 @@ class StormDash extends Component {
     });
   }
 
-  startUpdate() {
-    this.stopUpdate();
-
-    let intervalId = setInterval(() => {
-      this.socket.emit('item:checkall', {name: this.state.dashName}, (data) => {
-        return data && this.getDashContent();
-      });
-    }, 10 * 1000);
-
-    this.setState({intervalId: intervalId});
-  }
-
-  stopUpdate() {
-    clearInterval(this.state.intervalId);
-  }
-
   handleKeyDown(event) {
     if (event.key === 'Escape') {
       event.preventDefault();
@@ -220,12 +214,10 @@ class StormDash extends Component {
   };
 
   componentDidMount() {
-    this.startUpdate();
     document.addEventListener('keydown', this.handleKeyDown)
   }
 
   componentWillUnmount() {
-    this.stopUpdate();
     document.removeEventListener('keydown', this.handleKeyDown)
   }
 }

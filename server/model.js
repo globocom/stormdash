@@ -16,6 +16,8 @@ limitations under the License.
 
 const mongoose = require('mongoose');
 
+mongoose.Promise = global.Promise;
+
 const dashSchema = mongoose.Schema({
   name: { type: String, index: true },
   createdAt: { type: Date, default: Date.now },

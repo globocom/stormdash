@@ -23,12 +23,12 @@ import './DashList.css';
 class DashList extends Component {
 
   render() {
-    const dashList = this.props.dashboards.map((dash) => {
+    const dashList = this.props.dashboards.map((dash, i) => {
       let dashDate = new Date(dash.createdAt),
           numItems = dash.items.length;
 
       return (
-        <li>
+        <li key={'dash'+i}>
           <Link to={`/dash/${dash.name}`}>
             <span className="dash-name">{dash.name}</span><br />
             <span className="dash-created-at">

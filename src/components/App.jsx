@@ -20,11 +20,18 @@ import DashList from './DashList';
 
 import './App.css';
 
+function uiSocket() {
+  var uiSocket = io('http://localhost:8888');
+  uiSocket.on('error', function(err) {
+    console.log('uiSocket error');
+  });
+  return uiSocket;
+}
 
 class App extends Component {
   constructor(props) {
     super(props);
-    this.socket = io();
+    this.socket = uiSocket();
     this.state = {
       dashs: [],
       dashName: "",
@@ -123,4 +130,4 @@ class App extends Component {
 
 }
 
-export default App;
+export { App as default, uiSocket };

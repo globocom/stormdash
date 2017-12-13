@@ -16,17 +16,16 @@ limitations under the License.
 
 import React, { Component } from 'react';
 import AlertItem from './AlertItem';
+import { uiSocket } from './App';
 import { uuid } from '../utils';
-import io from 'socket.io-client';
 
 import './Sidebar.css';
-
 
 class Sidebar extends Component {
 
   constructor(props) {
     super(props);
-    this.socket = io();
+    this.socket = uiSocket();
 
     this.state = {
       id: uuid(),

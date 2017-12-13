@@ -14,10 +14,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+.dash-tools,
+.dash-tools .tool-btn {
+  box-sizing: border-box;
+}
+
 .dash-tools {
   position: absolute;
-  top: 45px;
-  right: 45px;
+  top: 30px;
+  right: 30px;
   text-align: right;
   z-index: 8;
 }
@@ -36,6 +41,7 @@ limitations under the License.
   cursor: pointer;
   outline: none;
   margin: 0 5px;
+  text-align: center;
 }
 
 .dash-tools .tool-btn:hover {

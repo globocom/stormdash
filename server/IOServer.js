@@ -16,19 +16,23 @@ limitations under the License.
 
 const axios = require('axios');
 const mongoose = require('mongoose');
-
 const model = require('./model');
 const utils = require('../src/utils');
 
 const mongoUri = process.env.MONGOURI || 'mongodb://localhost:27017/stormdash';
+const UPDATE_INTERVAL = 10;
 
 class IOServer {
-  constructor(io) {
-    mongoose.connect(mongoUri, { useMongoClient: true });
 
-    if(io === undefined) {
+  constructor(io) {
+    this.io = io;
+    this.updateIntervalIds = {};
+
+    if (io === undefined) {
       return;
     }
+
+    mongoose.connect(mongoUri, { useMongoClient: true });
 
     let eventList = [
       // Dashboard
@@ -39,7 +43,6 @@ class IOServer {
       { event: 'dash:deletedash', fn: this.deleteDash },
 
       // Alert item
-      { event: 'item:checkall', fn: this.checkAllItems },
       { event: 'item:check', fn: this.checkItem },
 
       // Alert item auth
@@ -50,23 +53,51 @@ class IOServer {
 
     io.on('connection', (socket) => {
       for(let i=0, l=eventList.length; i<l; ++i) {
-        let item = eventList[i];
-        socket.on(item.event, (data, callback) => {
-          item.fn.apply(this, [data, (result) => { callback(result); }]);
+        socket.on(eventList[i].event, (data, fn) => {
+          eventList[i].fn.apply(this, [data, (result) => { fn(result); }]);
         });
+      }
+    });
+
+    this.getAll({}, (dashboards) => {
+      for (let dash of dashboards) {
+        this.startUpdateLoop(dash);
       }
     });
   }
 
+  startUpdateLoop(dashName) {
+    let newId = setInterval(() => {
+      this.checkDashItems(dashName, (data) => {
+        if (data) {
+          this.io.emit('dash:update', dashName);
+        }
+      });
+    }, UPDATE_INTERVAL * 1000);
+
+    this.updateIntervalIds[dashName] = newId;
+  }
+
+  stopUpdateLoop(dashName) {
+    clearInterval(this.updateIntervalIds[dash.name]);
+  }
+
   createDash(data, fn) {
-    const name = data.name !== ''
-                 ? data.name
-                 : utils.uuid().split('-')[0];
+    let name = data.name !== ''
+                ? data.name
+                : utils.uuid().split('-')[0];
 
     let dash = new model.Dash({name: name});
+
     dash.save((err, doc) => {
       if (err) { console.log(err); }
-      return doc ? fn(doc) : fn(false);
+
+      if (doc) {
+        this.startUpdateLoop(doc);
+        return fn(doc);
+      }
+
+      return fn(false);
     });
   }
 
@@ -121,43 +152,48 @@ class IOServer {
 
   deleteAuth(data, fn) {}
 
-  checkAllItems(data, fn) {
-    this.getDash({ name: data.name }, (dash) => {
-      if(!dash) {
+  checkDashItems(dashName, fn) {
+    this.getDash({ name: dashName }, (dash) => {
+      if (!dash) {
         return fn(false);
       }
 
       let nItems = dash.items.slice(),
+          hasUpdate = false,
           stage = 0;
 
-      nItems.map((item) => {
-        let p = new Promise((resolve, reject) => {
-          this.checkItem(item, (value) => {
+      for (let i=0, l=nItems.length; i<l; ++i) {
+        let prom = new Promise((resolve, reject) => {
+          this.checkItem(nItems[i], (value) => {
             resolve(value);
           });
         });
 
-        p.then((val) => {
-          item.currentValue = val;
+        prom.then((val) => {
+          if (nItems[i].currentValue !== val) {
+            nItems[i].currentValue = val;
+            hasUpdate = true;
+          }
           ++stage;
-          if(stage === nItems.length) {
-            this.updateDash({name: data.name, items: nItems}, (result) => {
+          if(stage === nItems.length && hasUpdate) {
+            console.log('Updating dashboard ' + dash.name);
+            this.updateDash({name: dash.name, items: nItems}, (result) => {
               fn(result);
             });
           }
         });
-
-        return item;
-      });
+      }
     });
   }
 
   checkItem(item, fn) {
     let headers = {};
-    if(item.reqBody && item.reqBody !== '') {
+
+    if (item.reqBody && item.reqBody !== '') {
       headers['Content-Type'] = item.reqBodyContentType;
     }
-    if(item.hasAuth) {
+
+    if (item.hasAuth) {
       this.getAuth({itemId: item.id}, (auth) => {
         item.headers = utils.extend({}, headers, JSON.parse(auth.authHeaders));
         this._requestJSON(item, (value) => {
@@ -178,11 +214,11 @@ class IOServer {
       data: item.reqBody
     })
     .then((response) => {
-      if((typeof response.data) !== 'object') {
+      if ((typeof response.data) !== 'object') {
         return fn('__jsonurl_error');
       }
       utils.traverse(response.data, (key, value) => {
-        if(key === item.mainkey) {
+        if (key === item.mainkey) {
           return fn(value);
         }
       });
