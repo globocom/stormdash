@@ -14,8 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-body {
-  background: #2b2b2b;
+body,
+.dash-main {
+  background: #2e2e2e;
 }
 
 .dash-main,
@@ -29,16 +30,25 @@ body {
   justify-content: center;
   align-items: center;
   align-content: stretch;
+  padding-left: 20px;
 }
 
-.dash-main .main-title {
+.dash-main .main-title,
+.dash-main .dash-hour {
   position: absolute;
   bottom: 20px;
-  left: 20px;
   font-size: 9rem;
   line-height: 6rem;
   letter-spacing: -0.7rem;
   color: #111;
   margin: 0;
-  opacity: .2;
+  opacity: .5;
+}
+
+.dash-main .main-title {
+  left: 20px;
+}
+
+.dash-main .dash-hour {
+  right: 20px;
 }

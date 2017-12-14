@@ -16,25 +16,8 @@ limitations under the License.
 
 .dash-alert-group {
   display: flex;
-  flex-flow: column wrap;
-  justify-content: center;
-  align-items: center;
-  align-content: center;
-
-  min-height: 50%;
+  flex-flow: row wrap;
   max-height: 85%;
-  flex-grow: 1;
-  margin: 10px;
-
+  margin: 0 10px 10px 0;
   z-index: 5;
-}
-
-.dash-alert-group.critical {
-  align-self: flex-start;
-  z-index: 6;
-}
-
-.dash-alert-group.ok {
-  align-self: flex-end;
-  z-index: 4;
 }

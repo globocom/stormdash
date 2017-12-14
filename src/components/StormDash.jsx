@@ -38,7 +38,7 @@ class StormDash extends Component {
       items: [],
       show: false,
       notFound: false,
-      intervalId: null
+      currentHour: this.getCurrentHour()
     };
 
     this.getDashContent();
@@ -50,8 +50,11 @@ class StormDash extends Component {
     this.setCurrent = this.setCurrent.bind(this);
     this.clearCurrent = this.clearCurrent.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
+    this.getCurrentHour = this.getCurrentHour.bind(this);
 
     this.socket.on('dash:update', (data) => {
+      console.log('dash:update', data);
+
       if (data === this.props.params.dashName) {
         this.getDashContent();
       }
@@ -93,11 +96,17 @@ class StormDash extends Component {
           {alertGroups}
 
           <h2 className="main-title">{this.state.dashName}</h2>
+          <strong className="dash-hour">{this.state.currentHour}</strong>
         </div>
       )
     }
 
     return <div className="dash-main"></div>
+  }
+
+  getCurrentHour() {
+    let d = new Date();
+    return d.getHours() + ':' + (d.getMinutes() < 10 ? '0' : '') + d.getMinutes();
   }
 
   getDashContent() {
@@ -214,11 +223,15 @@ class StormDash extends Component {
   };
 
   componentDidMount() {
-    document.addEventListener('keydown', this.handleKeyDown)
+    document.addEventListener('keydown', this.handleKeyDown);
+    this.hourInterval = setInterval(() => {
+      this.setState({ currentHour: this.getCurrentHour() });
+    }, 15 * 1000);
   }
 
   componentWillUnmount() {
-    document.removeEventListener('keydown', this.handleKeyDown)
+    document.removeEventListener('keydown', this.handleKeyDown);
+    clearInterval(this.hourInterval);
   }
 }
 

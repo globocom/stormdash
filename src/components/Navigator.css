@@ -21,8 +21,8 @@ limitations under the License.
 
 .navigator {
   position: absolute;
-  top: 30px;
-  left: 30px;
+  top: 15px;
+  left: 10px;
   z-index: 8;
 }
 

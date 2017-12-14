@@ -21,8 +21,8 @@ limitations under the License.
 
 .dash-tools {
   position: absolute;
-  top: 30px;
-  right: 30px;
+  top: 15px;
+  right: 10px;
   text-align: right;
   z-index: 8;
 }

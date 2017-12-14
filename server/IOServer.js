@@ -20,7 +20,7 @@ const model = require('./model');
 const utils = require('../src/utils');
 
 const mongoUri = process.env.MONGOURI || 'mongodb://localhost:27017/stormdash';
-const UPDATE_INTERVAL = 10;
+const UPDATE_INTERVAL = process.env.UPDATE_INTERVAL || 15;
 
 class IOServer {
 
@@ -61,12 +61,14 @@ class IOServer {
 
     this.getAll({}, (dashboards) => {
       for (let dash of dashboards) {
-        this.startUpdateLoop(dash);
+        this.startUpdateLoop(dash.name);
       }
     });
   }
 
   startUpdateLoop(dashName) {
+    this.stopUpdateLoop(dashName);
+
     let newId = setInterval(() => {
       this.checkDashItems(dashName, (data) => {
         if (data) {
@@ -79,7 +81,7 @@ class IOServer {
   }
 
   stopUpdateLoop(dashName) {
-    clearInterval(this.updateIntervalIds[dash.name]);
+    clearInterval(this.updateIntervalIds[dashName]);
   }
 
   createDash(data, fn) {
@@ -87,7 +89,7 @@ class IOServer {
                 ? data.name
                 : utils.uuid().split('-')[0];
 
-    let dash = new model.Dash({name: name});
+    let dash = new model.Dash({ name: name, createdAt: Date.now() });
 
     dash.save((err, doc) => {
       if (err) { console.log(err); }
@@ -144,7 +146,7 @@ class IOServer {
   }
 
   getAuth(data, fn) {
-    model.ItemAuth.findOne({itemId: data.itemId}, (err, doc) => {
+    model.ItemAuth.findOne({ itemId: data.itemId }, (err, doc) => {
       if (err) { console.log(err); }
       return doc ? fn(doc) : fn(false);
     });
@@ -175,9 +177,8 @@ class IOServer {
             hasUpdate = true;
           }
           ++stage;
-          if(stage === nItems.length && hasUpdate) {
-            console.log('Updating dashboard ' + dash.name);
-            this.updateDash({name: dash.name, items: nItems}, (result) => {
+          if (stage === nItems.length && hasUpdate) {
+            this.updateDash({ name: dash.name, items: nItems }, (result) => {
               fn(result);
             });
           }
@@ -194,11 +195,13 @@ class IOServer {
     }
 
     if (item.hasAuth) {
-      this.getAuth({itemId: item.id}, (auth) => {
-        item.headers = utils.extend({}, headers, JSON.parse(auth.authHeaders));
-        this._requestJSON(item, (value) => {
-          return fn(value);
-        });
+      this.getAuth({ itemId: item.id }, (auth) => {
+        if (auth) {
+          item.headers = utils.extend({}, headers, JSON.parse(auth.authHeaders));
+          this._requestJSON(item, (value) => {
+            return fn(value);
+          });
+        }
       });
     } else {
       this._requestJSON(item, (value) => {

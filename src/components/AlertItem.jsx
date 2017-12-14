@@ -21,6 +21,7 @@ import './AlertItem.css';
 
 
 class AlertItem extends Component {
+
   constructor(props) {
     super(props);
     this.onItemSelect = this.onItemSelect.bind(this);
@@ -32,14 +33,16 @@ class AlertItem extends Component {
     let status = checkStatus(alert);
 
     let value = alert.currentValue;
-    if(alert.show === 'message' && status !== null) {
+    if (alert.show === 'message' && status !== null) {
       value = alert[status].message;
     }
 
     return (
       <div className={"dash-alert-item " + status + (current ? " current" : "")}
            onClick={this.onItemSelect}>
-        <span className="alert-title">{namespace}: {title}</span><br />
+        <span className="alert-title">
+          <span className="alert-namespace">{namespace}</span> {title}
+        </span>
         <strong className="alert-value">{value}</strong>
       </div>
     );

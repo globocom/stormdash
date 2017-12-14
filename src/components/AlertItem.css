@@ -15,16 +15,17 @@ limitations under the License.
 */
 
 .dash-alert-item {
+  display: flex;
+  flex-flow: column nowrap;
   position: relative;
-  display: inline-block;
   margin: 0 10px 10px 0;
   cursor: pointer;
+  /* flex-grow: 1; */
 }
 
 .dash-alert-item.current {
   cursor: default;
   z-index: 11;
-  background-color: rgba(40, 142, 223, 0.2);
 }
 
 .dash-alert-item.current .alert-title,
@@ -37,68 +38,51 @@ limitations under the License.
 .dash-alert-item.current .alert-value:after,
 .dash-alert-item.current .alert-value:before {
   position: absolute;
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
   border: 1px solid #76b7eb;
   content: "";
 }
 
-.dash-alert-item.current .alert-title:before { top: -3px; left: -3px; border-width: 1px 0 0 1px; }
-.dash-alert-item.current .alert-title:after { top: -3px; right: -3px; border-width: 1px 1px 0 0; }
-.dash-alert-item.current .alert-value:before { bottom: -3px; left: -3px; border-width: 0 0 1px 1px; }
-.dash-alert-item.current .alert-value:after { bottom: -3px; right: -3px; border-width: 0 1px 1px 0; }
+.dash-alert-item.current .alert-title:before { top: -4px; left: -4px; border-width: 1px 0 0 1px; }
+.dash-alert-item.current .alert-title:after { top: -4px; right: -4px; border-width: 1px 1px 0 0; }
+.dash-alert-item.current .alert-value:before { bottom: -4px; left: -4px; border-width: 0 0 1px 1px; }
+.dash-alert-item.current .alert-value:after { bottom: -4px; right: -4px; border-width: 0 1px 1px 0; }
 
 .dash-alert-item .alert-title {
-  display: inline-block;
+  box-sizing: border-box;
+  display: block;
+  white-space: nowrap;
   color: white;
+  font-weight: lighter;
+  font-size: 2rem;
+  padding: 4px 10px 8px;
+  line-height: 1.85rem;
 }
 
 .dash-alert-item .alert-value {
-  display: inline-block;
-  background-color: black;
-}
-
-.dash-alert-item.critical .alert-title {
-  background-color: #d70c0c;
-  font-size: 2.1rem;
-  line-height: 2.1rem;
-  letter-spacing: -0.1rem;
-  padding: 6px 14px 4px 8px;
-}
-
-.dash-alert-item.critical .alert-value {
-  font-size: 4rem;
-  color: #d70c0c;
-  line-height: 3rem;
-  letter-spacing: -0.35rem;
-  padding: 13px 14px 7px 8px;
-}
-
-.dash-alert-item.warning .alert-title {
-  background-color: #d19a14;
-  font-size: 1.6rem;
-  padding: 2px 7px;
-}
-
-.dash-alert-item.warning .alert-value {
+  background-color: #222;
+  flex-grow: 1;
+  align-items: center;
   font-size: 3rem;
-  color: #d19a14;
   line-height: 2.8rem;
   letter-spacing: -0.1rem;
-  padding: 6px 7px 3px;
+  padding: 10px;
+  overflow-wrap: break-word;
 }
 
-.dash-alert-item.ok .alert-title {
-  background-color: #438c07;
-  font-size: 1rem;
-  padding: 0.2rem;
-  line-height: 1rem;
+.dash-alert-item .alert-namespace {
+  display: block;
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.8);
+  text-transform: uppercase;
 }
 
-.dash-alert-item.ok .alert-value {
-  font-size: 2rem;
-  color: #438c07;
-  line-height: 1.7rem;
-  letter-spacing: -0.1rem;
-  padding: 0.5rem 0.4rem 0.3rem 0.3rem;
-}
+.dash-alert-item.ok .alert-title { background-color: #438c07; }
+.dash-alert-item.ok .alert-value { color: #438c07; }
+
+.dash-alert-item.warning .alert-title { background-color: #d19a14; }
+.dash-alert-item.warning .alert-value { color: #d19a14; }
+
+.dash-alert-item.critical .alert-title { background-color: #d70c0c; }
+.dash-alert-item.critical .alert-value { color: #d70c0c; }
