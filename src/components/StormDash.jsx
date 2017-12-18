@@ -53,8 +53,6 @@ class StormDash extends Component {
     this.getCurrentHour = this.getCurrentHour.bind(this);
 
     this.socket.on('dash:update', (data) => {
-      console.log('dash:update', data);
-
       if (data === this.props.params.dashName) {
         this.getDashContent();
       }
@@ -143,7 +141,7 @@ class StormDash extends Component {
       'dash:update',
       { name: this.state.dashName, items: newItems },
       (updated) => {
-        return updated && this.setState({items: newItems});
+        return updated && this.getDashContent();
       }
     );
   }
@@ -161,7 +159,7 @@ class StormDash extends Component {
         'dash:update',
         { name: this.state.dashName, items: currentItems },
         (updated) => {
-          return updated && this.setState({items: currentItems});
+          return updated && this.getDashContent();
         }
       );
     }
@@ -180,7 +178,7 @@ class StormDash extends Component {
         'dash:update',
         { name: this.state.dashName, items: currentItems },
         (updated) => {
-          return updated && this.setState({items: currentItems});
+          return updated && this.getDashContent();
         }
       );
     }

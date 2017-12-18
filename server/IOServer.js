@@ -26,7 +26,7 @@ class IOServer {
 
   constructor(io) {
     this.io = io;
-    this.updateIntervalIds = {};
+    this.updateInterval = null;
 
     if (io === undefined) {
       return;
@@ -59,29 +59,22 @@ class IOServer {
       }
     });
 
-    this.getAll({}, (dashboards) => {
-      for (let dash of dashboards) {
-        this.startUpdateLoop(dash.name);
-      }
-    });
+    this.startUpdateLoop();
   }
 
-  startUpdateLoop(dashName) {
-    this.stopUpdateLoop(dashName);
-
-    let newId = setInterval(() => {
-      this.checkDashItems(dashName, (data) => {
-        if (data) {
-          this.io.emit('dash:update', dashName);
-        }
+  startUpdateLoop() {
+    clearInterval(this.updateInterval);
+    this.updateInterval = setInterval(() => {
+      this.getAll({}, (dashboards) => {
+        dashboards.map((dash) => {
+          this.checkDashItems(dash.name, (data) => {
+            if (data) {
+              this.io.emit('dash:update', dash.name);
+            }
+          });
+        });
       });
     }, UPDATE_INTERVAL * 1000);
-
-    this.updateIntervalIds[dashName] = newId;
-  }
-
-  stopUpdateLoop(dashName) {
-    clearInterval(this.updateIntervalIds[dashName]);
   }
 
   createDash(data, fn) {
@@ -93,12 +86,10 @@ class IOServer {
 
     dash.save((err, doc) => {
       if (err) { console.log(err); }
-
       if (doc) {
-        this.startUpdateLoop(doc);
+        this.startUpdateLoop();
         return fn(doc);
       }
-
       return fn(false);
     });
   }
@@ -162,28 +153,30 @@ class IOServer {
 
       let nItems = dash.items.slice(),
           hasUpdate = false,
-          stage = 0;
+          promises = [];
 
       for (let i=0, l=nItems.length; i<l; ++i) {
-        let prom = new Promise((resolve, reject) => {
-          this.checkItem(nItems[i], (value) => {
-            resolve(value);
-          });
-        });
-
-        prom.then((val) => {
-          if (nItems[i].currentValue !== val) {
-            nItems[i].currentValue = val;
-            hasUpdate = true;
-          }
-          ++stage;
-          if (stage === nItems.length && hasUpdate) {
-            this.updateDash({ name: dash.name, items: nItems }, (result) => {
-              fn(result);
+        promises.push(
+          new Promise((resolve, reject) => {
+            this.checkItem(nItems[i], (value) => {
+              if (nItems[i].currentValue !== value) {
+                nItems[i].currentValue = value;
+                hasUpdate = true;
+              }
+              resolve(value);
             });
-          }
-        });
+          })
+        );
       }
+
+      Promise.all(promises).then((item) => {
+        if (hasUpdate) {
+          this.updateDash({ name: dashName, items: nItems }, (result) => {
+            return fn(result);
+          });
+        }
+        return fn(false);
+      });
     });
   }
 
@@ -211,6 +204,10 @@ class IOServer {
   }
 
   _requestJSON(item, fn) {
+    if (item.jsonurl === '') {
+      return fn('__jsonurl_error');
+    }
+
     axios.get(item.jsonurl, {
       responseType: 'json',
       headers: item.headers,
@@ -220,11 +217,8 @@ class IOServer {
       if ((typeof response.data) !== 'object') {
         return fn('__jsonurl_error');
       }
-      utils.traverse(response.data, (key, value) => {
-        if (key === item.mainkey) {
-          return fn(value);
-        }
-      });
+      let value = utils.findByKey(response.data, item.mainkey);
+      fn(value);
     })
     .catch((error) => {
       console.log(error);

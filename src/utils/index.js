@@ -68,13 +68,32 @@ function store(namespace, data) {
   return (store && JSON.parse(store)) || [];
 }
 
-function traverse(obj, func) {
-  for (var i in obj) {
-    func.apply(this, [i, obj[i]]);
-    if (obj[i] !== null && typeof(obj[i]) === "object") {
-      traverse(obj[i],func);
+function findByKey(obj, mainkey) {
+  var mainvalue = null,
+      found = false;
+
+  function traverse(o, k) {
+    var keys = Object.keys(o);
+
+    for (var i=0, l=keys.length; i<l; ++i) {
+      var key = keys[i];
+      if (key === k) {
+        found = true;
+        mainvalue = o[key];
+        break;
+      } else {
+        if (o[key] !== null && typeof(o[key]) === "object") {
+          traverse(o[key], k);
+          if (found) {
+            break;
+          }
+        }
+      }
     }
   }
+
+  traverse(obj, mainkey);
+  return mainvalue;
 }
 
 function checkStatus(item) {
@@ -119,5 +138,5 @@ function sha512(password, salt) {
     return { salt: salt, passwordHash: hash.digest('hex') };
 }
 
-module.exports = { extend, uuid, shuffle, store, traverse,
+module.exports = { extend, uuid, shuffle, store, findByKey,
                    checkStatus, genSalt, sha512 };
