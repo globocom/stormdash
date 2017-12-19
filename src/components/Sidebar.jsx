@@ -60,19 +60,19 @@ class Sidebar extends Component {
 
   render() {
     const authentication = (
-      <div className="auth">
-        <div>
+      <div className="form-auth">
+        <div className="form-auth-title">
           <label className="topcoat-checkbox has-auth-checkbox">
             <input type="checkbox" name="hasAuth"
               checked={this.state.hasAuth} onChange={this.handleInputChange} />
             <div className="topcoat-checkbox__checkmark"></div>
-            &nbsp;Need&nbsp;authentication
+            &nbsp;With&nbsp;Authentication
           </label>
         </div>
 
         {this.state.hasAuth &&
-          <div>
-            <label>Auth Headers</label><br />
+          <div className="sub-form">
+            <label>Authentication Headers</label><br />
             <input type="text" className="topcoat-text-input--large" name="authHeaders"
               value={this.state.authHeaders} onChange={this.handleInputChange} />
           </div>}
@@ -291,16 +291,13 @@ class Sidebar extends Component {
   }
 
   saveAuth() {
-    this.socket.emit(
-      'auth:save',
-      {
+    this.socket.emit('auth:save', {
         itemId: this.state.id,
         dashName: this.props.dashName,
         username: this.state.username,
         password: this.state.password,
         authHeaders: this.state.authHeaders
-      },
-      (data) => {
+      }, (data) => {
         console.log('Save item auth: '+ data);
       });
   }

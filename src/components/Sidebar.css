@@ -23,13 +23,13 @@ limitations under the License.
 
 @media (min-width: 641px) {
   .dash-sidebar {
-    width: 30%;
+    width: 35%;
   }
 }
 
 .dash-sidebar {
-  position: absolute;
-  padding: 20px;
+  position: fixed;
+  padding: 20px 0;
   right: 0;
   top: 0;
   bottom: 0;
@@ -43,7 +43,7 @@ limitations under the License.
   position: absolute;
   right: 20px;
   top: 20px;
-  width: 50px;
+  width: 40px;
   height: 40px;
   border: 0;
   color: white;
@@ -68,14 +68,33 @@ limitations under the License.
   font-weight: normal;
   color: white;
   margin: 0 0 15px;
+  padding: 0 20px;
 }
 
 .dash-sidebar .form-items > div {
   margin-bottom: 10px;
+  padding: 0 20px;
 }
+
+.dash-sidebar .form-items .form-auth {
+  padding: 0
+}
+
+.dash-sidebar .form-items .form-auth-title {
+  padding: 0 20px;
+}
+
+.dash-sidebar .form-items .sub-form {
+  padding: 15px 20px 20px;
+  background-color: #434647;
+  border-top: 1px solid #333;
+  border-bottom: 1px solid #555;
+}
+
 
 .dash-sidebar .form-base {
   margin: 20px 0;
+  padding: 0 20px;
   text-align: right;
 }
 
@@ -114,18 +133,27 @@ limitations under the License.
 
 .dash-sidebar .preview {
   display: flex;
-  flex-flow: column wrap;
+  flex-flow: column nowrap;
   justify-content: center;
   align-items: center;
   align-content: center;
-
   width: 100%;
-  height: 200px;
-  border: 3px dashed #333434;
-  background-color: #454646;
+  padding: 10px 0 2px;
+
+  background-color: #434647;
+  border-top: 1px solid #333;
+  border-bottom: 1px solid #555;
+
   margin-bottom: 20px;
+}
+
+.dash-sidebar .preview:after {
+  content: 'Preview';
+  font-size: 32px;
+  color: rgba(255, 255, 255, 0.2);
 }
 
 .dash-sidebar .preview .dash-alert-item {
   cursor: default;
+  margin: 10px;
 }
