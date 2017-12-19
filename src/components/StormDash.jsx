@@ -22,7 +22,6 @@ import AlertGroup from './AlertGroup';
 import NotFound from './NotFound';
 import { uiSocket } from './App';
 import { uuid } from '../utils';
-
 import './StormDash.css';
 
 class StormDash extends Component {

@@ -16,9 +16,7 @@ limitations under the License.
 
 import React, { Component } from 'react';
 import { Link } from 'react-router';
-
 import './DashList.css';
-
 
 class DashList extends Component {
 

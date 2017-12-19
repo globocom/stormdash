@@ -15,9 +15,7 @@ limitations under the License.
 */
 
 import React, { Component } from 'react';
-
 import './Tools.css';
-
 
 class ConfirmDelete extends Component {
   render() {

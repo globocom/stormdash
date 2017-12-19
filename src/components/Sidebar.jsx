@@ -18,7 +18,6 @@ import React, { Component } from 'react';
 import AlertItem from './AlertItem';
 import { uiSocket } from './App';
 import { uuid } from '../utils';
-
 import './Sidebar.css';
 
 class Sidebar extends Component {

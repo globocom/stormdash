@@ -16,9 +16,7 @@ limitations under the License.
 
 import React, { Component } from 'react';
 import { checkStatus } from '../utils';
-
 import './AlertItem.css';
-
 
 class AlertItem extends Component {
 
@@ -29,7 +27,7 @@ class AlertItem extends Component {
 
   render() {
     let alert = this.props.alert,
-        { namespace, title, current } = alert;
+        { namespace, title, current, description } = alert;
     let status = checkStatus(alert);
 
     let value = alert.currentValue;
@@ -39,7 +37,7 @@ class AlertItem extends Component {
 
     return (
       <div className={"dash-alert-item " + status + (current ? " current" : "")}
-           onClick={this.onItemSelect}>
+           onClick={this.onItemSelect} title={description}>
         <span className="alert-title">
           <span className="alert-namespace">{namespace}</span> {title}
         </span>

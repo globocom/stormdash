@@ -17,9 +17,7 @@ limitations under the License.
 import React, { Component } from 'react';
 import AlertItem from './AlertItem';
 import { checkStatus } from '../utils';
-
 import './AlertGroup.css';
-
 
 class AlertGroup extends Component {
 
