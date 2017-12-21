@@ -212,15 +212,35 @@ class IOServer {
   }
 
   _requestJSON(item, fn) {
+    let config = {
+      responseType: 'json'
+    }
+
     if (item.jsonurl === '') {
       return fn('__jsonurl_error');
     }
 
-    axios.get(item.jsonurl, {
-      responseType: 'json',
-      headers: item.headers,
-      data: item.reqBody
-    })
+    if (item.headers !== undefined
+      && item.headers !== '') {
+      config['headers'] = item.headers;
+    }
+
+    if (item.reqBody !== undefined
+      && item.reqBody !== '') {
+      config['data'] = item.reqBody;
+    }
+
+    if (item.proxyhost !== undefined
+      && item.proxyhost !== ''
+      && item.proxyport !== undefined
+      && item.proxyport !== '') {
+      config['proxy'] = {
+        host: item.proxyhost,
+        port: item.proxyport
+      };
+    }
+
+    axios.get(item.jsonurl, config)
     .then((response) => {
       if ((typeof response.data) !== 'object') {
         return fn('__jsonurl_error');

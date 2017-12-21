@@ -33,6 +33,8 @@ class Sidebar extends Component {
       namespace: "",
       title: "",
       jsonurl: "",
+      proxyhost: "",
+      proxyport: "",
       mainkey: "",
       ok: {compare: "", value: "", message: ""},
       warning: {compare: "", value: "", message: ""},
@@ -102,6 +104,26 @@ class Sidebar extends Component {
             <label>Json url</label><br />
             <input type="text" className="topcoat-text-input--large" name="jsonurl"
               value={this.state.jsonurl} onChange={this.handleInputChange} />
+          </div>
+
+          <div className="proxy-item">
+            <label>Proxy</label>
+            <div className="rule">
+              <input
+                type="text"
+                className="topcoat-text-input--large host"
+                placeholder="url"
+                name="proxyhost"
+                value={this.state.proxyhost}
+                onChange={this.handleInputChange} />
+              <input
+                type="text"
+                className="topcoat-text-input--large port"
+                placeholder="port"
+                name="proxyport"
+                value={this.state.proxyport}
+                onChange={this.handleInputChange} />
+            </div>
           </div>
 
           <div>
@@ -326,6 +348,8 @@ class Sidebar extends Component {
       namespace: this.state.namespace,
       title: this.state.title,
       jsonurl: this.state.jsonurl,
+      proxyhost: this.state.proxyhost,
+      proxyport: this.state.proxyport,
       mainkey: this.state.mainkey,
       ok: this.state.ok,
       warning: this.state.warning,
