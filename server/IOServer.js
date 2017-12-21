@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-const axios = require('axios');
+const axios = require('axios-proxy-fix');
 const mongoose = require('mongoose');
 const model = require('./model');
 const utils = require('../src/utils');
