@@ -41,6 +41,7 @@ class IOServer {
       { event: 'dash:get', fn: this.getDash },
       { event: 'dash:getall', fn: this.getAll },
       { event: 'dash:deletedash', fn: this.deleteDash },
+      { event: 'dash:deleteitemauth', fn: this.deleteItemAuth },
 
       // Alert item
       { event: 'item:check', fn: this.checkItem },
@@ -121,6 +122,14 @@ class IOServer {
   }
 
   deleteDash(data, fn) {}
+
+  deleteItemAuth(data, fn) {
+    model.ItemAuth.remove({
+      itemId: data.itemId
+    }, (error) => {
+      fn(error);
+    });
+  }
 
   saveAuth(data, fn) {
     let auth = new model.ItemAuth({
