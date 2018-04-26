@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+
 var crypto = require('crypto');
 
 function extend() {
@@ -102,11 +103,11 @@ function checkStatus(item) {
                 'warning': item.warning,
                 'critical': item.critical};
 
-  if(item.currentValue === '__jsonurl_error') {
+  if (item.currentValue === '__jsonurl_error') {
     return 'critical';
   }
 
-  for(let s in status) {
+  for (let s in status) {
     let v1 = item.currentValue,
         v2 = status[s].value,
         c = status[s].compare === '=' ? '==' : status[s].compare,
@@ -120,7 +121,7 @@ function checkStatus(item) {
     }
     catch(err) {}
 
-    if(c !== "" && condition) {
+    if (c !== "" && condition) {
       final = s;
     }
   }
@@ -129,13 +130,13 @@ function checkStatus(item) {
 }
 
 function genSalt(length) {
-    return crypto.randomBytes(Math.ceil(length/2)).toString('hex').slice(0,length);
+  return crypto.randomBytes(Math.ceil(length/2)).toString('hex').slice(0,length);
 }
 
 function sha512(password, salt) {
-    var hash = crypto.createHmac('sha512', salt);
-    hash.update(password);
-    return { salt: salt, passwordHash: hash.digest('hex') };
+  var hash = crypto.createHmac('sha512', salt);
+  hash.update(password);
+  return { salt: salt, passwordHash: hash.digest('hex') };
 }
 
 module.exports = { extend, uuid, shuffle, store, findByKey,

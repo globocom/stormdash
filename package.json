@@ -10,16 +10,17 @@
     "eject": "react-scripts eject"
   },
   "devDependencies": {
+    "eslint": "^4.19.1",
     "react-scripts": "1.0.10"
   },
   "dependencies": {
     "axios": "^0.16.2",
-    "express": "^4.15.3",
-    "mongoose": "^4.8.4",
+    "express": "^4.16.3",
+    "mongoose": "^4.13.12",
     "react": "16.2.0",
     "react-dom": "16.2.0",
-    "react-router": "^3.0.2",
+    "react-router": "^3.2.1",
     "react-router-dom": "4.2.2",
-    "socket.io": "^2.0.4"
+    "socket.io": "^2.1.0"
   }
 }
