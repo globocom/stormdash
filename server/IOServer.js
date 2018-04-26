@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-const axios = require('axios');
+const axios = require('axios-proxy-fix');
 const mongoose = require('mongoose');
 const model = require('./model');
 const utils = require('../src/utils');
@@ -41,6 +41,7 @@ class IOServer {
       { event: 'dash:get', fn: this.getDash },
       { event: 'dash:getall', fn: this.getAll },
       { event: 'dash:deletedash', fn: this.deleteDash },
+      { event: 'dash:deleteitemauth', fn: this.deleteItemAuth },
 
       // Alert item
       { event: 'item:check', fn: this.checkItem },
@@ -121,6 +122,14 @@ class IOServer {
   }
 
   deleteDash(data, fn) {}
+
+  deleteItemAuth(data, fn) {
+    model.ItemAuth.remove({
+      itemId: data.itemId
+    }, (error) => {
+      fn(error);
+    });
+  }
 
   saveAuth(data, fn) {
     let auth = new model.ItemAuth({
@@ -212,15 +221,35 @@ class IOServer {
   }
 
   _requestJSON(item, fn) {
+    let config = {
+      responseType: 'json'
+    }
+
     if (item.jsonurl === '') {
       return fn('__jsonurl_error');
     }
 
-    axios.get(item.jsonurl, {
-      responseType: 'json',
-      headers: item.headers,
-      data: item.reqBody
-    })
+    if (item.headers !== undefined
+      && item.headers !== '') {
+      config['headers'] = item.headers;
+    }
+
+    if (item.reqBody !== undefined
+      && item.reqBody !== '') {
+      config['data'] = item.reqBody;
+    }
+
+    if (item.proxyhost !== undefined
+      && item.proxyhost !== ''
+      && item.proxyport !== undefined
+      && item.proxyport !== '') {
+      config['proxy'] = {
+        host: item.proxyhost,
+        port: item.proxyport
+      };
+    }
+
+    axios.get(item.jsonurl, config)
     .then((response) => {
       if ((typeof response.data) !== 'object') {
         return fn('__jsonurl_error');

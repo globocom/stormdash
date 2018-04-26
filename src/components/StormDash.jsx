@@ -174,10 +174,18 @@ class StormDash extends Component {
     if (index >= 0) {
       currentItems.splice(index, 1);
       this.socket.emit(
-        'dash:update',
-        { name: this.state.dashName, items: currentItems },
-        (updated) => {
-          return updated && this.getDashContent();
+        'dash:deleteitemauth',
+        { itemId: itemId },
+        (error) => {
+          if (!error) {
+            this.socket.emit(
+              'dash:update',
+              { name: this.state.dashName, items: currentItems },
+              (updated) => {
+                return updated && this.getDashContent();
+              }
+            );
+          }
         }
       );
     }

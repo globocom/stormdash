@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "axios": "^0.16.2",
+    "axios-proxy-fix": "^0.16.3",
     "express": "^4.16.3",
     "mongoose": "^4.13.12",
     "react": "16.2.0",
