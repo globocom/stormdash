@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+/* eslint no-eval: 0 */
 
 var crypto = require('crypto');
 
@@ -38,7 +39,7 @@ function uuid() {
     if (i === 8 || i === 12 || i === 16 || i === 20) {
       uuid += '-';
     }
-    uuid += (i === 12 ? 4 : (i === 16 ? (random & 3 | 8) : random))
+    uuid += (i === 12 ? 4 : (i === 16 ? ((random & 3) | 8) : random))
       .toString(16);
   }
 

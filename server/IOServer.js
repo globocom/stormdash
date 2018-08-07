@@ -83,7 +83,7 @@ class IOServer {
                 ? data.name
                 : utils.uuid().split('-')[0];
 
-    let dash = new model.Dash({ name: name, createdAt: Date.now() });
+    let dash = new model.Dash({ name: name, hidden: false, createdAt: Date.now() });
 
     dash.save((err, doc) => {
       if (err) { console.log(err); }
@@ -97,8 +97,8 @@ class IOServer {
 
   updateDash(data, fn) {
     model.Dash.findOneAndUpdate(
-      { name: data.name},
-      { $set: { items: data.items} },
+      { name: data.name },
+      { $set: { hidden: data.hidden, items: data.items} },
       { upsert: true },
       (err, doc) => {
         if (err) { console.log(err); }

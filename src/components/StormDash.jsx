@@ -17,6 +17,7 @@ limitations under the License.
 import React, { Component } from 'react';
 import Tools from './Tools';
 import Navigator from './Navigator';
+import Hidden from './Hidden';
 import Sidebar from './Sidebar';
 import AlertGroup from './AlertGroup';
 import NotFound from './NotFound';
@@ -31,9 +32,9 @@ class StormDash extends Component {
 
     this.state = {
       dashName: this.props.params.dashName,
+      hidden: false,
       visibleSidebar: false,
       currentItem: null,
-      groupStatus: ['critical', 'warning', 'ok'],
       items: [],
       show: false,
       notFound: false,
@@ -50,6 +51,7 @@ class StormDash extends Component {
     this.clearCurrent = this.clearCurrent.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.getCurrentHour = this.getCurrentHour.bind(this);
+    this.changeHidden = this.changeHidden.bind(this);
 
     this.socket.on('dash:update', (data) => {
       if (data === this.props.params.dashName) {
@@ -64,14 +66,7 @@ class StormDash extends Component {
     }
 
     if(this.state.show) {
-      let { visibleSidebar, groupStatus } = this.state;
-      let alertGroups = groupStatus.map((group) => {
-        return <AlertGroup key={uuid()}
-                           items={this.state.items}
-                           groupStatus={group}
-                           setCurrent={this.setCurrent}
-                           clearCurrent={this.clearCurrent} />
-      });
+      let { visibleSidebar } = this.state;
 
       return (
         <div className="dash-main">
@@ -83,6 +78,8 @@ class StormDash extends Component {
                    deleteItem={this.deleteItem}
                    clearCurrent={this.clearCurrent} />}
 
+          <Hidden changeHidden={this.changeHidden} />
+
           {visibleSidebar &&
             <Sidebar currentItem={this.state.currentItem}
                      handleSidebar={this.handleSidebar}
@@ -90,10 +87,16 @@ class StormDash extends Component {
                      editItem={this.editItem}
                      dashName={this.state.dashName} />}
 
-          {alertGroups}
+          <AlertGroup key={uuid()}
+                      items={this.state.items}
+                      hidden={this.state.hidden}
+                      setCurrent={this.setCurrent}
+                      clearCurrent={this.clearCurrent} />
 
-          <h2 className="main-title">{this.state.dashName}</h2>
-          <strong className="dash-hour">{this.state.currentHour}</strong>
+          <div className="dash-footer">
+            <h2 className="main-title">{this.state.dashName}</h2>
+            <strong className="dash-hour">{this.state.currentHour}</strong>
+          </div>
         </div>
       )
     }
@@ -116,6 +119,7 @@ class StormDash extends Component {
       this.setState({
         items: data.items,
         mainTitle: data.name,
+        hidden: data.hidden,
         show: true
       });
 
@@ -138,7 +142,11 @@ class StormDash extends Component {
     const newItems = this.state.items.concat([alertObj]);
     this.socket.emit(
       'dash:update',
-      { name: this.state.dashName, items: newItems },
+      {
+        name: this.state.dashName,
+        hidden: this.state.hidden,
+        items: newItems
+      },
       (updated) => {
         return updated && this.getDashContent();
       }
@@ -156,7 +164,11 @@ class StormDash extends Component {
       currentItems[index] = newAlertObj;
       this.socket.emit(
         'dash:update',
-        { name: this.state.dashName, items: currentItems },
+        {
+          name: this.state.dashName,
+          hidden: this.state.hidden,
+          items: currentItems
+        },
         (updated) => {
           return updated && this.getDashContent();
         }
@@ -216,6 +228,25 @@ class StormDash extends Component {
     this.setState({
       currentItem: null,
       items: currentItems
+    });
+  }
+
+  changeHidden() {
+    let hidden = this.state.hidden;
+    this.setState({
+      hidden: !hidden
+    }, () => {
+      this.socket.emit(
+        'dash:update',
+        {
+          name: this.state.dashName,
+          hidden: this.state.hidden,
+          items: this.state.items
+        },
+        (updated) => {
+          return updated && this.getDashContent();
+        }
+      );
     });
   }
 
