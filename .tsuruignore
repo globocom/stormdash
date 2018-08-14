@@ -1,0 +1,14 @@
+.DS_Store
+.editorconfig
+.eslintrc.json
+.git
+.gitignore
+.jshintrc
+.travis.yml
+.vscode
+coverage
+node_modules
+src
+TODO
+LICENSE
+README.md
