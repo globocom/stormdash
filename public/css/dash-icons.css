@@ -2,11 +2,11 @@
 
 @font-face {
   font-family: "dash-icons";
-  src:url("../fonts/dash-icons.eot");
-  src:url("../fonts/dash-icons.eot?#iefix") format("embedded-opentype"),
-    url("../fonts/dash-icons.woff") format("woff"),
-    url("../fonts/dash-icons.ttf") format("truetype"),
-    url("../fonts/dash-icons.svg#dash-icons") format("svg");
+  src:url("fonts/dash-icons.eot");
+  src:url("fonts/dash-icons.eot?#iefix") format("embedded-opentype"),
+    url("fonts/dash-icons.woff") format("woff"),
+    url("fonts/dash-icons.ttf") format("truetype"),
+    url("fonts/dash-icons.svg#dash-icons") format("svg");
   font-weight: normal;
   font-style: normal;
 
@@ -55,4 +55,7 @@
 }
 .icon-left-open-big:before {
   content: "\66";
+}
+.icon-eye:before {
+  content: "\67";
 }
