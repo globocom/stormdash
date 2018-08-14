@@ -41,6 +41,7 @@ class Sidebar extends Component {
       critical: {compare: "", value: "", message: ""},
       show: "value",
       description: "",
+      disable: false,
       hasAuth: false,
       username: "",
       password: "",
@@ -280,6 +281,18 @@ class Sidebar extends Component {
             <textarea className="topcoat-textarea" name="description"
               value={this.state.description} onChange={this.handleInputChange}></textarea>
           </div>
+
+          <div>
+            <label className="topcoat-checkbox">
+              <input
+                type="checkbox"
+                name="disable"
+                onChange={this.handleInputChange}
+                checked={this.state.disable} />
+              <div className="topcoat-checkbox__checkmark"></div>
+              &nbsp;Disable
+            </label>
+          </div>
         </section>
 
         <section className="form-base">
@@ -356,6 +369,7 @@ class Sidebar extends Component {
       critical: this.state.critical,
       show: this.state.show,
       description: this.state.description,
+      disable: this.state.disable,
       hasAuth: this.state.hasAuth,
       reqBody: this.state.reqBody,
       reqBodyContentType: this.state.reqBodyContentType

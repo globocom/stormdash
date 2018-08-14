@@ -15,38 +15,28 @@ limitations under the License.
 */
 
 import React, { Component } from 'react';
-import AlertItem from './AlertItem';
-import './AlertGroup.css';
+import './Hidden.css';
 
-class AlertGroup extends Component {
+class Hidden extends Component {
+  constructor(props) {
+    super(props);
+    this.onClick = this.onClick.bind(this);
+  }
 
   render() {
-    let alertItems = this.props.items;
-    let allItems = [];
-    let hidden = this.props.hidden;
-
-    alertItems.forEach((alert) => {
-      if (hidden || !alert.disable) {
-        allItems.push(
-          <AlertItem
-            key={alert.id}
-            alert={alert}
-            setCurrent={this.props.setCurrent} />
-        )
-      }
-    });
-
-    if(allItems.length < 1) {
-      return null;
-    }
-
     return (
-      <div className="dash-alert-group"
-           onClick={() => this.props.clearCurrent()}>
-        {allItems}
+      <div className="hidden">
+        <button onClick={this.onClick} className="tool-btn add-alert">
+          <i className="icon-pencil"></i>
+        </button>
       </div>
     );
   }
+
+  onClick(event) {
+    event.stopPropagation();
+    this.props.changeHidden();
+  }
 }
 
-export default AlertGroup;
+export default Hidden;

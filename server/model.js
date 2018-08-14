@@ -20,6 +20,7 @@ mongoose.Promise = global.Promise;
 
 const dashSchema = mongoose.Schema({
   name: { type: String, index: true },
+  hidden: { type: Boolean },
   createdAt: { type: Date, default: Date.now },
   items: Array
 });

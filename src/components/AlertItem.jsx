@@ -29,14 +29,15 @@ class AlertItem extends Component {
     let alert = this.props.alert,
         { namespace, title, current, description } = alert;
     let status = checkStatus(alert);
+    let disable = alert.disable ? " disable" : "";
 
     let value = alert.currentValue;
     if (alert.show === 'message' && status !== null) {
-      value = alert[status].message;
+      value = alert[status].message.toLowerCase();
     }
 
     return (
-      <div className={"dash-alert-item " + status + (current ? " current" : "")}
+      <div className={"dash-alert-item " + status + disable + (current ? " current" : "")}
            onClick={this.onItemSelect} title={description}>
         <span className="alert-title">
           <span className="alert-namespace">{namespace}</span> {title}

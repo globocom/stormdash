@@ -15,12 +15,11 @@ limitations under the License.
 */
 
 .dash-alert-item {
-  display: flex;
-  flex-flow: column nowrap;
+  flex-grow: 1;
   position: relative;
   margin: 0 10px 10px 0;
   cursor: pointer;
-  /* flex-grow: 1; */
+  min-width: 300px;
 }
 
 .dash-alert-item.current {
@@ -49,26 +48,28 @@ limitations under the License.
 .dash-alert-item.current .alert-value:before { bottom: -4px; left: -4px; border-width: 0 0 1px 1px; }
 .dash-alert-item.current .alert-value:after { bottom: -4px; right: -4px; border-width: 0 1px 1px 0; }
 
+.dash-alert-item.disable {
+  opacity: 0.60;
+  outline: 5px dotted #484B4B;
+}
+
 .dash-alert-item .alert-title {
   box-sizing: border-box;
   display: block;
   white-space: nowrap;
   color: white;
   font-weight: lighter;
-  font-size: 2rem;
+  font-size: 1.8rem;
   padding: 4px 10px 8px;
   line-height: 1.85rem;
 }
 
 .dash-alert-item .alert-value {
   background-color: #222;
-  flex-grow: 1;
-  align-items: center;
-  font-size: 3rem;
-  line-height: 2.8rem;
+  font-size: 2rem;
   letter-spacing: -0.1rem;
-  padding: 10px;
-  overflow-wrap: break-word;
+  padding: 0 10px;
+  display: block;
 }
 
 .dash-alert-item .alert-namespace {
