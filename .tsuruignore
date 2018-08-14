@@ -8,7 +8,6 @@
 .vscode
 coverage
 node_modules
-src
 TODO
 LICENSE
 README.md
