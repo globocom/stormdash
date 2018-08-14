@@ -27,7 +27,7 @@ class Hidden extends Component {
     return (
       <div className="hidden">
         <button onClick={this.onClick} className="tool-btn add-alert">
-          <i className="icon-pencil"></i>
+          <i className="icon-eye"></i>
         </button>
       </div>
     );
