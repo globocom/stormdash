@@ -23,7 +23,7 @@ class Navigator extends Component {
     return (
       <div className="navigator">
         <Link to="/" className="tool-btn nav-btn">
-          <i className="icon-left-open-big"></i>
+          <i className="fa fa-angle-left fa-1x"></i>
         </Link>
       </div>
     );

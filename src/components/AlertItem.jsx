@@ -39,10 +39,11 @@ class AlertItem extends Component {
     return (
       <div className={"dash-alert-item " + status + disable + (current ? " current" : "")}
            onClick={this.onItemSelect} title={description}>
-        <span className="alert-title">
-          <span className="alert-namespace">{namespace}</span> {title}
+        <span className="alert-title">{title}</span>
+        <span className="alert-project">
+          <span className="alert-namespace">{namespace}</span>
+          <span className="alert-status">{value}</span>
         </span>
-        <strong className="alert-value">{value}</strong>
       </div>
     );
   }

@@ -15,23 +15,15 @@ limitations under the License.
 */
 
 import React, { Component } from 'react';
-import io from 'socket.io-client';
+import axios from 'axios';
 import DashList from './DashList';
 
 import './App.css';
 
-function uiSocket() {
-  var uiSocket = io();
-  uiSocket.on('error', function(err) {
-    console.log('uiSocket error');
-  });
-  return uiSocket;
-}
-
 class App extends Component {
   constructor(props) {
     super(props);
-    this.socket = uiSocket();
+
     this.state = {
       dashs: [],
       dashName: "",
@@ -75,8 +67,12 @@ class App extends Component {
   }
 
   getDashoboards() {
-    this.socket.emit('dash:getall', {}, (data) => {
-      this.setState({dashs: data});
+    axios.get('/api/dash/all')
+    .then((response) => {
+      this.setState({dashs: response.data});
+    })
+    .catch((error) => {
+      console.log(error)
     });
   }
 
@@ -94,8 +90,9 @@ class App extends Component {
 
     btn.disabled = true;
 
-    this.socket.emit('dash:create', {name: name}, (data) => {
-      if(!data) {
+    axios.post('/api/dash/create/', {name: name})
+    .then((response) => {
+      if(!response.data) {
         const msg = `Name ${name} already exists`;
         this.state.input.setCustomValidity(msg);
         console.log(msg);
@@ -104,7 +101,10 @@ class App extends Component {
         return false;
       }
 
-      this.props.router.push(`/dash/${data.name}`);
+      this.props.router.push(`/dash/${response.data.name}`);
+    })
+    .catch((error) => {
+      console.log(error)
     });
   }
 
@@ -130,4 +130,4 @@ class App extends Component {
 
 }
 
-export { App as default, uiSocket };
+export { App as default };

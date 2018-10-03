@@ -15,28 +15,19 @@ limitations under the License.
 */
 
 import React, { Component } from 'react';
-import './Hidden.css';
+import './Reload.css';
 
-class Hidden extends Component {
-  constructor(props) {
-    super(props);
-    this.onClick = this.onClick.bind(this);
-  }
-
+class Reload extends Component {
   render() {
     return (
-      <div className="hidden">
-        <button onClick={this.onClick} className="tool-btn add-alert">
-          <i className="fa fa-eye fa-1x"></i>
-        </button>
+      <div className="reload">
+        <div className="frame" onClick={this.onClick}>
+          <span className="text">atualizando</span>
+          <img className="icon" src="/images/loading.gif" alt="" />
+        </div>
       </div>
     );
   }
-
-  onClick(event) {
-    event.stopPropagation();
-    this.props.changeHidden();
-  }
 }
 
-export default Hidden;
+export default Reload;

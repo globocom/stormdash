@@ -15,20 +15,20 @@ limitations under the License.
 */
 
 import React, { Component } from 'react';
+import axios from 'axios';
 import Tools from './Tools';
 import Navigator from './Navigator';
+import Reload from './Reload';
 import Hidden from './Hidden';
 import Sidebar from './Sidebar';
 import AlertGroup from './AlertGroup';
 import NotFound from './NotFound';
-import { uiSocket } from './App';
 import { uuid } from '../utils';
 import './StormDash.css';
 
 class StormDash extends Component {
   constructor(props) {
     super(props);
-    this.socket = uiSocket();
 
     this.state = {
       dashName: this.props.params.dashName,
@@ -38,7 +38,8 @@ class StormDash extends Component {
       items: [],
       show: false,
       notFound: false,
-      currentHour: this.getCurrentHour()
+      currentHour: this.getCurrentHour(),
+      reloading: false
     };
 
     this.getDashContent();
@@ -52,12 +53,6 @@ class StormDash extends Component {
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.getCurrentHour = this.getCurrentHour.bind(this);
     this.changeHidden = this.changeHidden.bind(this);
-
-    this.socket.on('dash:update', (data) => {
-      if (data === this.props.params.dashName) {
-        this.getDashContent();
-      }
-    });
   }
 
   render() {
@@ -66,11 +61,13 @@ class StormDash extends Component {
     }
 
     if(this.state.show) {
-      let { visibleSidebar } = this.state;
+      let { visibleSidebar, reloading } = this.state;
 
       return (
         <div className="dash-main">
           <Navigator />
+          {reloading &&
+            <Reload />}
 
           {!visibleSidebar &&
             <Tools currentItem={this.state.currentItem}
@@ -104,6 +101,13 @@ class StormDash extends Component {
     return <div className="dash-main"></div>
   }
 
+  endAndStartTimer() {
+    window.clearTimeout(this.timer)
+    this.timer = window.setTimeout(() => {
+      this.setState({ reloading: false })
+    }, 3000)
+  }
+
   getCurrentHour() {
     let d = new Date();
     return d.getHours() + ':' + (d.getMinutes() < 10 ? '0' : '') + d.getMinutes();
@@ -111,21 +115,28 @@ class StormDash extends Component {
 
   getDashContent() {
     const current = this.state.currentItem;
-    this.socket.emit('dash:get', {name: this.state.dashName}, (data) => {
-      if (!data) {
+    let data = {
+      name: this.state.dashName
+    }
+    axios.post('/api/dash/search', data)
+    .then((response) => {
+      if (!response.data) {
         this.setState({ notFound: true });
         return;
       }
       this.setState({
-        items: data.items,
-        mainTitle: data.name,
-        hidden: data.hidden,
+        items: response.data.items,
+        mainTitle: response.data.name,
+        hidden: response.data.hidden,
         show: true
       });
 
       if (current) {
         this.setCurrent(current);
       }
+    })
+    .catch((error) => {
+      console.log(error)
     });
   }
 
@@ -140,17 +151,19 @@ class StormDash extends Component {
   addItem(alertObj) {
     this.clearCurrent();
     const newItems = this.state.items.concat([alertObj]);
-    this.socket.emit(
-      'dash:update',
-      {
-        name: this.state.dashName,
-        hidden: this.state.hidden,
-        items: newItems
-      },
-      (updated) => {
-        return updated && this.getDashContent();
-      }
-    );
+
+    let data = {
+      name: this.state.dashName,
+      hidden: this.state.hidden,
+      items: newItems
+    }
+    axios.post('/api/dash/update', data)
+    .then((updated) => {
+      return updated && this.getDashContent();
+    })
+    .catch((error) => {
+      console.log(error)
+    });
   }
 
   editItem(itemId, newAlertObj) {
@@ -162,17 +175,19 @@ class StormDash extends Component {
 
     if (index >= 0) {
       currentItems[index] = newAlertObj;
-      this.socket.emit(
-        'dash:update',
-        {
-          name: this.state.dashName,
-          hidden: this.state.hidden,
-          items: currentItems
-        },
-        (updated) => {
-          return updated && this.getDashContent();
-        }
-      );
+
+      let data = {
+        name: this.state.dashName,
+        hidden: this.state.hidden,
+        items: currentItems
+      }
+      axios.post('/api/dash/update', data)
+      .then((updated) => {
+        return updated && this.getDashContent();
+      })
+      .catch((error) => {
+        console.log(error)
+      });
     }
   }
 
@@ -185,21 +200,23 @@ class StormDash extends Component {
 
     if (index >= 0) {
       currentItems.splice(index, 1);
-      this.socket.emit(
-        'dash:deleteitemauth',
-        { itemId: itemId },
-        (error) => {
-          if (!error) {
-            this.socket.emit(
-              'dash:update',
-              { name: this.state.dashName, items: currentItems },
-              (updated) => {
-                return updated && this.getDashContent();
-              }
-            );
+
+      axios.delete('/api/dash/itemauth', { itemId: itemId })
+      .then((response) => {
+        if (response.status === 200) {
+          let data = {
+            name: this.state.dashName,
+            items: currentItems
           }
+          axios.post('/api/dash/update', data)
+          .then((updated) => {
+            return updated && this.getDashContent();
+          })
+          .catch((error) => {
+            console.log(error)
+          });
         }
-      );
+      })
     }
   }
 
@@ -236,17 +253,18 @@ class StormDash extends Component {
     this.setState({
       hidden: !hidden
     }, () => {
-      this.socket.emit(
-        'dash:update',
-        {
-          name: this.state.dashName,
-          hidden: this.state.hidden,
-          items: this.state.items
-        },
-        (updated) => {
-          return updated && this.getDashContent();
-        }
-      );
+      let data = {
+        name: this.state.dashName,
+        hidden: this.state.hidden,
+        items: this.state.items
+      }
+      axios.post('/api/dash/update', data)
+      .then((updated) => {
+        return updated && this.getDashContent();
+      })
+      .catch((error) => {
+        console.log(error)
+      });
     });
   }
 
@@ -261,7 +279,12 @@ class StormDash extends Component {
   componentDidMount() {
     document.addEventListener('keydown', this.handleKeyDown);
     this.hourInterval = setInterval(() => {
-      this.setState({ currentHour: this.getCurrentHour() });
+      this.endAndStartTimer()
+      this.setState({
+        currentHour: this.getCurrentHour(),
+        reloading: true
+      });
+      this.getDashContent();
     }, 15 * 1000);
   }
 

@@ -22,44 +22,11 @@ const utils = require('../src/utils');
 const mongoUri = process.env.MONGOURI || 'mongodb://localhost:27017/stormdash';
 const UPDATE_INTERVAL = process.env.UPDATE_INTERVAL || 15;
 
-class IOServer {
+class Server {
 
-  constructor(io) {
-    this.io = io;
+  constructor() {
     this.updateInterval = null;
-
-    if (io === undefined) {
-      return;
-    }
-
     mongoose.connect(mongoUri, { useMongoClient: true });
-
-    let eventList = [
-      // Dashboard
-      { event: 'dash:create', fn: this.createDash },
-      { event: 'dash:update', fn: this.updateDash },
-      { event: 'dash:get', fn: this.getDash },
-      { event: 'dash:getall', fn: this.getAll },
-      { event: 'dash:deletedash', fn: this.deleteDash },
-      { event: 'dash:deleteitemauth', fn: this.deleteItemAuth },
-
-      // Alert item
-      { event: 'item:check', fn: this.checkItem },
-
-      // Alert item auth
-      { event: 'auth:save', fn: this.saveAuth },
-      { event: 'auth:get', fn: this.getAuth },
-      { event: 'auth:delete', fn: this.deleteAuth }
-    ];
-
-    io.on('connection', (socket) => {
-      for(let i=0, l=eventList.length; i<l; ++i) {
-        socket.on(eventList[i].event, (data, fn) => {
-          eventList[i].fn.apply(this, [data, (result) => { fn(result); }]);
-        });
-      }
-    });
-
     this.startUpdateLoop();
   }
 
@@ -69,9 +36,7 @@ class IOServer {
       this.getAll({}, (dashboards) => {
         dashboards.map((dash) => {
           this.checkDashItems(dash.name, (data) => {
-            if (data) {
-              this.io.emit('dash:update', dash.name);
-            }
+            console.log('Run startUpdateLoop...');
           });
         });
       });
@@ -180,7 +145,14 @@ class IOServer {
                 nItems[i].currentValue = value;
                 hasUpdate = true;
               }
-              resolve(value);
+              if (value !== '__jsonurl_error' && nItems[i].coveragehost) {
+                this.checkCoverage(nItems[i], (coverage) => {
+                  nItems[i].coverage = coverage;
+                  resolve(value);
+                });
+              } else {
+                resolve(value);
+              }
             });
           })
         );
@@ -194,6 +166,21 @@ class IOServer {
         }
         return fn(false);
       });
+    });
+  }
+
+  checkCoverage(item, fn) {
+    axios.get(item.coveragehost)
+    .then((response) => {
+      if ((typeof response.data) !== 'object') {
+        return fn('__coveragehost_error');
+      }
+      let value = utils.findByKey(response.data, item.coveragefield);
+      fn(value);
+    })
+    .catch((error) => {
+      console.log(error);
+      return fn('__coveragehost_error');
     });
   }
 
@@ -249,6 +236,19 @@ class IOServer {
       };
     }
 
+    if (item.coveragehost !== undefined
+      && item.coveragehost !== ''
+      && item.coveragefield !== undefined
+      && item.coveragefield !== ''
+      && item.coveragetarget !== undefined
+      && item.coveragetarget !== '') {
+      config['coverage'] = {
+        host: item.coveragehost,
+        field: item.coveragefield,
+        target: item.coveragetarget
+      };
+    }
+
     axios.get(item.jsonurl, config)
     .then((response) => {
       if ((typeof response.data) !== 'object') {
@@ -264,4 +264,4 @@ class IOServer {
   }
 }
 
-module.exports = IOServer;
+module.exports = Server;

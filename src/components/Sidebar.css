@@ -103,7 +103,8 @@ limitations under the License.
 }
 
 .dash-sidebar .compare-item .rule,
-.dash-sidebar .proxy-item .rule {
+.dash-sidebar .proxy-item .rule,
+.dash-sidebar .coverage-item .rule {
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
@@ -118,6 +119,18 @@ limitations under the License.
 }
 
 .dash-sidebar .proxy-item .rule .port {
+  width: 16%;
+}
+
+.dash-sidebar .coverage-item .rule .host {
+  width: 59%;
+}
+
+.dash-sidebar .coverage-item .rule .field {
+  width: 16%;
+}
+
+.dash-sidebar .coverage-item .rule .target {
   width: 16%;
 }
 

@@ -14,41 +14,43 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-.hidden,
-.hidden .tool-btn {
+.reload,
+.reload .frame {
   box-sizing: border-box;
 }
 
-.hidden {
-  position: absolute;
-  bottom: 55px;
-  right: 10px;
-  text-align: right;
-  z-index: 8;
+.reload {
+    position: absolute;
+    top: 20px;
+    z-index: 8;
+    margin-left: -25px;
 }
 
-.hidden .tool-btn {
-  width: 50px;
+.reload .frame {
+  position: relative;
+  width: 190px;
   height: 50px;
-  padding-top: 2px;
+  padding: 3px 8px;
   border: 0;
-  color: white;
+  color: #76b7eb;
   font-size: 24px;
-  border-radius: 50%;
   background-color: #484b4c;
   box-shadow: 3px 3px 9px rgba(0, 0, 0, 0.2);
-  opacity: .5;
+  opacity: 1;
   cursor: pointer;
   outline: none;
-  margin: 0 5px;
   text-align: center;
 }
 
-.hidden .tool-btn:hover {
-  opacity: 1;
-  color: #76b7eb;
+.reload .frame .text {
+  position: absolute;
+  left: 14px;
+  top: 9px;
 }
 
-.hidden .tool-btn:active {
-  opacity: .8;
+.reload .frame .icon {
+  position: absolute;
+  right: -80px;
+  top: -50px;
+  height: 150px;
 }
