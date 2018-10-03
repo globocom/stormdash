@@ -24,4 +24,4 @@ build: clean
 	@npm run build
 
 deploy:
-	@tsuru app-deploy -a stormdash build node_modules server Procfile package.json package-lock.json
+	@tsuru app-deploy -a stormdash build node_modules public server src Procfile package.json package-lock.json
