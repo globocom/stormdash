@@ -18,7 +18,7 @@ tests_ci: clean pep8 ## Run pep8 and all tests
 	@npm run -s test-ci
 
 run: ## Run a development web server
-	@npm run start
+	@node server
 
 build: clean
 	@npm run build
