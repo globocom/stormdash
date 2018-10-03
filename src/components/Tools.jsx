@@ -58,19 +58,19 @@ class Tools extends Component {
 
         {this.props.currentItem &&
           <button onClick={() => this.setState({confirmDelete: true})} className="tool-btn delete-alert">
-            <i className="icon-trash"></i>
+            <i className="fa fa-trash fa-1x"></i>
           </button>}
 
         {this.props.currentItem &&
           <button onClick={this.onEditItem} className="tool-btn edit-alert">
-            <i className="icon-pencil"></i>
+            <i className="fa fa-pencil fa-1x"></i>
           </button>}
 
         <button onClick={this.onAddItem} className="tool-btn add-alert">
-          <i className="icon-plus"></i>
+          <i className="fa fa-plus fa-1x"></i>
         </button>
         {/*<button onClick={this.props.doStatusCheck} className="tool-btn check-status">
-          <i className="icon-check"></i>
+          <i className="fa fa-check fa-1x"></i>
         </button>*/}
       </div>
     );

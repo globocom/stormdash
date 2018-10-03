@@ -44,7 +44,7 @@ class DashList extends Component {
       <div className="dash-list">
         <h3 className="title">Dashboards</h3>
         <button className="close-btn" onClick={() => this.props.handleList("close")}>
-          <i className="icon-cancel"></i>
+          <i className="fa fa-times fa-1x"></i>
         </button>
         <ul className="list-container">
           {dashList}

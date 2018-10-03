@@ -16,11 +16,6 @@ limitations under the License.
 
 const app = require('./app');
 const httpServer = require('http').Server(app);
-const socketIO = require('socket.io');
-const io = socketIO(httpServer);
-const IOServer = require('./IOServer');
-
-global.ioserver = new IOServer(io);
 
 const PORT = process.env.PORT || 8888;
 

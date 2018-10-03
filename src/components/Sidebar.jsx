@@ -15,8 +15,8 @@ limitations under the License.
 */
 
 import React, { Component } from 'react';
+import axios from 'axios';
 import AlertItem from './AlertItem';
-import { uiSocket } from './App';
 import { uuid } from '../utils';
 import './Sidebar.css';
 
@@ -24,7 +24,6 @@ class Sidebar extends Component {
 
   constructor(props) {
     super(props);
-    this.socket = uiSocket();
 
     this.state = {
       id: uuid(),
@@ -86,7 +85,7 @@ class Sidebar extends Component {
         <h3 className="title">{this.currentId ? 'Edit Alert' : 'Add Alert'}</h3>
 
         <button className="close-btn" onClick={() => this.props.handleSidebar("close")}>
-          <i className="icon-cancel"></i>
+          <i className="fa fa-times fa-1x"></i>
         </button>
 
         <section className="form-items">
@@ -325,15 +324,20 @@ class Sidebar extends Component {
   }
 
   saveAuth() {
-    this.socket.emit('auth:save', {
-        itemId: this.state.id,
-        dashName: this.props.dashName,
-        username: this.state.username,
-        password: this.state.password,
-        authHeaders: this.state.authHeaders
-      }, (data) => {
-        console.log('Save item auth: '+ data);
-      });
+    let data = {
+      itemId: this.state.id,
+      dashName: this.props.dashName,
+      username: this.state.username,
+      password: this.state.password,
+      authHeaders: this.state.authHeaders
+    }
+    axios.post('/api/auth/save', data)
+    .then((response) => {
+      console.log('Save item auth: '+ data);
+    })
+    .catch((error) => {
+      console.log(error)
+    });
   }
 
   onEdit(event) {
@@ -343,13 +347,20 @@ class Sidebar extends Component {
   }
 
   setEditItem(itemId) {
-    this.socket.emit('dash:get', {name: this.props.dashName}, (data) => {
-      data.items.find((elem) => {
+    let data = {
+      name: this.props.dashName
+    }
+    axios.post('/api/dash/search', data)
+    .then((response) => {
+      response.data.items.find((elem) => {
         if(elem.id === itemId) {
           return this.setState(elem);
         }
         return null;
       });
+    })
+    .catch((error) => {
+      console.log(error)
     });
   }
 
@@ -378,8 +389,13 @@ class Sidebar extends Component {
 
   onCheckValue(event) {
     event.preventDefault();
-    this.socket.emit('item:check', this.buildItem(), (value) => {
-      this.setState({currentValue: value});
+
+    axios.get('/api/item/check', this.buildItem())
+    .then((response) => {
+      this.setState({currentValue: response.data.value});
+    })
+    .catch((error) => {
+      console.log(error)
     });
   }
 }

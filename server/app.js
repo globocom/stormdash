@@ -15,30 +15,79 @@ limitations under the License.
 */
 
 const express = require('express');
+const bodyParser = require('body-parser');
 const path = require('path');
+const model = require('./model');
+const Server = require('./Server');
 
 const app = express();
+const server = new Server()
 
-app.use(express.static(path.resolve(__dirname, '..', 'build')));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
-app.get('/dash/:dashName/info', (req, res) => {
-  global.ioserver.getDash({name: req.params.dashName}, (dash) => {
+app.post('/api/dash/create', (req, res) => {
+  server.createDash(req.body, (doc) => {
+    return res.status(200).json(doc)
+  })
+})
+
+app.post('/api/dash/update', (req, res) => {
+  server.updateDash(req.body, (doc) => {
+    return res.status(200).json(doc)
+  })
+})
+
+app.post('/api/dash/search', (req, res) => {
+  server.getDash(req.body, (doc) => {
+    return res.status(200).json(doc)
+  })
+})
+
+app.get('/api/dash/all', (req, res) => {
+  server.getAll({}, (docs) => {
+    return res.status(200).json(docs)
+  })
+})
+
+app.delete('/api/dash/itemauth', (req, res) => {
+  server.deleteItemAuth(req.body, (error) => {
+    return res.status(200).json(error)
+  })
+})
+
+app.get('/api/dash/:dashName/info', (req, res) => {
+  server.getDash({name: req.params.dashName}, (dash) => {
     if(dash) {
       return res.json({
         "status": "OK",
         "itemsCount": dash.items.length,
         "createdAt": dash.createdAt
-      });
+      })
     } else {
       return res.json({
         "status": "Dashboard Not Found"
-      });
+      })
     }
-  });
-});
+  })
+})
+
+app.get('/api/item/check', (req, res) => {
+  server.checkItem(req.body, (value) => {
+    return res.status(200).json(value)
+  })
+})
+
+app.post('/api/auth/save', (req, res) => {
+  server.saveAuth(req.body, (data) => {
+    return res.status(200).json(data)
+  })
+})
+
+app.use(express.static(path.resolve(__dirname, '..', 'build')));
 
 app.get('*', (req, res) => {
   res.sendFile(path.resolve(__dirname, '..', 'build', 'index.html'));
-});
+})
 
 module.exports = app;

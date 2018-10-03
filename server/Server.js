@@ -22,60 +22,11 @@ const utils = require('../src/utils');
 const mongoUri = process.env.MONGOURI || 'mongodb://localhost:27017/stormdash';
 const UPDATE_INTERVAL = process.env.UPDATE_INTERVAL || 15;
 
-class IOServer {
+class Server {
 
-  constructor(io) {
-    this.io = io;
+  constructor() {
     this.updateInterval = null;
-
-    if (io === undefined) {
-      return;
-    }
-
     mongoose.connect(mongoUri, { useMongoClient: true });
-
-    let eventList = [
-      // Dashboard
-      { event: 'dash:create', fn: this.createDash },
-      { event: 'dash:update', fn: this.updateDash },
-      { event: 'dash:get', fn: this.getDash },
-      { event: 'dash:getall', fn: this.getAll },
-      { event: 'dash:deletedash', fn: this.deleteDash },
-      { event: 'dash:deleteitemauth', fn: this.deleteItemAuth },
-
-      // Alert item
-      { event: 'item:check', fn: this.checkItem },
-
-      // Alert item auth
-      { event: 'auth:save', fn: this.saveAuth },
-      { event: 'auth:get', fn: this.getAuth },
-      { event: 'auth:delete', fn: this.deleteAuth }
-    ];
-
-    io.on('connection', (socket) => {
-      for(let i=0, l=eventList.length; i<l; ++i) {
-        socket.on(eventList[i].event, (data, fn) => {
-          eventList[i].fn.apply(this, [data, (result) => { fn(result); }]);
-        });
-      }
-    });
-
-    this.startUpdateLoop();
-  }
-
-  startUpdateLoop() {
-    clearInterval(this.updateInterval);
-    this.updateInterval = setInterval(() => {
-      this.getAll({}, (dashboards) => {
-        dashboards.map((dash) => {
-          this.checkDashItems(dash.name, (data) => {
-            if (data) {
-              this.io.emit('dash:update', dash.name);
-            }
-          });
-        });
-      });
-    }, UPDATE_INTERVAL * 1000);
   }
 
   createDash(data, fn) {
@@ -88,7 +39,6 @@ class IOServer {
     dash.save((err, doc) => {
       if (err) { console.log(err); }
       if (doc) {
-        this.startUpdateLoop();
         return fn(doc);
       }
       return fn(false);
@@ -264,4 +214,4 @@ class IOServer {
   }
 }
 
-module.exports = IOServer;
+module.exports = Server;
