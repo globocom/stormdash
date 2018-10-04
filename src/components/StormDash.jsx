@@ -202,8 +202,8 @@ class StormDash extends Component {
       currentItems.splice(index, 1);
 
       axios.delete('/api/dash/itemauth', { itemId: itemId })
-      .then((error) => {
-        if (!error) {
+      .then((response) => {
+        if (response.status === 200) {
           let data = {
             name: this.state.dashName,
             items: currentItems

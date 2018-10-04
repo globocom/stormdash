@@ -89,6 +89,10 @@ limitations under the License.
   padding: 0 10px;
 }
 
+.dash-alert-item.warning .alert-project {
+  color: #d19a14;
+}
+
 .dash-alert-item.critical .alert-project {
   color: #d70c0c;
 }
