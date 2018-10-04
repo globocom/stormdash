@@ -27,6 +27,20 @@ class Server {
   constructor() {
     this.updateInterval = null;
     mongoose.connect(mongoUri, { useMongoClient: true });
+    this.startUpdateLoop();
+  }
+
+  startUpdateLoop() {
+    clearInterval(this.updateInterval);
+    this.updateInterval = setInterval(() => {
+      this.getAll({}, (dashboards) => {
+        dashboards.map((dash) => {
+          this.checkDashItems(dash.name, (data) => {
+            console.log('Run startUpdateLoop...');
+          });
+        });
+      });
+    }, UPDATE_INTERVAL * 1000);
   }
 
   createDash(data, fn) {
@@ -39,6 +53,7 @@ class Server {
     dash.save((err, doc) => {
       if (err) { console.log(err); }
       if (doc) {
+        this.startUpdateLoop();
         return fn(doc);
       }
       return fn(false);

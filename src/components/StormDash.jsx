@@ -18,6 +18,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import Tools from './Tools';
 import Navigator from './Navigator';
+import Reload from './Reload';
 import Hidden from './Hidden';
 import Sidebar from './Sidebar';
 import AlertGroup from './AlertGroup';
@@ -37,7 +38,8 @@ class StormDash extends Component {
       items: [],
       show: false,
       notFound: false,
-      currentHour: this.getCurrentHour()
+      currentHour: this.getCurrentHour(),
+      reloading: false
     };
 
     this.getDashContent();
@@ -59,11 +61,13 @@ class StormDash extends Component {
     }
 
     if(this.state.show) {
-      let { visibleSidebar } = this.state;
+      let { visibleSidebar, reloading } = this.state;
 
       return (
         <div className="dash-main">
           <Navigator />
+          {reloading &&
+            <Reload />}
 
           {!visibleSidebar &&
             <Tools currentItem={this.state.currentItem}
@@ -95,6 +99,13 @@ class StormDash extends Component {
     }
 
     return <div className="dash-main"></div>
+  }
+
+  endAndStartTimer() {
+    window.clearTimeout(this.timer)
+    this.timer = window.setTimeout(() => {
+      this.setState({ reloading: false })
+    }, 3000)
   }
 
   getCurrentHour() {
@@ -268,7 +279,11 @@ class StormDash extends Component {
   componentDidMount() {
     document.addEventListener('keydown', this.handleKeyDown);
     this.hourInterval = setInterval(() => {
-      this.setState({ currentHour: this.getCurrentHour() });
+      this.endAndStartTimer()
+      this.setState({
+        currentHour: this.getCurrentHour(),
+        reloading: true
+      });
       this.getDashContent();
     }, 15 * 1000);
   }
