@@ -109,8 +109,6 @@ function checkStatus(item) {
   }
 
   if (item.coveragehost) {
-    console.log(item.coverage)
-    console.log(item.coveragetarget)
     if (item.coverage < item.coveragetarget) {
       return 'critical';
     }
