@@ -2,18 +2,29 @@
 
 A unique dashboard to show simple alerts
 
-###Getting Started###
+## Getting Started
+
+### Clone this repo
+```bash
+> git clone https://github.com/globocom/stormdash.git
+> cd stormdash
 ```
-  # Clone this repo
-	> git clone https://github.com/globocom/stormdash.git
-	> cd stormdash
 
-  # Install dependencies
-	> npm install
-
-  # Build
-	> npm run build
-
-  # Start the server
-  > npm run start:server
+### Install Dependencies
+```bash
+> npm install
 ```
+
+### Build
+```bash
+> npm run build
+```
+
+### Start the Server
+```bash
+> npm run start:server
+```
+
+## License
+
+Apache-2.0
