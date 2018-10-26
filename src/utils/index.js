@@ -108,6 +108,12 @@ function checkStatus(item) {
     return 'critical';
   }
 
+  if (item.coveragehost) {
+    if (item.coverage < item.coveragetarget) {
+      return 'critical';
+    }
+  }
+
   for (let s in status) {
     let v1 = item.currentValue,
         v2 = status[s].value,

@@ -34,6 +34,10 @@ class Sidebar extends Component {
       jsonurl: "",
       proxyhost: "",
       proxyport: "",
+      coverage: "",
+      coveragehost: "",
+      coveragefield: "",
+      coveragetarget: "",
       mainkey: "",
       ok: {compare: "", value: "", message: ""},
       warning: {compare: "", value: "", message: ""},
@@ -122,6 +126,33 @@ class Sidebar extends Component {
                 placeholder="port"
                 name="proxyport"
                 value={this.state.proxyport}
+                onChange={this.handleInputChange} />
+            </div>
+          </div>
+
+          <div className="coverage-item">
+            <label>Coverage</label>
+            <div className="rule">
+              <input
+                type="text"
+                className="topcoat-text-input--large host"
+                placeholder="url"
+                name="coveragehost"
+                value={this.state.coveragehost}
+                onChange={this.handleInputChange} />
+              <input
+                type="text"
+                className="topcoat-text-input--large field"
+                placeholder="field"
+                name="coveragefield"
+                value={this.state.coveragefield}
+                onChange={this.handleInputChange} />
+              <input
+                type="text"
+                className="topcoat-text-input--large target"
+                placeholder="target"
+                name="coveragetarget"
+                value={this.state.coveragetarget}
                 onChange={this.handleInputChange} />
             </div>
           </div>
@@ -374,6 +405,10 @@ class Sidebar extends Component {
       jsonurl: this.state.jsonurl,
       proxyhost: this.state.proxyhost,
       proxyport: this.state.proxyport,
+      coverage: this.state.coverage,
+      coveragehost: this.state.coveragehost,
+      coveragefield: this.state.coveragefield,
+      coveragetarget: this.state.coveragetarget,
       mainkey: this.state.mainkey,
       ok: this.state.ok,
       warning: this.state.warning,

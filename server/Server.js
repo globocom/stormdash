@@ -145,7 +145,14 @@ class Server {
                 nItems[i].currentValue = value;
                 hasUpdate = true;
               }
-              resolve(value);
+              if (value !== '__jsonurl_error' && nItems[i].coveragehost) {
+                this.checkCoverage(nItems[i], (coverage) => {
+                  nItems[i].coverage = coverage;
+                  resolve(value);
+                });
+              } else {
+                resolve(value);
+              }
             });
           })
         );
@@ -159,6 +166,21 @@ class Server {
         }
         return fn(false);
       });
+    });
+  }
+
+  checkCoverage(item, fn) {
+    axios.get(item.coveragehost)
+    .then((response) => {
+      if ((typeof response.data) !== 'object') {
+        return fn('__coveragehost_error');
+      }
+      let value = utils.findByKey(response.data, item.coveragefield);
+      fn(value);
+    })
+    .catch((error) => {
+      console.log(error);
+      return fn('__coveragehost_error');
     });
   }
 
@@ -211,6 +233,19 @@ class Server {
       config['proxy'] = {
         host: item.proxyhost,
         port: item.proxyport
+      };
+    }
+
+    if (item.coveragehost !== undefined
+      && item.coveragehost !== ''
+      && item.coveragefield !== undefined
+      && item.coveragefield !== ''
+      && item.coveragetarget !== undefined
+      && item.coveragetarget !== '') {
+      config['coverage'] = {
+        host: item.coveragehost,
+        field: item.coveragefield,
+        target: item.coveragetarget
       };
     }
 
