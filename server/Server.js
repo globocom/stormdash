@@ -18,6 +18,7 @@ const axios = require('axios-proxy-fix');
 const mongoose = require('mongoose');
 const model = require('./model');
 const utils = require('../src/utils');
+const HttpsProxyAgent = require('https-proxy-agent');
 
 const mongoUri = process.env.MONGOURI || 'mongodb://localhost:27017/stormdash';
 const UPDATE_INTERVAL = process.env.UPDATE_INTERVAL || 15;
@@ -230,10 +231,9 @@ class Server {
       && item.proxyhost !== ''
       && item.proxyport !== undefined
       && item.proxyport !== '') {
-      config['proxy'] = {
-        host: item.proxyhost,
-        port: item.proxyport
-      };
+      config['httpsAgent'] = new HttpsProxyAgent(
+        'http://' + item.proxyhost + ':' + item.proxyport
+      );
     }
 
     if (item.coveragehost !== undefined
