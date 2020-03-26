@@ -20,7 +20,7 @@
     "axios-proxy-fix": "^0.16.3",
     "body-parser": "^1.18.3",
     "express": "^4.16.3",
-    "mongoose": "^4.13.14",
+    "mongoose": "^5.7.5",
     "react": "16.2.0",
     "react-dom": "16.2.1",
     "react-router": "^3.2.1",
