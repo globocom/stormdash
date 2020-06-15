@@ -14,10 +14,77 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+.dash-alert-group-wrapper {
+  position: absolute;
+  left: 50%;
+}
+
 .dash-alert-group {
   display: flex;
   flex-wrap: wrap;
-  max-height: 85%;
   margin: 0 10px 10px 0;
   z-index: 5;
+  position: relative;
+  left: -50%;
+  transform-origin: center center;
+}
+
+.dash-alert-group-scale10 {
+  max-height: calc(85vw / .10);
+  width: calc(90vw / .10);
+  transform: scale(.10);
+}
+
+.dash-alert-group-scale20 {
+  max-height: calc(85vw / .20);
+  width: calc(90vw / .20);
+  transform: scale(.20);
+}
+
+.dash-alert-group-scale30 {
+  max-height: calc(85vw / .30);
+  width: calc(90vw / .30);
+  transform: scale(.30);
+}
+
+.dash-alert-group-scale40 {
+  max-height: calc(85vw / .40);
+  width: calc(90vw / .40);
+  transform: scale(.40);
+}
+
+.dash-alert-group-scale50 {
+  max-height: calc(85vw / .50);
+  width: calc(90vw / .50);
+  transform: scale(.50);
+}
+
+.dash-alert-group-scale60 {
+  max-height: calc(85vw / .60);
+  width: calc(90vw / .60);
+  transform: scale(.60);
+}
+
+.dash-alert-group-scale70 {
+  max-height: calc(85vw / .70);
+  width: calc(90vw / .70);
+  transform: scale(.70);
+}
+
+.dash-alert-group-scale80 {
+  max-height: calc(85vw / .80);
+  width: calc(90vw / .80);
+  transform: scale(.80);
+}
+
+.dash-alert-group-scale90 {
+  max-height: calc(85vw / .90);
+  width: calc(90vw / .90);
+  transform: scale(.90);
+}
+
+.dash-alert-group-scale100 {
+  max-height: calc(85vw / 1);
+  width: calc(90vw / 1);
+  transform: scale(1);
 }

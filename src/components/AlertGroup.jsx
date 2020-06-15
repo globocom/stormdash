@@ -41,11 +41,28 @@ class AlertGroup extends Component {
     }
 
     return (
-      <div className="dash-alert-group"
-           onClick={() => this.props.clearCurrent()}>
-        {allItems}
+      <div className="dash-alert-group-wrapper">
+        <div className="dash-alert-group dash-alert-group-scale100"
+             onClick={() => this.props.clearCurrent()}>
+          {allItems}
+        </div>
       </div>
     );
+  }
+
+  componentDidMount() {
+    // If component's height is too high, "zoom out"
+    let element = document.getElementsByClassName("dash-alert-group")[0];
+    let height = element.clientHeight;
+    let zoom = 100;
+    let maxHeight = window.innerHeight * 0.8;
+
+    while (zoom > 10 && height * zoom / 100 > maxHeight) {
+      element.classList.remove("dash-alert-group-scale" + zoom);
+      zoom = zoom - 10;
+      element.classList.add("dash-alert-group-scale" + zoom);
+      height = element.clientHeight; // get new height
+    }
   }
 }
 
