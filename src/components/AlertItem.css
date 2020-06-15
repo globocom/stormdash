@@ -32,7 +32,6 @@ limitations under the License.
 .dash-alert-item.current .alert-title,
 .dash-alert-item.current .alert-project {
   opacity: 0.75;
-  padding: 8px 12px;
 }
 
 .dash-alert-item.current .alert-title:after,
@@ -63,6 +62,7 @@ limitations under the License.
   color: white;
   font-weight: lighter;
   font-size: 25px;
+  padding: 8px 12px;
 }
 
 .dash-alert-item .alert-value {
@@ -88,6 +88,7 @@ limitations under the License.
   color: #438c07;
   display: block;
   font-size: 28px;
+  padding: 8px 12px;
 }
 
 .dash-alert-item.warning .alert-project {
