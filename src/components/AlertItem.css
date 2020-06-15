@@ -20,6 +20,8 @@ limitations under the License.
   margin: 0 10px 10px 0;
   cursor: pointer;
   min-width: 300px;
+  border-radius: 4px;
+  overflow: hidden;
 }
 
 .dash-alert-item.current {
@@ -30,6 +32,7 @@ limitations under the License.
 .dash-alert-item.current .alert-title,
 .dash-alert-item.current .alert-project {
   opacity: 0.75;
+  padding: 8px 12px;
 }
 
 .dash-alert-item.current .alert-title:after,
@@ -60,7 +63,6 @@ limitations under the License.
   color: white;
   font-weight: lighter;
   font-size: 25px;
-  padding: 2px 10px;
 }
 
 .dash-alert-item .alert-value {
@@ -86,7 +88,6 @@ limitations under the License.
   color: #438c07;
   display: block;
   font-size: 28px;
-  padding: 0 10px;
 }
 
 .dash-alert-item.warning .alert-project {
@@ -102,9 +103,12 @@ limitations under the License.
 }
 
 .dash-alert-item.ok .alert-value { color: #438c07; }
+/* .dash-alert-item.ok .alert-project { background-color: #1b3108; } */
 
 .dash-alert-item.warning .alert-title { background-color: #d19a14; }
 .dash-alert-item.warning .alert-value { color: #d19a14; }
+/* .dash-alert-item.warning .alert-project { background-color: #382905; } */
 
 .dash-alert-item.critical .alert-title { background-color: #d70c0c; }
 .dash-alert-item.critical .alert-value { color: #d70c0c; }
+/* .dash-alert-item.critical .alert-project { background-color: #3a0505; } */
