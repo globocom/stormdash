@@ -17,7 +17,7 @@ limitations under the License.
 import React, { Component } from 'react';
 import axios from 'axios';
 import DashList from './DashList';
-
+import { host } from '../config';
 import './App.css';
 
 class App extends Component {
@@ -38,36 +38,8 @@ class App extends Component {
     this.getDashoboards();
   }
 
-  render() {
-    return (
-      <section className="dash-index">
-        <div className="dash-index-title">
-          <h1>
-            <span className="storm">Storm</span>
-            <span className="dash">Dash</span>
-          </h1>
-        </div>
-        <div className="dash-index-form">
-          <input type="text" className="create-dash-name topcoat-text-input--large"
-            value={this.state.dashName}
-            onChange={e => this.defineName(e.target)}
-            placeholder="Dashboard name" />
-          <button className="create-dash-btn topcoat-button--large--cta"
-                  onClick={this.createNewDash}>Create</button>
-        </div>
-
-        <button className="show-all-btn topcoat-button--large--quiet"
-                onClick={this.handleList}>Show all</button>
-
-        {this.state.visibleList &&
-          <DashList dashboards={this.state.dashs}
-                    handleList={this.handleList} />}
-      </section>
-    );
-  }
-
   getDashoboards() {
-    axios.get('/api/dash/all')
+    axios.get(`${host}/api/dash/all`)
     .then((response) => {
       this.setState({dashs: response.data});
     })
@@ -90,7 +62,7 @@ class App extends Component {
 
     btn.disabled = true;
 
-    axios.post('/api/dash/create/', {name: name})
+    axios.post(`${host}/api/dash/create/`, {name: name})
     .then((response) => {
       if(!response.data) {
         const msg = `Name ${name} already exists`;
@@ -126,6 +98,34 @@ class App extends Component {
 
   componentWillUnmount() {
     document.removeEventListener('keydown', this.handleKeyDown)
+  }
+
+  render() {
+    return (
+      <section className="dash-index">
+        <div className="dash-index-title">
+          <h1>
+            <span className="storm">Storm</span>
+            <span className="dash">Dash</span>
+          </h1>
+        </div>
+        <div className="dash-index-form">
+          <input type="text" className="create-dash-name topcoat-text-input--large"
+            value={this.state.dashName}
+            onChange={e => this.defineName(e.target)}
+            placeholder="Dashboard name" />
+          <button className="create-dash-btn topcoat-button--large--cta"
+                  onClick={this.createNewDash}>Create</button>
+        </div>
+
+        <button className="show-all-btn topcoat-button--large--quiet"
+                onClick={this.handleList}>Show all</button>
+
+        {this.state.visibleList &&
+          <DashList dashboards={this.state.dashs}
+                    handleList={this.handleList} />}
+      </section>
+    );
   }
 
 }

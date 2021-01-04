@@ -18,6 +18,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import AlertItem from './AlertItem';
 import { uuid } from '../utils';
+import { host } from '../config';
 import './Sidebar.css';
 
 class Sidebar extends Component {
@@ -362,7 +363,7 @@ class Sidebar extends Component {
       password: this.state.password,
       authHeaders: this.state.authHeaders
     }
-    axios.post('/api/auth/save', data)
+    axios.post(`${host}/api/auth/save`, data)
     .then((response) => {
       console.log('Save item auth: '+ data);
     })
@@ -381,7 +382,7 @@ class Sidebar extends Component {
     let data = {
       name: this.props.dashName
     }
-    axios.post('/api/dash/search', data)
+    axios.post(`${host}/api/dash/search`, data)
     .then((response) => {
       response.data.items.find((elem) => {
         if(elem.id === itemId) {
@@ -425,7 +426,7 @@ class Sidebar extends Component {
   onCheckValue(event) {
     event.preventDefault();
 
-    axios.get('/api/item/check', this.buildItem())
+    axios.get(`${host}/api/item/check`, this.buildItem())
     .then((response) => {
       this.setState({currentValue: response.data.value});
     })

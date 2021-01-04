@@ -15,23 +15,26 @@ limitations under the License.
 */
 
 import React, { Component } from 'react';
+import { Redirect, useParams } from 'react-router-dom';
 import axios from 'axios';
+
 import Tools from './Tools';
 import Navigator from './Navigator';
 import Reload from './Reload';
 import Hidden from './Hidden';
 import Sidebar from './Sidebar';
 import AlertGroup from './AlertGroup';
-import NotFound from './NotFound';
 import { uuid } from '../utils';
+import { host } from '../config';
+
 import './StormDash.css';
 
-class StormDash extends Component {
+class StormDashMain extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      dashName: this.props.params.dashName,
+      dashName: this.props.dashName,
       hidden: false,
       visibleSidebar: false,
       currentItem: null,
@@ -57,7 +60,7 @@ class StormDash extends Component {
 
   render() {
     if(this.state.notFound) {
-      return <NotFound />;
+      return <Redirect to="/not-found" />;
     }
 
     if(this.state.show) {
@@ -118,12 +121,13 @@ class StormDash extends Component {
     let data = {
       name: this.state.dashName
     }
-    axios.post('/api/dash/search', data)
+    axios.post(`${host}/api/dash/search`, data)
     .then((response) => {
       if (!response.data) {
         this.setState({ notFound: true });
         return;
       }
+
       this.setState({
         items: response.data.items,
         mainTitle: response.data.name,
@@ -157,7 +161,7 @@ class StormDash extends Component {
       hidden: this.state.hidden,
       items: newItems
     }
-    axios.post('/api/dash/update', data)
+    axios.post(`${host}/api/dash/update`, data)
     .then((updated) => {
       return updated && this.getDashContent();
     })
@@ -181,7 +185,7 @@ class StormDash extends Component {
         hidden: this.state.hidden,
         items: currentItems
       }
-      axios.post('/api/dash/update', data)
+      axios.post(`${host}/api/dash/update`, data)
       .then((updated) => {
         return updated && this.getDashContent();
       })
@@ -201,14 +205,14 @@ class StormDash extends Component {
     if (index >= 0) {
       currentItems.splice(index, 1);
 
-      axios.delete('/api/dash/itemauth', { itemId: itemId })
+      axios.delete(`${host}/api/dash/itemauth`, { itemId: itemId })
       .then((response) => {
         if (response.status === 200) {
           let data = {
             name: this.state.dashName,
             items: currentItems
           }
-          axios.post('/api/dash/update', data)
+          axios.post(`${host}/api/dash/update`, data)
           .then((updated) => {
             return updated && this.getDashContent();
           })
@@ -258,7 +262,7 @@ class StormDash extends Component {
         hidden: this.state.hidden,
         items: this.state.items
       }
-      axios.post('/api/dash/update', data)
+      axios.post(`${host}/api/dash/update`, data)
       .then((updated) => {
         return updated && this.getDashContent();
       })
@@ -292,6 +296,11 @@ class StormDash extends Component {
     document.removeEventListener('keydown', this.handleKeyDown);
     clearInterval(this.hourInterval);
   }
+}
+
+function StormDash() {
+  let { dashName } = useParams();
+  return <StormDashMain dashName={dashName} />;
 }
 
 export default StormDash;

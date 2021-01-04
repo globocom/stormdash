@@ -53,6 +53,11 @@ class AlertGroup extends Component {
   componentDidMount() {
     // If component's height is too high, "zoom out"
     let element = document.getElementsByClassName("dash-alert-group")[0];
+
+    if (!element) {
+      return;
+    }
+
     let height = element.clientHeight;
     let zoom = 100;
     let maxHeight = window.innerHeight * 0.8;

@@ -15,19 +15,33 @@ limitations under the License.
 */
 
 import React from 'react';
-import { Router, Route } from 'react-router';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route
+} from 'react-router-dom';
 
 import App from './components/App';
 import StormDash from './components/StormDash';
 import NotFound from './components/NotFound';
 
 
-const Routes = (props) => (
-  <Router {...props}>
-    <Route path="/" component={App} />
-    <Route path="/dash/:dashName" component={StormDash} />
-    <Route path="*" status={404} component={NotFound} />
-  </Router>
-);
+function Routes() {
+  return (
+    <Router>
+      <Switch>
+        <Route exact path="/">
+          <App />
+        </Route>
+        <Route path="/dash/:dashName">
+          <StormDash />
+        </Route>
+        <Route path="*" status={404}>
+          <NotFound />
+        </Route>
+      </Switch>
+    </Router>
+  );
+}
 
 export default Routes;
