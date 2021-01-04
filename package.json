@@ -12,19 +12,30 @@
     "eject": "react-scripts eject"
   },
   "devDependencies": {
-    "eslint": "^4.19.1",
-    "react-scripts": "^1.1.4"
+    "react-scripts": "^4.0.1"
   },
   "dependencies": {
     "axios": "^0.18.1",
     "axios-proxy-fix": "^0.16.3",
     "body-parser": "^1.18.3",
     "express": "^4.16.3",
-    "mongoose": "^4.13.14",
-    "react": "16.2.0",
-    "react-dom": "16.2.1",
-    "react-router": "^3.2.1",
-    "react-router-dom": "4.2.2",
-    "https-proxy-agent": "5.0.0"
+    "https-proxy-agent": "5.0.0",
+    "mongoose": "^5.11.9",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-router": "^5.2.0",
+    "react-router-dom": "5.2.0"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }
