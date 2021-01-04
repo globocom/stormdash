@@ -27,7 +27,11 @@ class Server {
 
   constructor() {
     this.updateInterval = null;
-    mongoose.connect(mongoUri, { useMongoClient: true });
+    mongoose.connect(mongoUri, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      useCreateIndex: true
+    });
     this.startUpdateLoop();
   }
 
@@ -36,8 +40,8 @@ class Server {
     this.updateInterval = setInterval(() => {
       this.getAll({}, (dashboards) => {
         dashboards.map((dash) => {
-          this.checkDashItems(dash.name, (data) => {
-            console.log('Run startUpdateLoop...');
+          this.checkDashItems(dash.name, data => {
+            // console.log('Run startUpdateLoop...');
           });
         });
       });
