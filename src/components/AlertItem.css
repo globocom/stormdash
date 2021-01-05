@@ -21,21 +21,22 @@ limitations under the License.
   cursor: pointer;
   min-width: 300px;
   border-radius: 4px;
+  border: 1px solid transparent;
   overflow: hidden;
 }
 
 .dash-alert-item.current {
   cursor: default;
   z-index: 11;
+  border: 1px solid cyan;
 }
 
 .dash-alert-item.current .alert-title,
 .dash-alert-item.current .alert-project {
-  opacity: 0.75;
-  padding: 8px 12px;
+  opacity: 0.85;
 }
 
-.dash-alert-item.current .alert-title:after,
+/* .dash-alert-item.current .alert-title:after,
 .dash-alert-item.current .alert-title:before,
 .dash-alert-item.current .alert-project:after,
 .dash-alert-item.current .alert-project:before {
@@ -44,12 +45,12 @@ limitations under the License.
   height: 8px;
   border: 1px solid #76b7eb;
   content: "";
-}
+} */
 
-.dash-alert-item.current .alert-title:before { top: -4px; left: -4px; border-width: 1px 0 0 1px; }
+/* .dash-alert-item.current .alert-title:before { top: -4px; left: -4px; border-width: 1px 0 0 1px; }
 .dash-alert-item.current .alert-title:after { top: -4px; right: -4px; border-width: 1px 1px 0 0; }
 .dash-alert-item.current .alert-project:before { bottom: -4px; left: -4px; border-width: 0 0 1px 1px; }
-.dash-alert-item.current .alert-project:after { bottom: -4px; right: -4px; border-width: 0 1px 1px 0; }
+.dash-alert-item.current .alert-project:after { bottom: -4px; right: -4px; border-width: 0 1px 1px 0; } */
 
 .dash-alert-item.disable {
   opacity: 0.60;
@@ -57,12 +58,26 @@ limitations under the License.
 }
 
 .dash-alert-item .alert-title {
+  position: relative;
   box-sizing: border-box;
   display: block;
   white-space: nowrap;
   color: white;
   font-weight: lighter;
   font-size: 25px;
+  padding: 8px 12px;
+}
+
+.dash-alert-item .alert-title .ext-link {
+  position: absolute;
+  right: 12px;
+  top: 10px;
+  color: rgba(255, 255, 255, 0.75);
+  text-decoration: none;
+}
+
+.dash-alert-item .alert-title .ext-link:hover {
+  color: rgba(255, 255, 255, 1);
 }
 
 .dash-alert-item .alert-value {
@@ -88,6 +103,7 @@ limitations under the License.
   color: #438c07;
   display: block;
   font-size: 28px;
+  padding: 8px 12px;
 }
 
 .dash-alert-item.warning .alert-project {

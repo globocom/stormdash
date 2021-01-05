@@ -33,6 +33,7 @@ class Sidebar extends Component {
       namespace: "",
       title: "",
       jsonurl: "",
+      extlink: "",
       proxyhost: "",
       proxyport: "",
       coverage: "",
@@ -109,6 +110,12 @@ class Sidebar extends Component {
             <label>Json url</label><br />
             <input type="text" className="topcoat-text-input--large" name="jsonurl"
               value={this.state.jsonurl} onChange={this.handleInputChange} />
+          </div>
+
+          <div>
+            <label>External url</label><br />
+            <input type="text" className="topcoat-text-input--large" name="extlink"
+              value={this.state.extlink} onChange={this.handleInputChange} />
           </div>
 
           <div className="proxy-item">
@@ -404,6 +411,7 @@ class Sidebar extends Component {
       namespace: this.state.namespace,
       title: this.state.title,
       jsonurl: this.state.jsonurl,
+      extlink: this.state.extlink,
       proxyhost: this.state.proxyhost,
       proxyport: this.state.proxyport,
       coverage: this.state.coverage,

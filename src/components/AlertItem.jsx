@@ -26,8 +26,8 @@ class AlertItem extends Component {
   }
 
   render() {
-    let alert = this.props.alert,
-        { namespace, title, current, description } = alert;
+    let alert = this.props.alert;
+    let { namespace, title, extlink, current, description } = alert;
     let status = checkStatus(alert);
     let disable = alert.disable ? " disable" : "";
 
@@ -39,7 +39,13 @@ class AlertItem extends Component {
     return (
       <div className={"dash-alert-item " + status + disable + (current ? " current" : "")}
            onClick={this.onItemSelect} title={description}>
-        <span className="alert-title">{title}</span>
+        <span className="alert-title">
+          {title}
+          {extlink &&
+            <a href={extlink} className="ext-link" target="_blank">
+              <i className="fa fa-external-link"></i>
+            </a>}
+        </span>
         <span className="alert-project">
           <span className="alert-namespace">{namespace}</span>
           <span className="alert-status">{value}</span>
