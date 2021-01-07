@@ -15,77 +15,165 @@ limitations under the License.
 */
 
 .dash-tools,
-.dash-tools .tool-btn {
+.dash-item-tools,
+.dash-tools-options {
   box-sizing: border-box;
 }
 
-.dash-tools {
-  position: absolute;
-  top: 15px;
-  right: 10px;
-  text-align: right;
-  z-index: 8;
+.divider {
+  margin: 0 12px;
 }
 
-.dash-tools .tool-btn {
-  width: 50px;
-  height: 50px;
-  padding-top: 2px;
-  border: 0;
+.divider::before {
+  content: "|";
+  color: #282828;
+  text-shadow: 1px 0 #646464;
+}
+
+.dash-tools,
+.dash-item-tools,
+.dash-tools-options {
+  display: flex;
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 34px;
+  padding: 4px 6px;
+  background-color: #4a4d4e;
+  border-top: 1px solid #646464;
+  border-bottom: 1px solid #282828;
+  color: #c6c8c8;
+  font-size: 0.9rem;
+}
+
+.dash-tools {
+  left: 0;
+  z-index: 9;
+}
+
+.dash-item-tools,
+.dash-tools-options {
+  top: 34px;
   color: white;
-  font-size: 22px;
-  border-radius: 50%;
-  background-color: #484b4c;
-  box-shadow: 3px 3px 9px rgba(0, 0, 0, 0.2);
-  opacity: .5;
-  cursor: pointer;
-  outline: none;
-  margin: 0 5px;
+  border-left: 1px solid #282828;
+}
+
+.dash-item-tools .item-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-left: 2px;
+}
+
+@media (max-width: 640px) {
+  .dash-item-tools,
+  .dash-tools-options {
+    width: auto;
+    left: 0;
+  }
+}
+
+@media (min-width: 641px) {
+  .dash-item-tools,
+  .dash-tools-options {
+    width: 420px;
+  }
+}
+
+.dash-tools a,
+.dash-item-tools a {
+  text-decoration: none;
+  color: #288edf;
+}
+
+.dash-tools a:hover,
+.dash-item-tools a:hover {
+  opacity: 0.85;
+}
+
+.dash-tools button,
+.dash-item-tools button {
+  margin-left: 4px;
+}
+
+.dash-tools-options {
+  padding: 10px 20px;
+  height: auto;
+}
+
+.dash-tools-options .options-list {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+.dash-tools-options .options-list li {
+  padding: 5px 0;
+}
+
+.dash-tools-options .options-list .option-name {
+  margin-left: 10px;
+}
+
+.dash-tools-left,
+.dash-tools-right,
+.dash-tools-middle {
+  display: flex;
+  align-items: center;
+}
+
+.dash-tools-left,
+.dash-tools-right {
+  width: 45%;
+  flex-grow: 1;
+}
+
+.dash-tools-middle {
   text-align: center;
 }
 
-.dash-tools .tool-btn:hover {
-  opacity: 1;
-  color: #76b7eb;
-}
-
-.dash-tools .tool-btn:active {
-  opacity: .8;
+.dash-tools-right {
+  justify-content: flex-end;
 }
 
 .dash-tools .confirm-delete {
-  float: left;
+  /* box-sizing: border-box;
+  position: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  top: 50px;
+  left: 50%;
   height: 50px;
+  width: 280px;
   line-height: 50px;
-  margin: 0 5px;
-  border-radius: 25px;
-  padding: 0;
+  margin-left: -140px;
+  border-radius: 4px;
+  padding: 10px;
   background-color: #484b4c;
   box-shadow: 3px 3px 9px rgba(0, 0, 0, 0.2);
+  z-index: 9; */
+
+  box-sizing: border-box;
+  position: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 68px;
+  right: 0;
+  height: 50px;
+  width: 420px;
+  line-height: 50px;
+  border-top: 1px solid #646464;
+  border-left: 1px solid #282828;
+  background-color: #484b4c;
+  z-index: 9;
 }
 
 .dash-tools .confirm-delete .warn-message {
   display: inline-block;
-  margin: 0 15px 0 20px;
   color: white;
   font-weight: bold;
   font-size: 22px;
-}
-
-.dash-tools .confirm-delete .delete-yes,
-.dash-tools .confirm-delete .delete-no {
-  height: 30px;
-  line-height: 30px;
-  border: 0;
-  border-radius: 15px;
-  padding: 1px 12px 0;
-  margin-right: 10px;
-  color: white;
-  background-color: #777;
-  cursor: pointer;
-}
-
-.dash-tools .confirm-delete .delete-yes:hover,
-.dash-tools .confirm-delete .delete-no:hover {
-  background-color: #76b7eb;
+  margin-right: 20px;
 }

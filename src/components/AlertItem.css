@@ -21,14 +21,14 @@ limitations under the License.
   cursor: pointer;
   min-width: 300px;
   border-radius: 4px;
-  border: 1px solid transparent;
+  border: 2px solid transparent;
   overflow: hidden;
 }
 
 .dash-alert-item.current {
   cursor: default;
   z-index: 11;
-  border: 1px solid cyan;
+  border: 2px solid #288edf;
 }
 
 .dash-alert-item.current .alert-title,
@@ -52,9 +52,10 @@ limitations under the License.
 .dash-alert-item.current .alert-project:before { bottom: -4px; left: -4px; border-width: 0 0 1px 1px; }
 .dash-alert-item.current .alert-project:after { bottom: -4px; right: -4px; border-width: 0 1px 1px 0; } */
 
-.dash-alert-item.disable {
-  opacity: 0.60;
-  outline: 5px dotted #484B4B;
+.dash-alert-item.disabled .alert-title,
+.dash-alert-item.disabled .alert-project {
+  opacity: 0.3;
+  filter: grayscale(1);
 }
 
 .dash-alert-item .alert-title {

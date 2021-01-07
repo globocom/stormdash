@@ -25,11 +25,16 @@ class AlertItem extends Component {
     this.onItemSelect = this.onItemSelect.bind(this);
   }
 
+  onItemSelect(event) {
+    event.stopPropagation();
+    this.props.setCurrent(this.props.alert);
+  }
+
   render() {
     let alert = this.props.alert;
     let { namespace, title, extlink, current, description } = alert;
     let status = checkStatus(alert);
-    let disable = alert.disable ? " disable" : "";
+    let disabled = alert.disable ? " disabled" : "";
 
     let value = alert.currentValue;
     if (alert.show === 'message' && status !== null) {
@@ -37,7 +42,7 @@ class AlertItem extends Component {
     }
 
     return (
-      <div className={"dash-alert-item " + status + disable + (current ? " current" : "")}
+      <div className={"dash-alert-item " + status + disabled + (current ? " current" : "")}
            onClick={this.onItemSelect} title={description}>
         <span className="alert-title">
           {title}
@@ -54,10 +59,6 @@ class AlertItem extends Component {
     );
   }
 
-  onItemSelect(event) {
-    event.stopPropagation();
-    this.props.setCurrent(this.props.alert.id);
-  }
 }
 
 export default AlertItem;

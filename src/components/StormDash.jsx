@@ -19,9 +19,6 @@ import { Redirect, useParams } from 'react-router-dom';
 import axios from 'axios';
 
 import Tools from './Tools';
-import Navigator from './Navigator';
-import Reload from './Reload';
-import Hidden from './Hidden';
 import Sidebar from './Sidebar';
 import AlertGroup from './AlertGroup';
 import { uuid } from '../utils';
@@ -42,7 +39,8 @@ class StormDashMain extends Component {
       show: false,
       notFound: false,
       currentHour: this.getCurrentHour(),
-      reloading: false
+      reloading: false,
+      dashUpdate: true
     };
 
     this.getDashContent();
@@ -56,96 +54,45 @@ class StormDashMain extends Component {
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.getCurrentHour = this.getCurrentHour.bind(this);
     this.changeHidden = this.changeHidden.bind(this);
-  }
-
-  render() {
-    if(this.state.notFound) {
-      return <Redirect to="/not-found" />;
-    }
-
-    if(this.state.show) {
-      let { visibleSidebar, reloading } = this.state;
-
-      return (
-        <div className="dash-main">
-          <Navigator />
-          {reloading &&
-            <Reload />}
-
-          {!visibleSidebar &&
-            <Tools currentItem={this.state.currentItem}
-                   handleSidebar={this.handleSidebar}
-                   deleteItem={this.deleteItem}
-                   clearCurrent={this.clearCurrent} />}
-
-          <Hidden changeHidden={this.changeHidden} />
-
-          {visibleSidebar &&
-            <Sidebar currentItem={this.state.currentItem}
-                     handleSidebar={this.handleSidebar}
-                     addItem={this.addItem}
-                     editItem={this.editItem}
-                     dashName={this.state.dashName} />}
-
-          <AlertGroup key={uuid()}
-                      items={this.state.items}
-                      hidden={this.state.hidden}
-                      setCurrent={this.setCurrent}
-                      clearCurrent={this.clearCurrent} />
-
-          <div className="dash-footer">
-            <h2 className="main-title">{this.state.dashName}</h2>
-            <strong className="dash-hour">{this.state.currentHour}</strong>
-          </div>
-        </div>
-      )
-    }
-
-    return <div className="dash-main"></div>
-  }
-
-  endAndStartTimer() {
-    window.clearTimeout(this.timer)
-    this.timer = window.setTimeout(() => {
-      this.setState({ reloading: false })
-    }, 3000)
+    this.changeUpdate = this.changeUpdate.bind(this);
   }
 
   getCurrentHour() {
-    let d = new Date();
+    const d = new Date();
     return d.getHours() + ':' + (d.getMinutes() < 10 ? '0' : '') + d.getMinutes();
   }
 
   getDashContent() {
     const current = this.state.currentItem;
-    let data = {
+    const data = {
       name: this.state.dashName
     }
+
     axios.post(`${host}/api/dash/search`, data)
-    .then((response) => {
-      if (!response.data) {
-        this.setState({ notFound: true });
-        return;
-      }
+      .then(response => {
+        if (!response.data) {
+          this.setState({ notFound: true });
+          return;
+        }
 
-      this.setState({
-        items: response.data.items,
-        mainTitle: response.data.name,
-        hidden: response.data.hidden,
-        show: true
+        this.setState({
+          items: response.data.items,
+          mainTitle: response.data.name,
+          hidden: response.data.hidden,
+          show: true
+        });
+
+        if (current) {
+          this.setCurrent(current);
+        }
+      })
+      .catch(error => {
+        console.log(error);
       });
-
-      if (current) {
-        this.setCurrent(current);
-      }
-    })
-    .catch((error) => {
-      console.log(error)
-    });
   }
 
-  handleSidebar(action="open") {
-    if (action === "close") {
+  handleSidebar(action='open') {
+    if (action === 'close') {
       this.setState({visibleSidebar: false});
       return;
     }
@@ -156,18 +103,19 @@ class StormDashMain extends Component {
     this.clearCurrent();
     const newItems = this.state.items.concat([alertObj]);
 
-    let data = {
+    const data = {
       name: this.state.dashName,
       hidden: this.state.hidden,
       items: newItems
     }
+
     axios.post(`${host}/api/dash/update`, data)
-    .then((updated) => {
-      return updated && this.getDashContent();
-    })
-    .catch((error) => {
-      console.log(error)
-    });
+      .then(updated => {
+        return updated && this.getDashContent();
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
 
   editItem(itemId, newAlertObj) {
@@ -185,13 +133,14 @@ class StormDashMain extends Component {
         hidden: this.state.hidden,
         items: currentItems
       }
+
       axios.post(`${host}/api/dash/update`, data)
-      .then((updated) => {
-        return updated && this.getDashContent();
-      })
-      .catch((error) => {
-        console.log(error)
-      });
+        .then(updated => {
+          return updated && this.getDashContent();
+        })
+        .catch(error => {
+          console.log(error)
+        });
     }
   }
 
@@ -206,46 +155,50 @@ class StormDashMain extends Component {
       currentItems.splice(index, 1);
 
       axios.delete(`${host}/api/dash/itemauth`, { itemId: itemId })
-      .then((response) => {
-        if (response.status === 200) {
-          let data = {
-            name: this.state.dashName,
-            items: currentItems
+        .then(response => {
+          if (response.status === 200) {
+            const data = {
+              name: this.state.dashName,
+              items: currentItems
+            }
+
+            axios.post(`${host}/api/dash/update`, data)
+              .then(updated => {
+                return updated && this.getDashContent();
+              })
+              .catch(error => {
+                console.log(error);
+              });
           }
-          axios.post(`${host}/api/dash/update`, data)
-          .then((updated) => {
-            return updated && this.getDashContent();
-          })
-          .catch((error) => {
-            console.log(error)
-          });
-        }
-      })
+        })
+        .catch(error => {
+          console.log(error);
+        });
     }
   }
 
-  setCurrent(itemId) {
+  setCurrent(item) {
     let currentItems = this.state.items.slice();
-    currentItems.map((item) => {
-      if(item.id !== itemId) {
-        item.current = false;
-      } else {
-        item.current = true;
-      }
-      return item;
+
+    currentItems.map(i => {
+      i.current = i.id == item.id ? true : false;
+      return i;
     });
+
     this.setState({
-      currentItem: itemId,
+      currentItem: item,
       items: currentItems
     });
   }
 
   clearCurrent() {
     let currentItems = this.state.items.slice();
-    currentItems.map((item) => {
+
+    currentItems.map(item => {
       item.current = false;
       return item;
     });
+
     this.setState({
       currentItem: null,
       items: currentItems
@@ -257,19 +210,25 @@ class StormDashMain extends Component {
     this.setState({
       hidden: !hidden
     }, () => {
-      let data = {
+      const data = {
         name: this.state.dashName,
         hidden: this.state.hidden,
         items: this.state.items
       }
+
       axios.post(`${host}/api/dash/update`, data)
-      .then((updated) => {
-        return updated && this.getDashContent();
-      })
-      .catch((error) => {
-        console.log(error)
-      });
+        .then(updated => {
+          return updated && this.getDashContent();
+        })
+        .catch(error => {
+          console.log(error);
+        });
     });
+  }
+
+  changeUpdate() {
+    this.endAndStartTimer();
+    this.setState({dashUpdate: !this.state.dashUpdate});
   }
 
   handleKeyDown(event) {
@@ -280,15 +239,24 @@ class StormDashMain extends Component {
     }
   };
 
+  endAndStartTimer() {
+    window.clearTimeout(this.timer)
+    this.timer = window.setTimeout(() => {
+      this.setState({ reloading: false })
+    }, 3000)
+  }
+
   componentDidMount() {
     document.addEventListener('keydown', this.handleKeyDown);
     this.hourInterval = setInterval(() => {
-      this.endAndStartTimer()
-      this.setState({
-        currentHour: this.getCurrentHour(),
-        reloading: true
-      });
-      this.getDashContent();
+      if (this.state.dashUpdate) {
+        this.endAndStartTimer();
+        this.setState({
+          currentHour: this.getCurrentHour(),
+          reloading: true
+        });
+        this.getDashContent();
+      }
     }, 15 * 1000);
   }
 
@@ -296,11 +264,51 @@ class StormDashMain extends Component {
     document.removeEventListener('keydown', this.handleKeyDown);
     clearInterval(this.hourInterval);
   }
+
+  render() {
+    if(this.state.notFound) {
+      return <Redirect to="/not-found" />;
+    }
+
+    if(this.state.show) {
+      let { visibleSidebar, reloading } = this.state;
+
+      return (
+        <div className="dash-main">
+          <Tools currentItem={this.state.currentItem}
+                 handleSidebar={this.handleSidebar}
+                 deleteItem={this.deleteItem}
+                 clearCurrent={this.clearCurrent}
+                 reloading={reloading}
+                 changeHidden={this.changeHidden}
+                 hidden={this.state.hidden}
+                 changeUpdate={this.changeUpdate}
+                 update={this.state.dashUpdate}
+                 dashName={this.state.dashName}
+                 dashHour={this.state.currentHour} />
+
+          {visibleSidebar &&
+            <Sidebar currentItem={this.state.currentItem}
+                     handleSidebar={this.handleSidebar}
+                     addItem={this.addItem}
+                     editItem={this.editItem}
+                     dashName={this.state.dashName} />}
+
+          <AlertGroup key={uuid()}
+                      items={this.state.items}
+                      hidden={this.state.hidden}
+                      setCurrent={this.setCurrent}
+                      clearCurrent={this.clearCurrent} />
+        </div>
+      )
+    }
+
+    return <div className="dash-main"></div>
+  }
+
 }
 
-function StormDash() {
+export default function StormDash() {
   let { dashName } = useParams();
   return <StormDashMain dashName={dashName} />;
 }
-
-export default StormDash;

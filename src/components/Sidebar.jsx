@@ -55,7 +55,7 @@ class Sidebar extends Component {
       reqBodyContentType: "text/plain"
     };
 
-    this.currentId = props.currentItem;
+    this.currentId = props.currentItem ? props.currentItem.id : null;
     this.setEditItem(this.currentId);
 
     this.onCreate = this.onCreate.bind(this);
@@ -87,8 +87,8 @@ class Sidebar extends Component {
     );
 
     return (
-      <div className="dash-sidebar">
-        <h3 className="title">{this.currentId ? 'Edit Alert' : 'Add Alert'}</h3>
+      <div className={'dash-sidebar' + (this.currentId ? ' editing' : '')}>
+        <h3 className="title">{this.currentId ? 'Edit Item' : 'Add New Item'}</h3>
 
         <button className="close-btn" onClick={() => this.props.handleSidebar("close")}>
           <i className="fa fa-times fa-1x"></i>
@@ -356,14 +356,16 @@ class Sidebar extends Component {
   onCreate(event) {
     event.preventDefault();
     this.props.addItem(this.buildItem());
+
     if(this.state.hasAuth) {
       this.saveAuth();
     }
+
     this.props.handleSidebar("close");
   }
 
   saveAuth() {
-    let data = {
+    const data = {
       itemId: this.state.id,
       dashName: this.props.dashName,
       username: this.state.username,
@@ -371,12 +373,12 @@ class Sidebar extends Component {
       authHeaders: this.state.authHeaders
     }
     axios.post(`${host}/api/auth/save`, data)
-    .then((response) => {
-      console.log('Save item auth: '+ data);
-    })
-    .catch((error) => {
-      console.log(error)
-    });
+      .then(response => {
+        console.log('Save item auth: '+ data);
+      })
+      .catch(error => {
+        console.log(error)
+      });
   }
 
   onEdit(event) {
@@ -386,21 +388,21 @@ class Sidebar extends Component {
   }
 
   setEditItem(itemId) {
-    let data = {
+    const data = {
       name: this.props.dashName
     }
     axios.post(`${host}/api/dash/search`, data)
-    .then((response) => {
-      response.data.items.find((elem) => {
-        if(elem.id === itemId) {
-          return this.setState(elem);
-        }
-        return null;
+      .then(response => {
+        response.data.items.find(elem => {
+          if(elem.id === itemId) {
+            return this.setState(elem);
+          }
+          return null;
+        });
+      })
+      .catch(error => {
+        console.log(error)
       });
-    })
-    .catch((error) => {
-      console.log(error)
-    });
   }
 
   buildItem() {
@@ -435,12 +437,12 @@ class Sidebar extends Component {
     event.preventDefault();
 
     axios.get(`${host}/api/item/check`, this.buildItem())
-    .then((response) => {
-      this.setState({currentValue: response.data.value});
-    })
-    .catch((error) => {
-      console.log(error)
-    });
+      .then(response => {
+        this.setState({currentValue: response.data.value});
+      })
+      .catch(error => {
+        console.log(error)
+      });
   }
 }
 
