@@ -15,20 +15,20 @@ limitations under the License.
 */
 
 .dash-alert-item {
-  flex-grow: 1;
   position: relative;
-  margin: 0 10px 10px 0;
+  margin: 0 5px 5px 0;
   cursor: pointer;
-  min-width: 300px;
   border-radius: 4px;
   border: 2px solid transparent;
   overflow: hidden;
 }
 
+.dash-alert-item:hover,
 .dash-alert-item.current {
   cursor: default;
   z-index: 11;
-  border: 2px solid #288edf;
+  border: 2px solid white;
+  cursor: pointer;
 }
 
 .dash-alert-item.current .alert-title,
@@ -54,7 +54,7 @@ limitations under the License.
 
 .dash-alert-item.disabled .alert-title,
 .dash-alert-item.disabled .alert-project {
-  opacity: 0.3;
+  opacity: 0.5;
   filter: grayscale(1);
 }
 
@@ -63,69 +63,96 @@ limitations under the License.
   box-sizing: border-box;
   display: block;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   color: white;
   font-weight: lighter;
-  font-size: 25px;
-  padding: 8px 12px;
+  padding: 6px 12px;
 }
 
-.dash-alert-item .alert-title .ext-link {
+.dash-alert-item .ext-link {
   position: absolute;
   right: 12px;
-  top: 10px;
+  top: 7px;
   color: rgba(255, 255, 255, 0.75);
   text-decoration: none;
 }
 
-.dash-alert-item .alert-title .ext-link:hover {
+.dash-alert-item.ok .ext-link {
+  font-size: 1rem;
+}
+
+.dash-alert-item.warning .ext-link {
+  font-size: 1.2rem;
+}
+
+.dash-alert-item.critical .ext-link {
+  font-size: 1.4rem;
+}
+
+.dash-alert-item .ext-link:hover {
   color: rgba(255, 255, 255, 1);
 }
 
-.dash-alert-item .alert-value {
+.dash-alert-item .alert-project {
+  display: flex;
   background-color: #222;
-  font-size: 2rem;
-  letter-spacing: -0.1rem;
-  padding: 0 10px;
-  display: block;
+  padding: 6px 12px;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .dash-alert-item .alert-namespace {
-  font-size: 1.2rem;
   color: rgba(255, 255, 255, 0.8);
   text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: 10px;
 }
 
 .dash-alert-item .alert-status {
-  float: right;
+  white-space: nowrap;
 }
 
-.dash-alert-item .alert-project {
-  background-color: #222;
-  color: #438c07;
-  display: block;
-  font-size: 28px;
-  padding: 8px 12px;
+.dash-alert-item.ok .alert-project {
+  /* color: #438c07; */
+  color: white;
+  font-size: 1rem;
+  background-color: #438c07;
+  opacity: 0.9;
 }
 
 .dash-alert-item.warning .alert-project {
-  color: #d19a14;
+  /* color: #d19a14; */
+  color: white;
+  font-size: 1.2rem;
+  background-color: #d19a14;
+  opacity: 0.9;
 }
 
 .dash-alert-item.critical .alert-project {
-  color: #d70c0c;
+  /* color: #d70c0c; */
+  color: white;
+  font-size: 1.4rem;
+  background-color: #d70c0c;
+  opacity: 0.9;
 }
 
 .dash-alert-item.ok .alert-title {
   background-color: #438c07;
+  font-size: 1rem;
+  padding-right: 32px;
 }
 
-.dash-alert-item.ok .alert-value { color: #438c07; }
-/* .dash-alert-item.ok .alert-project { background-color: #1b3108; } */
+.dash-alert-item.warning .alert-title {
+  background-color: #d19a14;
+  font-size: 1.2rem;
+  padding-right: 36px;
+}
 
-.dash-alert-item.warning .alert-title { background-color: #d19a14; }
-.dash-alert-item.warning .alert-value { color: #d19a14; }
-/* .dash-alert-item.warning .alert-project { background-color: #382905; } */
-
-.dash-alert-item.critical .alert-title { background-color: #d70c0c; }
-.dash-alert-item.critical .alert-value { color: #d70c0c; }
-/* .dash-alert-item.critical .alert-project { background-color: #3a0505; } */
+.dash-alert-item.critical .alert-title {
+  background-color: #d70c0c;
+  font-size: 1.4rem;
+  padding-right: 42px;
+}

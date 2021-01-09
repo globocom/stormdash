@@ -55,14 +55,114 @@ class Sidebar extends Component {
       reqBodyContentType: "text/plain"
     };
 
-    this.currentId = props.currentItem ? props.currentItem.id : null;
-    this.setEditItem(this.currentId);
+    if (props.currentItem) {
+      this.setEditItem(props.currentItem);
+    }
 
     this.onCreate = this.onCreate.bind(this);
     this.onEdit = this.onEdit.bind(this);
     this.onCheckValue = this.onCheckValue.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.saveAuth = this.saveAuth.bind(this);
+  }
+
+  handleInputChange(event) {
+    const target = event.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    this.setState({[target.name]: value});
+  }
+
+  onCreate(event) {
+    event.preventDefault();
+    this.props.addItem(this.buildItem());
+
+    if(this.state.hasAuth) {
+      this.saveAuth();
+    }
+
+    this.props.handleSidebar("close");
+  }
+
+  saveAuth() {
+    const data = {
+      itemId: this.state.id,
+      dashName: this.props.dashName,
+      username: this.state.username,
+      password: this.state.password,
+      authHeaders: this.state.authHeaders
+    }
+    axios.post(`${host}/api/auth/save`, data)
+      .then(response => {
+        console.log('Save item auth: '+ data);
+      })
+      .catch(error => {
+        console.log(error)
+      });
+  }
+
+  onEdit(event) {
+    event.preventDefault();
+    this.props.editItem(this.props.currentItem, this.buildItem());
+    this.props.handleSidebar("close");
+  }
+
+  setEditItem(item) {
+    const data = {
+      name: this.props.dashName
+    }
+
+    axios.post(`${host}/api/dash/search`, data)
+      .then(response => {
+        response.data.items.find(elem => {
+          if(elem.id === item.id) {
+            return this.setState(elem);
+          }
+          return null;
+        });
+      })
+      .catch(error => {
+        console.log(error)
+      });
+  }
+
+  buildItem() {
+    return {
+      id: this.state.id,
+      current: this.state.current,
+      currentValue: this.state.currentValue,
+      namespace: this.state.namespace,
+      title: this.state.title,
+      jsonurl: this.state.jsonurl,
+      extlink: this.state.extlink,
+      proxyhost: this.state.proxyhost,
+      proxyport: this.state.proxyport,
+      coverage: this.state.coverage,
+      coveragehost: this.state.coveragehost,
+      coveragefield: this.state.coveragefield,
+      coveragetarget: this.state.coveragetarget,
+      mainkey: this.state.mainkey,
+      ok: this.state.ok,
+      warning: this.state.warning,
+      critical: this.state.critical,
+      show: this.state.show,
+      description: this.state.description,
+      disable: this.state.disable,
+      hasAuth: this.state.hasAuth,
+      reqBody: this.state.reqBody,
+      reqBodyContentType: this.state.reqBodyContentType
+    }
+  }
+
+  onCheckValue(event) {
+    event.preventDefault();
+
+    axios.get(`${host}/api/item/check`, this.buildItem())
+      .then(response => {
+        this.setState({currentValue: response.data.value});
+      })
+      .catch(error => {
+        console.log(error)
+      });
   }
 
   render() {
@@ -87,8 +187,8 @@ class Sidebar extends Component {
     );
 
     return (
-      <div className={'dash-sidebar' + (this.currentId ? ' editing' : '')}>
-        <h3 className="title">{this.currentId ? 'Edit Item' : 'Add New Item'}</h3>
+      <div className={'dash-sidebar' + (this.props.currentItem ? ' editing' : '')}>
+        <h3 className="title">{this.props.currentItem ? 'Edit Item' : 'Add New Item'}</h3>
 
         <button className="close-btn" onClick={() => this.props.handleSidebar("close")}>
           <i className="fa fa-times fa-1x"></i>
@@ -185,7 +285,7 @@ class Sidebar extends Component {
               value={this.state.reqBody} onChange={this.handleInputChange}></textarea>
           </div>
 
-          {!this.currentId && authentication}
+          {!this.props.currentItem && authentication}
 
           <div>
             <label>Key</label><br />
@@ -335,7 +435,7 @@ class Sidebar extends Component {
 
         <section className="form-base">
           <button className="topcoat-button--large" onClick={this.onCheckValue}>Check Status</button>
-          {this.currentId
+          {this.props.currentItem
             ? <button className="topcoat-button--large--cta" onClick={this.onEdit}>Save</button>
             : <button className="topcoat-button--large--cta" onClick={this.onCreate}>Create</button>}
         </section>
@@ -347,103 +447,6 @@ class Sidebar extends Component {
     );
   }
 
-  handleInputChange(event) {
-    const target = event.target;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
-    this.setState({[target.name]: value});
-  }
-
-  onCreate(event) {
-    event.preventDefault();
-    this.props.addItem(this.buildItem());
-
-    if(this.state.hasAuth) {
-      this.saveAuth();
-    }
-
-    this.props.handleSidebar("close");
-  }
-
-  saveAuth() {
-    const data = {
-      itemId: this.state.id,
-      dashName: this.props.dashName,
-      username: this.state.username,
-      password: this.state.password,
-      authHeaders: this.state.authHeaders
-    }
-    axios.post(`${host}/api/auth/save`, data)
-      .then(response => {
-        console.log('Save item auth: '+ data);
-      })
-      .catch(error => {
-        console.log(error)
-      });
-  }
-
-  onEdit(event) {
-    event.preventDefault();
-    this.props.editItem(this.currentId, this.buildItem());
-    this.props.handleSidebar("close");
-  }
-
-  setEditItem(itemId) {
-    const data = {
-      name: this.props.dashName
-    }
-    axios.post(`${host}/api/dash/search`, data)
-      .then(response => {
-        response.data.items.find(elem => {
-          if(elem.id === itemId) {
-            return this.setState(elem);
-          }
-          return null;
-        });
-      })
-      .catch(error => {
-        console.log(error)
-      });
-  }
-
-  buildItem() {
-    return {
-      id: this.state.id,
-      current: this.state.current,
-      currentValue: this.state.currentValue,
-      namespace: this.state.namespace,
-      title: this.state.title,
-      jsonurl: this.state.jsonurl,
-      extlink: this.state.extlink,
-      proxyhost: this.state.proxyhost,
-      proxyport: this.state.proxyport,
-      coverage: this.state.coverage,
-      coveragehost: this.state.coveragehost,
-      coveragefield: this.state.coveragefield,
-      coveragetarget: this.state.coveragetarget,
-      mainkey: this.state.mainkey,
-      ok: this.state.ok,
-      warning: this.state.warning,
-      critical: this.state.critical,
-      show: this.state.show,
-      description: this.state.description,
-      disable: this.state.disable,
-      hasAuth: this.state.hasAuth,
-      reqBody: this.state.reqBody,
-      reqBodyContentType: this.state.reqBodyContentType
-    }
-  }
-
-  onCheckValue(event) {
-    event.preventDefault();
-
-    axios.get(`${host}/api/item/check`, this.buildItem())
-      .then(response => {
-        this.setState({currentValue: response.data.value});
-      })
-      .catch(error => {
-        console.log(error)
-      });
-  }
 }
 
 export default Sidebar;

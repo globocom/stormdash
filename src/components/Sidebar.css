@@ -161,18 +161,15 @@ limitations under the License.
 }
 
 .dash-sidebar .preview {
+  box-sizing: border-box;
   display: flex;
   flex-flow: column nowrap;
   justify-content: center;
   align-items: center;
   align-content: center;
   width: 100%;
-  padding: 10px 0 2px;
-
+  padding: 20px 10px;
   background-color: #434647;
-  border-top: 1px solid #333;
-  border-bottom: 1px solid #555;
-
   margin-bottom: 20px;
 }
 
