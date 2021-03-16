@@ -21,13 +21,16 @@ function AlertItem(props) {
 
   const onItemSelect = (e) => {
     e.stopPropagation();
-    props.setCurrent(props.alert);
+    if (props.handleSidebar) {
+      props.setCurrent(props.alert);
+      props.handleSidebar('open');
+    }
   }
 
-  let alert = props.alert;
-  let { namespace, title, extlink, current, description } = alert;
-  let status = checkStatus(alert);
-  let disabled = alert.disable ? " disabled" : "";
+  const alert = props.alert;
+  const { namespace, title, extlink, current, description } = alert;
+  const status = checkStatus(alert);
+  const disabled = alert.disable ? " disabled" : "";
   let value = alert.currentValue;
 
   if (alert.show === 'message' && status !== null) {
@@ -38,20 +41,16 @@ function AlertItem(props) {
     <div className={"dash-alert-item " + status + disabled + (current ? " current" : "")}
          onClick={onItemSelect} title={description}>
       <span className="alert-title">
-        {title}
+        { title || 'title' }
       </span>
       <span className="alert-project">
-        <span className="alert-namespace">{namespace}</span>
-        <span className="alert-status">{value}</span>
+        <span className="alert-namespace">{ namespace || 'namespace' }</span>
+        <span className="alert-status">{ value || 'value' }</span>
       </span>
       {extlink &&
-          <a href={extlink} className="ext-link" target="_blank"
-            onClick={e => e.stopPropagation()}>
+          <a href={extlink} className="ext-link" target="_blank" onClick={e => e.stopPropagation()}>
             <i className="fa fa-external-link"></i>
           </a>}
-
-      <div className="alert-item-options"></div>
-
     </div>
   )
 

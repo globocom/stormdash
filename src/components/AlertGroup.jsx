@@ -51,7 +51,9 @@ function AlertGroup(props) {
     if (props.hidden || !alert.disable) {
         items.[checkStatus(alert)].push(
           <div key={alert.id}>
-            <AlertItem alert={alert} setCurrent={props.setCurrent} />
+            <AlertItem alert={alert}
+                       setCurrent={props.setCurrent}
+                       handleSidebar={props.handleSidebar} />
           </div>
         )
     }

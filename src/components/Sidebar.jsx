@@ -30,8 +30,8 @@ class Sidebar extends Component {
       id: uuid(),
       current: false,
       currentValue: "",
-      namespace: "",
       title: "",
+      namespace: "",
       jsonurl: "",
       extlink: "",
       proxyhost: "",
@@ -52,7 +52,8 @@ class Sidebar extends Component {
       password: "",
       authHeaders: "",
       reqBody: "",
-      reqBodyContentType: "text/plain"
+      reqBodyContentType: "text/plain",
+      confirmDelete: false
     };
 
     if (props.currentItem) {
@@ -64,6 +65,9 @@ class Sidebar extends Component {
     this.onCheckValue = this.onCheckValue.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.saveAuth = this.saveAuth.bind(this);
+    this.onShowDelete = this.onShowDelete.bind(this);
+    this.onDeleteItem = this.onDeleteItem.bind(this);
+    this.closeConfirmDelete = this.closeConfirmDelete.bind(this);
   }
 
   handleInputChange(event) {
@@ -130,8 +134,8 @@ class Sidebar extends Component {
       id: this.state.id,
       current: this.state.current,
       currentValue: this.state.currentValue,
-      namespace: this.state.namespace,
       title: this.state.title,
+      namespace: this.state.namespace,
       jsonurl: this.state.jsonurl,
       extlink: this.state.extlink,
       proxyhost: this.state.proxyhost,
@@ -165,6 +169,20 @@ class Sidebar extends Component {
       });
   }
 
+  onShowDelete() {
+    this.setState({ confirmDelete: true });
+  }
+
+  onDeleteItem() {
+    this.props.deleteItem(this.props.currentItem);
+    this.closeConfirmDelete();
+    this.props.handleSidebar("close")
+  }
+
+  closeConfirmDelete() {
+    this.setState({ confirmDelete: false });
+  }
+
   render() {
     const authentication = (
       <div className="form-auth">
@@ -188,22 +206,27 @@ class Sidebar extends Component {
 
     return (
       <div className={'dash-sidebar' + (this.props.currentItem ? ' editing' : '')}>
-        <h3 className="title">{this.props.currentItem ? 'Edit Item' : 'Add New Item'}</h3>
 
-        <button className="close-btn" onClick={() => this.props.handleSidebar("close")}>
-          <i className="fa fa-times fa-1x"></i>
-        </button>
+        <div className="dash-sidebar-header">
+          <h3 className="dash-sidebar-title">
+            {this.props.currentItem ? 'Edit Item' : 'Add New Item'}
+          </h3>
+          <button className="dash-sidebar-close-btn" onClick={() => this.props.handleSidebar("close")}>
+            <i className="fa fa-times fa-1x"></i>
+          </button>
+        </div>
 
         <section className="form-items">
-          <div>
-            <label>Namespace</label><br />
-            <input type="text" className="topcoat-text-input--large" name="namespace"
-              value={this.state.namespace} onChange={this.handleInputChange} />
-          </div>
           <div>
             <label>Title</label><br />
             <input type="text" className="topcoat-text-input--large" name="title"
               value={this.state.title} onChange={this.handleInputChange} />
+          </div>
+
+          <div>
+            <label>Namespace</label><br />
+            <input type="text" className="topcoat-text-input--large" name="namespace"
+              value={this.state.namespace} onChange={this.handleInputChange} />
           </div>
 
           <div>
@@ -434,11 +457,24 @@ class Sidebar extends Component {
         </section>
 
         <section className="form-base">
-          <button className="topcoat-button--large" onClick={this.onCheckValue}>Check Status</button>
+          {this.props.currentItem &&
+            <button onClick={this.onShowDelete}
+                    className="delete-btn btn-danger topcoat-button--large">Delete</button>}
+
+          <button className="topcoat-button--large" onClick={this.onCheckValue}
+                  disabled={this.state.confirmDelete}>Check Status</button>
           {this.props.currentItem
-            ? <button className="topcoat-button--large--cta" onClick={this.onEdit}>Save</button>
+            ? <button className="topcoat-button--large--cta" onClick={this.onEdit}
+                      disabled={this.state.confirmDelete}>Save</button>
             : <button className="topcoat-button--large--cta" onClick={this.onCreate}>Create</button>}
         </section>
+
+        {this.state.confirmDelete && this.props.currentItem &&
+          <div className="confirm-delete">
+            <span className="warn-message">Are you sure?</span>
+            <button onClick={this.onDeleteItem} className="topcoat-button--large">Yes</button>
+            <button onClick={this.closeConfirmDelete} className="topcoat-button--large">No</button>
+          </div>}
 
         <div className="preview">
           <AlertItem alert={this.buildItem()} setCurrent={() => false} />

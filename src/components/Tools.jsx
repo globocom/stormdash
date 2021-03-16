@@ -19,7 +19,6 @@ import { Link } from 'react-router-dom';
 import './Tools.css';
 
 function Tools(props) {
-  const [confirmDelete, setConfirmDelete] = useState(false);
   const [showOptions, setShowOptions] = useState(false);
 
   const onAddItem = () => {
@@ -28,43 +27,19 @@ function Tools(props) {
     props.handleSidebar('open');
   }
 
-  const onEditItem = () => {
-    props.handleSidebar('open');
-  }
-
-  const onDeleteItem = () => {
-    props.deleteItem(props.currentItem);
-    disableConfirm();
-  }
-
-  const disableConfirm = () => {
-    setConfirmDelete(false);
-  }
-
-  const onShowDelete = () => {
-    props.handleSidebar('close');
-    setConfirmDelete(true);
-  }
-
-  const onShowOptions = () => {
+  const toggleShowOptions = () => {
     setShowOptions(!showOptions);
   }
 
   return (
     <div className="dash-tools">
 
-      {confirmDelete && props.currentItem &&
-        <div className="confirm-delete">
-          <span className="warn-message">Are you sure?</span>
-          <button onClick={onDeleteItem} className="topcoat-button--large">Yes</button>
-          <button onClick={disableConfirm} className="topcoat-button--large">No</button>
-        </div>}
-
       <div className="dash-tools-left">
         <span className="dash-tools-breadcrumb">
           <Link to="/">StormDash</Link>
-          &nbsp;/&nbsp;
-          <span>{props.dashName}</span>
+          <span className="dash-name">
+            &nbsp;&rsaquo;&nbsp;{props.dashName}
+          </span>
         </span>
       </div>
 
@@ -73,60 +48,54 @@ function Tools(props) {
           <span>{props.dashHour}</span>}
 
         {props.reloading &&
-          <span className="text">
-            <i className="fa fa-refresh fa-spin fa-fw"></i> updating
+          <span className="updating-spin">
+            <i className="fa fa-refresh fa-spin fa-fw"></i>
           </span>}
       </div>
 
       <div className="dash-tools-right">
-        <button onClick={onShowOptions} className="topcoat-button--quiet"
+        <button onClick={toggleShowOptions} className="topcoat-button--quiet btn-options"
                 disabled={props.visibleSidebar || props.currentItem}>
-          <i className="fa fa-cog fa-1x"></i> Options
+          <i className="fa fa-cog fa-1x"></i>
         </button>
 
-        {showOptions && !props.visibleSidebar &&
-          <div className="dash-tools-options">
-            <ul className="options-list">
-              <li>
-                <label className="topcoat-switch">
-                  <input type="checkbox" className="topcoat-switch__input"
-                         checked={props.hidden} onChange={props.changeHidden} />
-                  <div className="topcoat-switch__toggle"></div>
-                </label>
-                <span className="option-name">Disabled items</span>
-              </li>
-              <li>
-                <label className="topcoat-switch">
-                  <input type="checkbox" className="topcoat-switch__input"
-                         checked={props.update} onChange={props.changeUpdate} />
-                  <div className="topcoat-switch__toggle"></div>
-                </label>
-                <span className="option-name">Dashboard update</span>
-              </li>
-            </ul>
-          </div>}
-
-        <button onClick={onAddItem} className="topcoat-button--cta add-alert"
+        <button onClick={onAddItem} className="topcoat-button--cta btn-add-alert"
                 disabled={props.visibleSidebar}>
-          <i className="fa fa-plus fa-1x"></i> Add Alert
+          <i className="fa fa-plus fa-1x"></i>
         </button>
       </div>
 
-      {props.currentItem &&
-        <div className="dash-item-tools">
-          <div className="dash-tools-left">
-            <span className="item-title" title={props.currentItem.title}>
-              {props.currentItem.title}
-            </span>
-          </div>
-          <div className="dash-tools-right">
-            <button onClick={onEditItem} className="topcoat-button edit-alert">
-              <i className="fa fa-pencil fa-1x"></i>&nbsp; Edit
-            </button>
-            <button onClick={onShowDelete} className="topcoat-button delete-alert">
-              <i className="fa fa-trash fa-1x"></i>&nbsp; Delete
+      {showOptions && !props.visibleSidebar &&
+        <div className="dash-sidebar-overlay"></div>}
+
+      {showOptions && !props.visibleSidebar &&
+        <div className="dash-tools-options dash-sidebar">
+
+          <div className="dash-sidebar-header">
+            <h3 className="dash-sidebar-title">Options</h3>
+            <button className="dash-sidebar-close-btn" onClick={toggleShowOptions}>
+              <i className="fa fa-times fa-1x"></i>
             </button>
           </div>
+
+          <ul className="options-list">
+            <li>
+              <span className="option-name">Show disabled items</span>
+              <label className="topcoat-switch">
+                <input type="checkbox" className="topcoat-switch__input"
+                        checked={props.hidden} onChange={props.changeHidden} />
+                <div className="topcoat-switch__toggle"></div>
+              </label>
+            </li>
+            <li>
+              <span className="option-name">Dashboard update</span>
+              <label className="topcoat-switch">
+                <input type="checkbox" className="topcoat-switch__input"
+                        checked={props.update} onChange={props.changeUpdate} />
+                <div className="topcoat-switch__toggle"></div>
+              </label>
+            </li>
+          </ul>
         </div>}
 
     </div>

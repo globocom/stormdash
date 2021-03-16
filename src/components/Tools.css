@@ -31,8 +31,7 @@ limitations under the License.
 }
 
 .dash-tools,
-.dash-item-tools,
-.dash-tools-options {
+.dash-item-tools {
   display: flex;
   position: fixed;
   top: 0;
@@ -46,23 +45,28 @@ limitations under the License.
   font-size: 0.9rem;
 }
 
+@media (max-width: 640px) {
+  .dash-tools {
+    height: 68px;
+  }
+}
+
 .dash-tools {
   left: 0;
   z-index: 9;
 }
 
-.dash-item-tools,
-.dash-tools-options {
+.dash-item-tools {
   top: 34px;
   color: white;
   border-left: 1px solid #282828;
 }
 
-.dash-item-tools .item-title {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  padding-left: 2px;
+@media (max-width: 640px) {
+  .dash-tools-breadcrumb .dash-name {
+    display: block;
+    font-size: 1.4em;
+  }
 }
 
 @media (max-width: 640px) {
@@ -83,7 +87,7 @@ limitations under the License.
 .dash-tools a,
 .dash-item-tools a {
   text-decoration: none;
-  color: #288edf;
+  color: #3da9ff;
 }
 
 .dash-tools a:hover,
@@ -96,19 +100,38 @@ limitations under the License.
   margin-left: 4px;
 }
 
+@media (min-width: 641px) {
+  .dash-tools .updating-spin::after {
+    content: ' updating';
+  }
+
+  .dash-tools .btn-add-alert::after {
+    content: ' Add Alert';
+  }
+
+  .dash-tools .btn-options::after {
+    content: ' Options';
+  }
+}
+
 .dash-tools-options {
-  padding: 10px 20px;
+  display: block;
+  padding: 0;
   height: auto;
+  bottom: 0;
 }
 
 .dash-tools-options .options-list {
   margin: 0;
-  padding: 0;
+  padding: 20px;
   list-style-type: none;
 }
 
 .dash-tools-options .options-list li {
-  padding: 5px 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 0;
+  margin-bottom: 20px;
 }
 
 .dash-tools-options .options-list .option-name {
@@ -132,48 +155,12 @@ limitations under the License.
   text-align: center;
 }
 
+@media (max-width: 640px) {
+  .dash-tools-middle {
+    font-size: 1.2em;
+  }
+}
+
 .dash-tools-right {
   justify-content: flex-end;
-}
-
-.dash-tools .confirm-delete {
-  /* box-sizing: border-box;
-  position: fixed;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  top: 50px;
-  left: 50%;
-  height: 50px;
-  width: 280px;
-  line-height: 50px;
-  margin-left: -140px;
-  border-radius: 4px;
-  padding: 10px;
-  background-color: #484b4c;
-  box-shadow: 3px 3px 9px rgba(0, 0, 0, 0.2);
-  z-index: 9; */
-
-  box-sizing: border-box;
-  position: fixed;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  top: 68px;
-  right: 0;
-  height: 50px;
-  width: 420px;
-  line-height: 50px;
-  border-top: 1px solid #646464;
-  border-left: 1px solid #282828;
-  background-color: #484b4c;
-  z-index: 9;
-}
-
-.dash-tools .confirm-delete .warn-message {
-  display: inline-block;
-  color: white;
-  font-weight: bold;
-  font-size: 22px;
-  margin-right: 20px;
 }

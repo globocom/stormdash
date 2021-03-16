@@ -23,6 +23,12 @@ limitations under the License.
   right: 0;
 }
 
+@media (max-width: 640px) {
+  .dash-alert-group-wrapper {
+    top: 68px;
+  }
+}
+
 .dash-alert-group {
   flex-wrap: wrap;
   z-index: 5;

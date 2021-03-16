@@ -94,6 +94,7 @@ class StormDashMain extends Component {
   handleSidebar(action='open') {
     if (action === 'close') {
       this.setState({visibleSidebar: false});
+      this.clearCurrent();
       return;
     }
     this.setState({visibleSidebar: true});
@@ -234,7 +235,6 @@ class StormDashMain extends Component {
   handleKeyDown(event) {
     if (event.key === 'Escape') {
       event.preventDefault();
-      this.clearCurrent();
       this.handleSidebar('close');
     }
   };
@@ -281,7 +281,6 @@ class StormDashMain extends Component {
                  dashHour={this.state.currentHour}
                  hidden={this.state.hidden}
                  clearCurrent={this.clearCurrent}
-                 deleteItem={this.deleteItem}
                  handleSidebar={this.handleSidebar}
                  changeHidden={this.changeHidden}
                  changeUpdate={this.changeUpdate}
@@ -293,13 +292,18 @@ class StormDashMain extends Component {
                      handleSidebar={this.handleSidebar}
                      addItem={this.addItem}
                      editItem={this.editItem}
+                     deleteItem={this.deleteItem}
                      dashName={this.state.dashName} />}
+
+          {visibleSidebar &&
+            <div className="dash-sidebar-overlay"></div>}
 
           <AlertGroup key={uuid()}
                       items={this.state.items}
                       hidden={this.state.hidden}
                       setCurrent={this.setCurrent}
-                      clearCurrent={this.clearCurrent} />
+                      clearCurrent={this.clearCurrent}
+                      handleSidebar={this.handleSidebar} />
         </div>
       )
     }
