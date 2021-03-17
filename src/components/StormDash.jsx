@@ -94,6 +94,7 @@ class StormDashMain extends Component {
   handleSidebar(action='open') {
     if (action === 'close') {
       this.setState({visibleSidebar: false});
+      this.clearCurrent();
       return;
     }
     this.setState({visibleSidebar: true});
@@ -118,11 +119,11 @@ class StormDashMain extends Component {
       });
   }
 
-  editItem(itemId, newAlertObj) {
+  editItem(item, newAlertObj) {
     this.clearCurrent();
     let currentItems = this.state.items.slice();
     const index = currentItems.findIndex((elem, i, arr) => {
-      return elem.id === itemId;
+      return elem.id === item.id;
     });
 
     if (index >= 0) {
@@ -144,17 +145,17 @@ class StormDashMain extends Component {
     }
   }
 
-  deleteItem(itemId) {
+  deleteItem(item) {
     this.clearCurrent();
     let currentItems = this.state.items.slice();
     const index = currentItems.findIndex((elem, i, arr) => {
-      return elem.id === itemId;
+      return elem.id === item.id;
     });
 
     if (index >= 0) {
       currentItems.splice(index, 1);
 
-      axios.delete(`${host}/api/dash/itemauth`, { itemId: itemId })
+      axios.delete(`${host}/api/dash/itemauth`, { itemId: item.id })
         .then(response => {
           if (response.status === 200) {
             const data = {
@@ -234,7 +235,6 @@ class StormDashMain extends Component {
   handleKeyDown(event) {
     if (event.key === 'Escape') {
       event.preventDefault();
-      this.clearCurrent();
       this.handleSidebar('close');
     }
   };
@@ -276,29 +276,34 @@ class StormDashMain extends Component {
       return (
         <div className="dash-main">
           <Tools currentItem={this.state.currentItem}
-                 handleSidebar={this.handleSidebar}
-                 deleteItem={this.deleteItem}
-                 clearCurrent={this.clearCurrent}
-                 reloading={reloading}
-                 changeHidden={this.changeHidden}
-                 hidden={this.state.hidden}
-                 changeUpdate={this.changeUpdate}
                  update={this.state.dashUpdate}
                  dashName={this.state.dashName}
-                 dashHour={this.state.currentHour} />
+                 dashHour={this.state.currentHour}
+                 hidden={this.state.hidden}
+                 clearCurrent={this.clearCurrent}
+                 handleSidebar={this.handleSidebar}
+                 changeHidden={this.changeHidden}
+                 changeUpdate={this.changeUpdate}
+                 visibleSidebar={visibleSidebar}
+                 reloading={reloading} />
 
           {visibleSidebar &&
             <Sidebar currentItem={this.state.currentItem}
                      handleSidebar={this.handleSidebar}
                      addItem={this.addItem}
                      editItem={this.editItem}
+                     deleteItem={this.deleteItem}
                      dashName={this.state.dashName} />}
+
+          {visibleSidebar &&
+            <div className="dash-sidebar-overlay"></div>}
 
           <AlertGroup key={uuid()}
                       items={this.state.items}
                       hidden={this.state.hidden}
                       setCurrent={this.setCurrent}
-                      clearCurrent={this.clearCurrent} />
+                      clearCurrent={this.clearCurrent}
+                      handleSidebar={this.handleSidebar} />
         </div>
       )
     }
