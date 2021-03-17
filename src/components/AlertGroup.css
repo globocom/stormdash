@@ -46,6 +46,12 @@ limitations under the License.
   grid-auto-rows: minmax(min-content, max-content);
 }
 
+.dash-alert-group.group-grid > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .dash-alert-group-scale10 {
   max-height: calc(85vw / .10);
   width: calc(90vw / .10);
