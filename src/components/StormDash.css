@@ -26,6 +26,11 @@ body,
 }
 
 .dash-main {
+  position: fixed;
+  top: 32px;
+  left: 0;
+  right: 0;
+  bottom: 0;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -34,24 +39,21 @@ body,
 }
 
 .dash-main .dash-footer {
-    width: 100%;
-    background-color: #484b4c;
-    height: 40px;
-    align-self: flex-end;
-    position: absolute;
-    left: 0;
-    z-index: 5;
+  width: 100%;
+  background-color: #363636;
+  height: 32px;
+  align-self: flex-end;
+  position: absolute;
+  left: 0;
+  z-index: 5;
+  font-size: 0.9rem;
 }
 
 .dash-main .main-title,
 .dash-main .dash-hour {
   position: absolute;
-  font-size: 2rem;
-  letter-spacing: -.1rem;
-  color: #111;
-  margin: 0;
-  margin-left: 20px;
-  opacity: .5;
+  font-size: 0.9rem;
+  color: #c6c8c8;
 }
 
 .dash-main .dash-hour {

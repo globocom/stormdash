@@ -14,6 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+.btn-danger {
+  background-color: #b72e2b;
+}
+
+.btn-danger:hover {
+  background-color: #d03835;
+}
+
 .dash-index {
   display: flex;
   flex-flow: column wrap;

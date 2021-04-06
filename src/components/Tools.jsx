@@ -14,88 +14,93 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import React, { Component } from 'react';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import './Tools.css';
 
-class ConfirmDelete extends Component {
-  render() {
-    return (
-      <div className="confirm-delete">
-        <span className="warn-message">Are you sure?</span>
-        <button onClick={this.props.onDeleteItem} className="delete-yes">Yes</button>
-        <button onClick={this.props.disableConfirm} className="delete-no">No</button>
+function Tools(props) {
+  const [showOptions, setShowOptions] = useState(false);
+
+  const onAddItem = () => {
+    props.clearCurrent();
+    setShowOptions(false);
+    props.handleSidebar('open');
+  }
+
+  const toggleShowOptions = () => {
+    setShowOptions(!showOptions);
+  }
+
+  return (
+    <div className="dash-tools">
+
+      <div className="dash-tools-left">
+        <span className="dash-tools-breadcrumb">
+          <Link to="/">StormDash</Link>
+          <span className="dash-name">
+            &nbsp;&rsaquo;&nbsp;{props.dashName}
+          </span>
+        </span>
       </div>
-    );
-  }
 
-  componentDidUpdate() {
-    this.props.disableConfirm();
-  }
+      <div className="dash-tools-middle">
+        {!props.reloading &&
+          <span>{props.dashHour}</span>}
 
-  componentWillUnmount() {
-    this.props.disableConfirm();
-  }
-}
+        {props.reloading &&
+          <span className="updating-spin">
+            <i className="fa fa-refresh fa-spin fa-fw"></i>
+          </span>}
+      </div>
 
-class Tools extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      confirmDelete: false
-    };
-    this.onAddItem = this.onAddItem.bind(this);
-    this.onEditItem = this.onEditItem.bind(this);
-    this.onDeleteItem = this.onDeleteItem.bind(this);
-    this.disableConfirm = this.disableConfirm.bind(this);
-  }
+      <div className="dash-tools-right">
+        <button onClick={toggleShowOptions} className="topcoat-button--quiet btn-options"
+                disabled={props.visibleSidebar || props.currentItem}>
+          <i className="fa fa-cog fa-1x"></i>
+        </button>
 
-  render() {
-    return (
-      <div className="dash-tools">
-        {this.state.confirmDelete && this.props.currentItem &&
-          <ConfirmDelete disableConfirm={this.disableConfirm}
-                         onDeleteItem={this.onDeleteItem} />}
-
-        {this.props.currentItem &&
-          <button onClick={() => this.setState({confirmDelete: true})} className="tool-btn delete-alert">
-            <i className="fa fa-trash fa-1x"></i>
-          </button>}
-
-        {this.props.currentItem &&
-          <button onClick={this.onEditItem} className="tool-btn edit-alert">
-            <i className="fa fa-pencil fa-1x"></i>
-          </button>}
-
-        <button onClick={this.onAddItem} className="tool-btn add-alert">
+        <button onClick={onAddItem} className="topcoat-button--cta btn-add-alert"
+                disabled={props.visibleSidebar}>
           <i className="fa fa-plus fa-1x"></i>
         </button>
-        {/*<button onClick={this.props.doStatusCheck} className="tool-btn check-status">
-          <i className="fa fa-check fa-1x"></i>
-        </button>*/}
       </div>
-    );
-  }
 
-  onAddItem(event) {
-    event.stopPropagation();
-    this.props.clearCurrent();
-    this.props.handleSidebar("open");
-  }
+      {showOptions && !props.visibleSidebar &&
+        <div className="dash-sidebar-overlay"></div>}
 
-  onEditItem(event) {
-    event.stopPropagation();
-    this.props.handleSidebar("open");
-  }
+      {showOptions && !props.visibleSidebar &&
+        <div className="dash-tools-options dash-sidebar">
 
-  onDeleteItem(event) {
-    event.stopPropagation();
-    this.props.deleteItem(this.props.currentItem);
-    this.disableConfirm();
-  }
+          <div className="dash-sidebar-header">
+            <h3 className="dash-sidebar-title">Options</h3>
+            <button className="dash-sidebar-close-btn" onClick={toggleShowOptions}>
+              <i className="fa fa-times fa-1x"></i>
+            </button>
+          </div>
 
-  disableConfirm() {
-    this.setState({confirmDelete: false});
-  }
+          <ul className="options-list">
+            <li>
+              <span className="option-name">Show disabled items</span>
+              <label className="topcoat-switch">
+                <input type="checkbox" className="topcoat-switch__input"
+                        checked={props.hidden} onChange={props.changeHidden} />
+                <div className="topcoat-switch__toggle"></div>
+              </label>
+            </li>
+            <li>
+              <span className="option-name">Dashboard update</span>
+              <label className="topcoat-switch">
+                <input type="checkbox" className="topcoat-switch__input"
+                        checked={props.update} onChange={props.changeUpdate} />
+                <div className="topcoat-switch__toggle"></div>
+              </label>
+            </li>
+          </ul>
+        </div>}
+
+    </div>
+  );
+
 }
 
 export default Tools;

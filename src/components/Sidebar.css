@@ -23,39 +23,41 @@ limitations under the License.
 
 @media (min-width: 641px) {
   .dash-sidebar {
-    width: 35%;
+    width: 420px;
   }
 }
 
 .dash-sidebar {
+  box-sizing: border-box;
   position: fixed;
-  padding: 20px 0;
+  padding: 0;
   right: 0;
-  top: 0;
+  top: 34px;
   bottom: 0;
-  background-color: #484b4c;
+  background-color: #4a4d4e;
   color: white;
-  z-index: 9;
   overflow-y: auto;
+  z-index: 991;
+  box-shadow: -5px 2px 5px rgba(0, 0, 0, 0.20);
 }
 
-.dash-sidebar .close-btn {
-  position: absolute;
-  right: 20px;
-  top: 20px;
-  width: 40px;
-  height: 40px;
-  border: 0;
-  color: white;
-  font-size: 24px;
-  background-color: transparent;
-  cursor: pointer;
-  outline: none;
+.dash-sidebar-overlay {
+  position: fixed;
+  top: 34px;
+  left: 0;
+  width: 100vw;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 990;
 }
 
-.dash-sidebar .close-btn:hover {
-  color: #76b7eb;
+@media (max-width: 640px) {
+  .dash-sidebar,
+  .dash-sidebar-overlay {
+    top: 68px;
+  }
 }
+
 
 .dash-sidebar hr {
   border: 0;
@@ -63,17 +65,13 @@ limitations under the License.
   margin: 20px 0;
 }
 
-.dash-sidebar .title {
-  font-size: 26px;
-  font-weight: normal;
-  color: white;
-  margin: 0 0 15px;
-  padding: 0 20px;
+.dash-sidebar .form-items {
+  padding: 20px;
 }
 
 .dash-sidebar .form-items > div {
   margin-bottom: 10px;
-  padding: 0 20px;
+  /* padding: 0 20px; */
 }
 
 .dash-sidebar .form-items .form-auth {
@@ -100,6 +98,17 @@ limitations under the License.
 
 .dash-sidebar .form-base button {
   margin-left: 10px;
+}
+
+@media (max-width: 640px) {
+  .dash-sidebar .form-base button {
+    margin-left: 5px;
+  }
+}
+
+.dash-sidebar .form-base .delete-btn {
+  float: left;
+  margin-left: 0;
 }
 
 .dash-sidebar .compare-item .rule,
@@ -154,19 +163,15 @@ limitations under the License.
 }
 
 .dash-sidebar .preview {
+  box-sizing: border-box;
   display: flex;
   flex-flow: column nowrap;
   justify-content: center;
   align-items: center;
   align-content: center;
   width: 100%;
-  padding: 10px 0 2px;
-
+  padding: 20px;
   background-color: #434647;
-  border-top: 1px solid #333;
-  border-bottom: 1px solid #555;
-
-  margin-bottom: 20px;
 }
 
 .dash-sidebar .preview:after {
@@ -178,4 +183,62 @@ limitations under the License.
 .dash-sidebar .preview .dash-alert-item {
   cursor: default;
   margin: 10px;
+  min-width: 65%;
+}
+
+.dash-sidebar-header {
+  background-color: #444;
+  padding: 20px 0;
+  border-bottom: 1px solid #585858;
+}
+
+.dash-sidebar-title {
+  font-size: 26px;
+  font-weight: normal;
+  color: white;
+  margin: 0;
+  padding: 0 20px;
+}
+
+.dash-sidebar-close-btn {
+  position: absolute;
+  right: 15px;
+  top: 15px;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  color: white;
+  font-size: 24px;
+  background-color: transparent;
+  cursor: pointer;
+  outline: none;
+}
+
+.dash-sidebar-close-btn:hover {
+  color: #76b7eb;
+}
+
+.confirm-delete {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* padding: 20px; */
+  margin: 20px;
+  height: 50px;
+  line-height: 50px;
+  border-radius: 4px;
+  background-color: #444;
+}
+
+.confirm-delete button {
+  margin-right: 10px;
+}
+
+.confirm-delete .warn-message {
+  display: inline-block;
+  color: white;
+  font-weight: bold;
+  font-size: 22px;
+  margin-right: 20px;
 }

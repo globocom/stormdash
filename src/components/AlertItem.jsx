@@ -14,50 +14,46 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import React, { Component } from 'react';
 import { checkStatus } from '../utils';
 import './AlertItem.css';
 
-class AlertItem extends Component {
+function AlertItem(props) {
 
-  constructor(props) {
-    super(props);
-    this.onItemSelect = this.onItemSelect.bind(this);
-  }
-
-  render() {
-    let alert = this.props.alert;
-    let { namespace, title, extlink, current, description } = alert;
-    let status = checkStatus(alert);
-    let disable = alert.disable ? " disable" : "";
-
-    let value = alert.currentValue;
-    if (alert.show === 'message' && status !== null) {
-      value = alert[status].message.toLowerCase();
+  const onItemSelect = (e) => {
+    e.stopPropagation();
+    if (props.handleSidebar) {
+      props.setCurrent(props.alert);
+      props.handleSidebar('open');
     }
-
-    return (
-      <div className={"dash-alert-item " + status + disable + (current ? " current" : "")}
-           onClick={this.onItemSelect} title={description}>
-        <span className="alert-title">
-          {title}
-          {extlink &&
-            <a href={extlink} className="ext-link" target="_blank">
-              <i className="fa fa-external-link"></i>
-            </a>}
-        </span>
-        <span className="alert-project">
-          <span className="alert-namespace">{namespace}</span>
-          <span className="alert-status">{value}</span>
-        </span>
-      </div>
-    );
   }
 
-  onItemSelect(event) {
-    event.stopPropagation();
-    this.props.setCurrent(this.props.alert.id);
+  const alert = props.alert;
+  const { namespace, title, extlink, current, description } = alert;
+  const status = checkStatus(alert);
+  const disabled = alert.disable ? " disabled" : "";
+  let value = alert.currentValue;
+
+  if (alert.show === 'message' && status !== null) {
+    value = alert[status].message.toLowerCase();
   }
+
+  return (
+    <div className={"dash-alert-item " + status + disabled + (current ? " current" : "")}
+         onClick={onItemSelect} title={description}>
+      <span className="alert-title">
+        { title || 'title' }
+      </span>
+      <span className="alert-project">
+        <span className="alert-namespace">{ namespace || 'namespace' }</span>
+        <span className="alert-status">{ value || 'value' }</span>
+      </span>
+      {extlink &&
+          <a href={extlink} className="ext-link" target="_blank" onClick={e => e.stopPropagation()}>
+            <i className="fa fa-external-link"></i>
+          </a>}
+    </div>
+  )
+
 }
 
 export default AlertItem;
