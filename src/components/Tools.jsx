@@ -43,15 +43,21 @@ function Tools(props) {
         </span>
       </div>
 
-      <div className="dash-tools-middle">
-        {!props.reloading &&
-          <span>{props.dashHour}</span>}
+      {props.update &&
+        <div className="dash-tools-middle">
+          {!props.reloading &&
+            <span>{props.dashHour}</span>}
 
-        {props.reloading &&
-          <span className="updating-spin">
-            <i className="fa fa-refresh fa-spin fa-fw"></i>
-          </span>}
-      </div>
+          {props.reloading &&
+            <span className="updating-spin">
+              <i className="fa fa-refresh fa-spin fa-fw"></i>
+            </span>}
+        </div>}
+
+      {!props.update &&
+        <div className="dash-tools-middle">
+          <span><i className="fa fa-pause"></i></span>
+        </div>}
 
       <div className="dash-tools-right">
         <button onClick={toggleShowOptions} className="topcoat-button--quiet btn-options"

@@ -55,11 +55,58 @@ class StormDashMain extends Component {
     this.getCurrentHour = this.getCurrentHour.bind(this);
     this.changeHidden = this.changeHidden.bind(this);
     this.changeUpdate = this.changeUpdate.bind(this);
+    this.stopUpdate = this.stopUpdate.bind(this);
+    this.startUpdate = this.startUpdate.bind(this);
+  }
+
+  handleKeyDown(event) {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      this.handleSidebar('close');
+    }
   }
 
   getCurrentHour() {
     const d = new Date();
     return d.getHours() + ':' + (d.getMinutes() < 10 ? '0' : '') + d.getMinutes();
+  }
+
+  endAndStartTimer() {
+    window.clearTimeout(this.timer)
+    this.timer = window.setTimeout(() => {
+      this.setState({ reloading: false })
+    }, 3000)
+  }
+
+  handleSidebar(action='open') {
+    if (action === 'close') {
+      this.setState({ visibleSidebar: false });
+      this.startUpdate();
+      this.clearCurrent();
+      return;
+    }
+
+    this.setState({ visibleSidebar: true });
+    this.stopUpdate();
+  }
+
+  changeUpdate() {
+    this.endAndStartTimer();
+    this.setState({ dashUpdate: !this.state.dashUpdate });
+  }
+
+  stopUpdate() {
+    this.endAndStartTimer();
+    this.setState({ dashUpdate: false });
+
+    console.log('stop');
+  }
+
+  startUpdate() {
+    this.endAndStartTimer();
+    this.setState({ dashUpdate: true });
+
+    console.log('start');
   }
 
   getDashContent() {
@@ -89,15 +136,6 @@ class StormDashMain extends Component {
       .catch(error => {
         console.log(error);
       });
-  }
-
-  handleSidebar(action='open') {
-    if (action === 'close') {
-      this.setState({visibleSidebar: false});
-      this.clearCurrent();
-      return;
-    }
-    this.setState({visibleSidebar: true});
   }
 
   addItem(alertObj) {
@@ -225,25 +263,6 @@ class StormDashMain extends Component {
           console.log(error);
         });
     });
-  }
-
-  changeUpdate() {
-    this.endAndStartTimer();
-    this.setState({dashUpdate: !this.state.dashUpdate});
-  }
-
-  handleKeyDown(event) {
-    if (event.key === 'Escape') {
-      event.preventDefault();
-      this.handleSidebar('close');
-    }
-  };
-
-  endAndStartTimer() {
-    window.clearTimeout(this.timer)
-    this.timer = window.setTimeout(() => {
-      this.setState({ reloading: false })
-    }, 3000)
   }
 
   componentDidMount() {
