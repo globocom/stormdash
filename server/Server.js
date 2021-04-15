@@ -27,21 +27,24 @@ class Server {
 
   constructor() {
     this.updateInterval = null;
+
     mongoose.connect(mongoUri, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      useCreateIndex: true
+      useCreateIndex: true,
+      useFindAndModify: false
     });
+
     this.startUpdateLoop();
   }
 
   startUpdateLoop() {
     clearInterval(this.updateInterval);
     this.updateInterval = setInterval(() => {
-      this.getAll({}, (dashboards) => {
-        dashboards.map((dash) => {
-          this.checkDashItems(dash.name, data => {
-            // console.log('Run startUpdateLoop...');
+      this.getAll({}, dashboards => {
+        dashboards.map(dash => {
+          this.checkDashItems(dash.name, result => {
+            console.info(`Dashboard: ${dash.name}, check result: ${result}`);
           });
         });
       });
@@ -53,7 +56,11 @@ class Server {
                 ? data.name
                 : utils.uuid().split('-')[0];
 
-    let dash = new model.Dash({ name: name, hidden: false, createdAt: Date.now() });
+    let dash = new model.Dash({
+      name: name,
+      hidden: false,
+      createdAt: Date.now()
+    });
 
     dash.save((err, doc) => {
       if (err) { console.log(err); }
@@ -68,9 +75,9 @@ class Server {
   updateDash(data, fn) {
     model.Dash.findOneAndUpdate(
       { name: data.name },
-      { $set: { hidden: data.hidden, items: data.items} },
+      { $set: { hidden: data.hidden, items: data.items } },
       { upsert: true },
-      (err, doc) => {
+      (err, _) => {
         if (err) { console.log(err); }
         return err === null ? fn(true) : fn(false);
       }
@@ -133,59 +140,37 @@ class Server {
   }
 
   checkDashItems(dashName, fn) {
-    this.getDash({ name: dashName }, (dash) => {
+    this.getDash({ name: dashName }, dash => {
       if (!dash) {
         return fn(false);
       }
 
-      let nItems = dash.items.slice(),
-          hasUpdate = false,
-          promises = [];
+      const itemsClone = utils.clone(dash.items),
+            promises = [];
 
-      for (let i=0, l=nItems.length; i<l; ++i) {
-        promises.push(
-          new Promise((resolve, reject) => {
-            this.checkItem(nItems[i], (value) => {
-              if (nItems[i].currentValue !== value) {
-                nItems[i].currentValue = value;
-                hasUpdate = true;
-              }
-              if (value !== '__jsonurl_error' && nItems[i].coveragehost) {
-                this.checkCoverage(nItems[i], (coverage) => {
-                  nItems[i].coverage = coverage;
-                  resolve(value);
-                });
-              } else {
-                resolve(value);
-              }
-            });
-          })
-        );
-      }
+      for (const item of itemsClone) {
+        const prom = new Promise((resolve, _) => {
+          this.checkItem(item, value => {
+            item.currentValue = value;
 
-      Promise.all(promises).then((item) => {
-        if (hasUpdate) {
-          this.updateDash({ name: dashName, items: nItems }, (result) => {
-            return fn(result);
+            if (value !== '__jsonurl_error' && item.coveragehost) {
+              this.checkCoverage(item, coverage => {
+                item.coverage = coverage;
+                resolve(item);
+              });
+            } else {
+              resolve(item);
+            }
           });
-        }
-        return fn(false);
-      });
-    });
-  }
-
-  checkCoverage(item, fn) {
-    axios.get(item.coveragehost)
-    .then((response) => {
-      if ((typeof response.data) !== 'object') {
-        return fn('__coveragehost_error');
+        });
+        promises.push(prom);
       }
-      let value = utils.findByKey(response.data, item.coveragefield);
-      fn(value);
-    })
-    .catch((error) => {
-      console.log(error);
-      return fn('__coveragehost_error');
+
+      Promise.all(promises).then(items => {
+        this.updateDash({ name: dashName, items: items }, result => {
+          return fn(result);
+        });
+      });
     });
   }
 
@@ -197,24 +182,40 @@ class Server {
     }
 
     if (item.hasAuth) {
-      this.getAuth({ itemId: item.id }, (auth) => {
+      this.getAuth({ itemId: item.id }, auth => {
         if (auth) {
           item.headers = utils.extend({}, headers, JSON.parse(auth.authHeaders));
-          this._requestJSON(item, (value) => {
+          this._requestJSON(item, value => {
             return fn(value);
           });
         }
       });
     } else {
-      this._requestJSON(item, (value) => {
+      this._requestJSON(item, value => {
         return fn(value);
       });
     }
   }
 
+  checkCoverage(item, fn) {
+    axios.get(item.coveragehost)
+      .then(response => {
+        if (typeof(response.data) !== 'object') {
+          return fn('__coveragehost_error');
+        }
+        let value = utils.findByKey(response.data, item.coveragefield);
+        fn(value);
+      })
+      .catch(error => {
+        console.log(error);
+        return fn('__coveragehost_error');
+      });
+  }
+
   _requestJSON(item, fn) {
     let config = {
-      responseType: 'json'
+      responseType: 'json',
+      timeout: 5000
     }
 
     if (item.jsonurl === '') {
@@ -253,18 +254,20 @@ class Server {
       };
     }
 
+    console.info(`Fetching ${item.jsonurl}`);
+
     axios.get(item.jsonurl, config)
-    .then((response) => {
-      if ((typeof response.data) !== 'object') {
+      .then(response => {
+        if (typeof(response.data) !== 'object') {
+          return fn('__jsonurl_error');
+        }
+        let value = utils.findByKey(response.data, item.mainkey);
+        fn(value);
+      })
+      .catch(error => {
+        console.error(`\t${error}`);
         return fn('__jsonurl_error');
-      }
-      let value = utils.findByKey(response.data, item.mainkey);
-      fn(value);
-    })
-    .catch((error) => {
-      console.log(error);
-      return fn('__jsonurl_error');
-    });
+      });
   }
 }
 

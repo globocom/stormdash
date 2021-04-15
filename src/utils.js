@@ -15,7 +15,7 @@ limitations under the License.
 */
 /* eslint no-eval: 0 */
 
-var crypto = require('crypto');
+var crypto = require("crypto");
 
 function extend() {
   var newObj = {};
@@ -30,17 +30,20 @@ function extend() {
   return newObj;
 }
 
+function clone(obj) {
+  return JSON.parse(JSON.stringify(obj));
+}
+
 function uuid() {
   var i, random;
-  var uuid = '';
+  var uuid = "";
 
   for (i = 0; i < 32; i++) {
-    random = Math.random() * 16 | 0;
+    random = (Math.random() * 16) | 0;
     if (i === 8 || i === 12 || i === 16 || i === 20) {
-      uuid += '-';
+      uuid += "-";
     }
-    uuid += (i === 12 ? 4 : (i === 16 ? ((random & 3) | 8) : random))
-      .toString(16);
+    uuid += (i === 12 ? 4 : i === 16 ? (random & 3) | 8 : random).toString(16);
   }
 
   return uuid;
@@ -48,7 +51,9 @@ function uuid() {
 
 function shuffle(array) {
   // Fisher–Yates shuffle
-  var m = array.length, t, i;
+  var m = array.length,
+    t,
+    i;
 
   while (m) {
     i = Math.floor(Math.random() * m--);
@@ -72,19 +77,19 @@ function store(namespace, data) {
 
 function findByKey(obj, mainkey) {
   var mainvalue = null,
-      found = false;
+    found = false;
 
   function traverse(o, k) {
     var keys = Object.keys(o);
 
-    for (var i=0, l=keys.length; i<l; ++i) {
+    for (var i = 0, l = keys.length; i < l; ++i) {
       var key = keys[i];
       if (key === k) {
         found = true;
         mainvalue = o[key];
         break;
       } else {
-        if (o[key] !== null && typeof(o[key]) === "object") {
+        if (o[key] !== null && typeof o[key] === "object") {
           traverse(o[key], k);
           if (found) {
             break;
@@ -99,34 +104,35 @@ function findByKey(obj, mainkey) {
 }
 
 function checkStatus(item) {
-  let final = 'ok',
-      status = {'ok': item.ok,
-                'warning': item.warning,
-                'critical': item.critical};
+  let final = "ok",
+    status = {
+      ok: item.ok,
+      warning: item.warning,
+      critical: item.critical
+    };
 
-  if (item.currentValue === '__jsonurl_error') {
-    return 'critical';
+  if (item.currentValue === "__jsonurl_error") {
+    return "critical";
   }
 
   if (item.coveragehost) {
     if (item.coverage < item.coveragetarget) {
-      return 'critical';
+      return "critical";
     }
   }
 
   for (let s in status) {
     let v1 = item.currentValue,
-        v2 = status[s].value,
-        c = status[s].compare === '=' ? '==' : status[s].compare,
-        condition = false;
+      v2 = status[s].value,
+      c = status[s].compare === "=" ? "==" : status[s].compare,
+      condition = false;
 
-    v1 = !!parseInt(v1, 10) ? parseInt(v1, 10) : '"'+ v1 +'"';
-    v2 = !!parseInt(v2, 10) ? parseInt(v2, 10) : '"'+ v2 +'"';
+    v1 = !!parseInt(v1, 10) ? parseInt(v1, 10) : '"' + v1 + '"';
+    v2 = !!parseInt(v2, 10) ? parseInt(v2, 10) : '"' + v2 + '"';
 
     try {
       condition = eval(v1 + c + v2);
-    }
-    catch(err) {}
+    } catch (err) {}
 
     if (c !== "" && condition) {
       final = s;
@@ -137,22 +143,26 @@ function checkStatus(item) {
 }
 
 function genSalt(length) {
-  return crypto.randomBytes(Math.ceil(length/2)).toString('hex').slice(0,length);
+  return crypto
+    .randomBytes(Math.ceil(length / 2))
+    .toString("hex")
+    .slice(0, length);
 }
 
 function sha512(password, salt) {
-  var hash = crypto.createHmac('sha512', salt);
+  var hash = crypto.createHmac("sha512", salt);
   hash.update(password);
-  return { salt: salt, passwordHash: hash.digest('hex') };
+  return { salt: salt, passwordHash: hash.digest("hex") };
 }
 
 module.exports = {
   extend,
+  clone,
   uuid,
   shuffle,
   store,
   findByKey,
   checkStatus,
   genSalt,
-  sha512
+  sha512,
 };

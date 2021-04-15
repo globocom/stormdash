@@ -14,15 +14,60 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 mongoose.Promise = global.Promise;
 
 const dashSchema = mongoose.Schema({
-  name: { type: String, index: true },
+  name: {
+    type: String,
+    index: true,
+  },
   hidden: { type: Boolean },
-  createdAt: { type: Date, default: Date.now },
-  items: Array
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+  items: Array,
+});
+
+const itemSchema = mongoose.Schema({
+  id: String,
+  current: Boolean,
+  currentValue: String,
+  namespace: String,
+  title: String,
+  jsonurl: String,
+  extlink: String,
+  proxyhost: String,
+  proxyport: String,
+  coverage: String,
+  coveragehost: String,
+  coveragefield: String,
+  coveragetarget: String,
+  mainkey: String,
+  ok: {
+    message: String,
+    value: String,
+    compare: String
+  },
+  warning: {
+    message: String,
+    value: String,
+    compare: String
+  },
+  critical: {
+    message: String,
+    value: String,
+    compare: String
+  },
+  show: String,
+  description: String,
+  disable: Boolean,
+  hasAuth: Boolean,
+  reqBody: String,
+  reqBodyContentType: String,
+  headers: {}
 });
 
 const itemAuthSchema = mongoose.Schema({
@@ -30,10 +75,18 @@ const itemAuthSchema = mongoose.Schema({
   username: String,
   password: String,
   authHeaders: String,
-  createdAt: { type: Date, default: Date.now }
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
-const Dash = mongoose.model('Dash', dashSchema);
-const ItemAuth = mongoose.model('ItemAuth', itemAuthSchema);
+const Dash = mongoose.model("Dash", dashSchema);
+const Item = mongoose.model("Item", itemSchema);
+const ItemAuth = mongoose.model("ItemAuth", itemAuthSchema);
 
-module.exports = { Dash, ItemAuth };
+module.exports = {
+  Dash,
+  Item,
+  ItemAuth,
+};

@@ -17,14 +17,13 @@ limitations under the License.
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
-const model = require('./model');
 const Server = require('./Server');
 
 const app = express();
 const server = new Server()
 
-app.use(bodyParser.urlencoded({limit:'50mb', extended: true }));
-app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+app.use(bodyParser.json({ limit: '50mb' }));
 
 // Add CORS for DEVELOPMENT
 app.use(function(req, res, next) {
@@ -37,37 +36,37 @@ app.use(function(req, res, next) {
 });
 
 app.post('/api/dash/create', (req, res) => {
-  server.createDash(req.body, (doc) => {
+  server.createDash(req.body, doc => {
     return res.status(200).json(doc)
   })
 })
 
 app.post('/api/dash/update', (req, res) => {
-  server.updateDash(req.body, (doc) => {
+  server.updateDash(req.body, doc => {
     return res.status(200).json(doc)
   })
 })
 
 app.post('/api/dash/search', (req, res) => {
-  server.getDash(req.body, (doc) => {
+  server.getDash(req.body, doc => {
     return res.status(200).json(doc)
   })
 })
 
 app.get('/api/dash/all', (req, res) => {
-  server.getAll({}, (docs) => {
+  server.getAll({}, docs => {
     return res.status(200).json(docs)
   })
 })
 
 app.delete('/api/dash/itemauth', (req, res) => {
-  server.deleteItemAuth(req.body, (error) => {
+  server.deleteItemAuth(req.body, error => {
     return res.status(200).json(error)
   })
 })
 
 app.get('/api/dash/:dashName/info', (req, res) => {
-  server.getDash({name: req.params.dashName}, (dash) => {
+  server.getDash({name: req.params.dashName}, dash => {
     if(dash) {
       return res.json({
         "status": "OK",
@@ -83,13 +82,13 @@ app.get('/api/dash/:dashName/info', (req, res) => {
 })
 
 app.get('/api/item/check', (req, res) => {
-  server.checkItem(req.body, (value) => {
+  server.checkItem(req.body, value => {
     return res.status(200).json(value)
   })
 })
 
 app.post('/api/auth/save', (req, res) => {
-  server.saveAuth(req.body, (data) => {
+  server.saveAuth(req.body, data => {
     return res.status(200).json(data)
   })
 })
