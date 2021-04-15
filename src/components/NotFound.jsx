@@ -14,9 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import React from 'react';
-import { Link } from 'react-router-dom';
-import './NotFound.css';
+import React from "react";
+import { Link } from "react-router-dom";
+import "./NotFound.css";
 
 class NotFoundPage extends React.Component {
   render() {
@@ -24,7 +24,8 @@ class NotFoundPage extends React.Component {
       <div className="dash-not-found">
         <div className="not-found-title">
           <h1>
-            <span className="status">404</span><br />
+            <span className="status">404</span>
+            <br />
             <strong className="message">Dashboard not found!</strong>
           </h1>
           <p>

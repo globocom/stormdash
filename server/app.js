@@ -14,89 +14,95 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-const express = require('express');
-const bodyParser = require('body-parser');
-const path = require('path');
-const Server = require('./Server');
+const express = require("express");
+const bodyParser = require("body-parser");
+const path = require("path");
+const Server = require("./Server");
 
 const app = express();
-const server = new Server()
+const server = new Server();
 
-app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
-app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
+app.use(bodyParser.json({ limit: "50mb" }));
 
 // Add CORS for DEVELOPMENT
-app.use(function(req, res, next) {
-  if (req.connection.remoteAddress == '127.0.0.1') {
+app.use(function (req, res, next) {
+  if (req.connection.remoteAddress == "127.0.0.1") {
     res.header("Access-Control-Allow-Origin", "http://localhost:3000");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD");
+    res.header(
+      "Access-Control-Allow-Headers",
+      "Origin, X-Requested-With, Content-Type, Accept"
+    );
+    res.header(
+      "Access-Control-Allow-Methods",
+      "GET, POST, PUT, DELETE, OPTIONS, HEAD"
+    );
   }
   next();
 });
 
-app.post('/api/dash/create', (req, res) => {
-  server.createDash(req.body, doc => {
-    return res.status(200).json(doc)
-  })
-})
+app.post("/api/dash/create", (req, res) => {
+  server.createDash(req.body, (doc) => {
+    return res.status(200).json(doc);
+  });
+});
 
-app.post('/api/dash/update', (req, res) => {
-  server.updateDash(req.body, doc => {
-    return res.status(200).json(doc)
-  })
-})
+app.post("/api/dash/update", (req, res) => {
+  server.updateDash(req.body, (doc) => {
+    return res.status(200).json(doc);
+  });
+});
 
-app.post('/api/dash/search', (req, res) => {
-  server.getDash(req.body, doc => {
-    return res.status(200).json(doc)
-  })
-})
+app.post("/api/dash/search", (req, res) => {
+  server.getDash(req.body, (doc) => {
+    return res.status(200).json(doc);
+  });
+});
 
-app.get('/api/dash/all', (req, res) => {
-  server.getAll({}, docs => {
-    return res.status(200).json(docs)
-  })
-})
+app.get("/api/dash/all", (req, res) => {
+  server.getAll({}, (docs) => {
+    return res.status(200).json(docs);
+  });
+});
 
-app.delete('/api/dash/itemauth', (req, res) => {
-  server.deleteItemAuth(req.body, error => {
-    return res.status(200).json(error)
-  })
-})
+app.delete("/api/dash/itemauth", (req, res) => {
+  server.deleteItemAuth(req.body, (error) => {
+    return res.status(200).json(error);
+  });
+});
 
-app.get('/api/dash/:dashName/info', (req, res) => {
-  server.getDash({name: req.params.dashName}, dash => {
-    if(dash) {
+app.get("/api/dash/:dashName/info", (req, res) => {
+  server.getDash({ name: req.params.dashName }, (dash) => {
+    if (dash) {
       return res.json({
-        "status": "OK",
-        "itemsCount": dash.items.length,
-        "createdAt": dash.createdAt
-      })
+        status: "OK",
+        itemsCount: dash.items.length,
+        createdAt: dash.createdAt,
+      });
     } else {
       return res.json({
-        "status": "Dashboard Not Found"
-      })
+        status: "Dashboard Not Found",
+      });
     }
-  })
-})
+  });
+});
 
-app.get('/api/item/check', (req, res) => {
-  server.checkItem(req.body, value => {
-    return res.status(200).json(value)
-  })
-})
+app.get("/api/item/check", (req, res) => {
+  server.checkItem(req.body, (value) => {
+    return res.status(200).json(value);
+  });
+});
 
-app.post('/api/auth/save', (req, res) => {
-  server.saveAuth(req.body, data => {
-    return res.status(200).json(data)
-  })
-})
+app.post("/api/auth/save", (req, res) => {
+  server.saveAuth(req.body, (data) => {
+    return res.status(200).json(data);
+  });
+});
 
-app.use(express.static(path.resolve(__dirname, '..', 'build')));
+app.use(express.static(path.resolve(__dirname, "..", "build")));
 
-app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, '..', 'build', 'index.html'));
-})
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "..", "build", "index.html"));
+});
 
 module.exports = app;

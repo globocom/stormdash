@@ -38,7 +38,7 @@ limitations under the License.
   color: white;
   overflow-y: auto;
   z-index: 991;
-  box-shadow: -5px 2px 5px rgba(0, 0, 0, 0.20);
+  box-shadow: -5px 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .dash-sidebar-overlay {
@@ -58,7 +58,6 @@ limitations under the License.
   }
 }
 
-
 .dash-sidebar hr {
   border: 0;
   border-top: 1px dotted #777;
@@ -75,7 +74,7 @@ limitations under the License.
 }
 
 .dash-sidebar .form-items .form-auth {
-  padding: 0
+  padding: 0;
 }
 
 .dash-sidebar .form-items .form-auth-title {
@@ -88,7 +87,6 @@ limitations under the License.
   border-top: 1px solid #333;
   border-bottom: 1px solid #555;
 }
-
 
 .dash-sidebar .form-base {
   margin: 20px 0;
@@ -175,7 +173,7 @@ limitations under the License.
 }
 
 .dash-sidebar .preview:after {
-  content: 'Preview';
+  content: "Preview";
   font-size: 32px;
   color: rgba(255, 255, 255, 0.2);
 }

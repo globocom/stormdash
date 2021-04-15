@@ -49,17 +49,17 @@ const itemSchema = mongoose.Schema({
   ok: {
     message: String,
     value: String,
-    compare: String
+    compare: String,
   },
   warning: {
     message: String,
     value: String,
-    compare: String
+    compare: String,
   },
   critical: {
     message: String,
     value: String,
-    compare: String
+    compare: String,
   },
   show: String,
   description: String,
@@ -67,7 +67,7 @@ const itemSchema = mongoose.Schema({
   hasAuth: Boolean,
   reqBody: String,
   reqBodyContentType: String,
-  headers: {}
+  headers: {},
 });
 
 const itemAuthSchema = mongoose.Schema({

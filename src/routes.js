@@ -14,17 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import React from 'react';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route
-} from 'react-router-dom';
+import React from "react";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
-import App from './components/App';
-import StormDash from './components/StormDash';
-import NotFound from './components/NotFound';
-
+import App from "./components/App";
+import StormDash from "./components/StormDash";
+import NotFound from "./components/NotFound";
 
 function Routes() {
   return (

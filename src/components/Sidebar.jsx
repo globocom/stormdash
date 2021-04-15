@@ -14,15 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import React, { Component } from 'react';
-import axios from 'axios';
-import AlertItem from './AlertItem';
-import { uuid } from '../utils';
-import { host } from '../config';
-import './Sidebar.css';
+import React, { Component } from "react";
+import axios from "axios";
+import AlertItem from "./AlertItem";
+import { uuid } from "../utils";
+import { host } from "../config";
+import "./Sidebar.css";
 
 class Sidebar extends Component {
-
   constructor(props) {
     super(props);
 
@@ -41,9 +40,9 @@ class Sidebar extends Component {
       coveragefield: "",
       coveragetarget: "",
       mainkey: "",
-      ok: {compare: "", value: "", message: ""},
-      warning: {compare: "", value: "", message: ""},
-      critical: {compare: "", value: "", message: ""},
+      ok: { compare: "", value: "", message: "" },
+      warning: { compare: "", value: "", message: "" },
+      critical: { compare: "", value: "", message: "" },
       show: "value",
       description: "",
       disable: false,
@@ -53,7 +52,7 @@ class Sidebar extends Component {
       authHeaders: "",
       reqBody: "",
       reqBodyContentType: "text/plain",
-      confirmDelete: false
+      confirmDelete: false,
     };
 
     if (props.currentItem) {
@@ -72,15 +71,15 @@ class Sidebar extends Component {
 
   handleInputChange(event) {
     const target = event.target;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
-    this.setState({[target.name]: value});
+    const value = target.type === "checkbox" ? target.checked : target.value;
+    this.setState({ [target.name]: value });
   }
 
   onCreate(event) {
     event.preventDefault();
     this.props.addItem(this.buildItem());
 
-    if(this.state.hasAuth) {
+    if (this.state.hasAuth) {
       this.saveAuth();
     }
 
@@ -93,14 +92,15 @@ class Sidebar extends Component {
       dashName: this.props.dashName,
       username: this.state.username,
       password: this.state.password,
-      authHeaders: this.state.authHeaders
-    }
-    axios.post(`${host}/api/auth/save`, data)
-      .then(response => {
-        console.log('Save item auth: '+ data);
+      authHeaders: this.state.authHeaders,
+    };
+    axios
+      .post(`${host}/api/auth/save`, data)
+      .then((response) => {
+        console.log("Save item auth: " + data);
       })
-      .catch(error => {
-        console.log(error)
+      .catch((error) => {
+        console.log(error);
       });
   }
 
@@ -112,20 +112,21 @@ class Sidebar extends Component {
 
   setEditItem(item) {
     const data = {
-      name: this.props.dashName
-    }
+      name: this.props.dashName,
+    };
 
-    axios.post(`${host}/api/dash/search`, data)
-      .then(response => {
-        response.data.items.find(elem => {
-          if(elem.id === item.id) {
+    axios
+      .post(`${host}/api/dash/search`, data)
+      .then((response) => {
+        response.data.items.find((elem) => {
+          if (elem.id === item.id) {
             return this.setState(elem);
           }
           return null;
         });
       })
-      .catch(error => {
-        console.log(error)
+      .catch((error) => {
+        console.log(error);
       });
   }
 
@@ -153,19 +154,20 @@ class Sidebar extends Component {
       disable: this.state.disable,
       hasAuth: this.state.hasAuth,
       reqBody: this.state.reqBody,
-      reqBodyContentType: this.state.reqBodyContentType
-    }
+      reqBodyContentType: this.state.reqBodyContentType,
+    };
   }
 
   onCheckValue(event) {
     event.preventDefault();
 
-    axios.get(`${host}/api/item/check`, this.buildItem())
-      .then(response => {
-        this.setState({currentValue: response.data.value});
+    axios
+      .get(`${host}/api/item/check`, this.buildItem())
+      .then((response) => {
+        this.setState({ currentValue: response.data.value });
       })
-      .catch(error => {
-        console.log(error)
+      .catch((error) => {
+        console.log(error);
       });
   }
 
@@ -176,7 +178,7 @@ class Sidebar extends Component {
   onDeleteItem() {
     this.props.deleteItem(this.props.currentItem);
     this.closeConfirmDelete();
-    this.props.handleSidebar("close")
+    this.props.handleSidebar("close");
   }
 
   closeConfirmDelete() {
@@ -188,57 +190,96 @@ class Sidebar extends Component {
       <div className="form-auth">
         <div className="form-auth-title">
           <label className="topcoat-checkbox has-auth-checkbox">
-            <input type="checkbox" name="hasAuth"
-              checked={this.state.hasAuth} onChange={this.handleInputChange} />
+            <input
+              type="checkbox"
+              name="hasAuth"
+              checked={this.state.hasAuth}
+              onChange={this.handleInputChange}
+            />
             <div className="topcoat-checkbox__checkmark"></div>
             &nbsp;With&nbsp;Authentication
           </label>
         </div>
 
-        {this.state.hasAuth &&
+        {this.state.hasAuth && (
           <div className="sub-form">
-            <label>Authentication Headers</label><br />
-            <input type="text" className="topcoat-text-input--large" name="authHeaders"
-              value={this.state.authHeaders} onChange={this.handleInputChange} />
-          </div>}
+            <label>Authentication Headers</label>
+            <br />
+            <input
+              type="text"
+              className="topcoat-text-input--large"
+              name="authHeaders"
+              value={this.state.authHeaders}
+              onChange={this.handleInputChange}
+            />
+          </div>
+        )}
       </div>
     );
 
     return (
-      <div className={'dash-sidebar' + (this.props.currentItem ? ' editing' : '')}>
-
+      <div
+        className={"dash-sidebar" + (this.props.currentItem ? " editing" : "")}
+      >
         <div className="dash-sidebar-header">
           <h3 className="dash-sidebar-title">
-            {this.props.currentItem ? 'Edit Item' : 'Add New Item'}
+            {this.props.currentItem ? "Edit Item" : "Add New Item"}
           </h3>
-          <button className="dash-sidebar-close-btn" onClick={() => this.props.handleSidebar("close")}>
+          <button
+            className="dash-sidebar-close-btn"
+            onClick={() => this.props.handleSidebar("close")}
+          >
             <i className="fa fa-times fa-1x"></i>
           </button>
         </div>
 
         <section className="form-items">
           <div>
-            <label>Title</label><br />
-            <input type="text" className="topcoat-text-input--large" name="title"
-              value={this.state.title} onChange={this.handleInputChange} />
+            <label>Title</label>
+            <br />
+            <input
+              type="text"
+              className="topcoat-text-input--large"
+              name="title"
+              value={this.state.title}
+              onChange={this.handleInputChange}
+            />
           </div>
 
           <div>
-            <label>Namespace</label><br />
-            <input type="text" className="topcoat-text-input--large" name="namespace"
-              value={this.state.namespace} onChange={this.handleInputChange} />
+            <label>Namespace</label>
+            <br />
+            <input
+              type="text"
+              className="topcoat-text-input--large"
+              name="namespace"
+              value={this.state.namespace}
+              onChange={this.handleInputChange}
+            />
           </div>
 
           <div>
-            <label>Json url</label><br />
-            <input type="text" className="topcoat-text-input--large" name="jsonurl"
-              value={this.state.jsonurl} onChange={this.handleInputChange} />
+            <label>Json url</label>
+            <br />
+            <input
+              type="text"
+              className="topcoat-text-input--large"
+              name="jsonurl"
+              value={this.state.jsonurl}
+              onChange={this.handleInputChange}
+            />
           </div>
 
           <div>
-            <label>External url</label><br />
-            <input type="text" className="topcoat-text-input--large" name="extlink"
-              value={this.state.extlink} onChange={this.handleInputChange} />
+            <label>External url</label>
+            <br />
+            <input
+              type="text"
+              className="topcoat-text-input--large"
+              name="extlink"
+              value={this.state.extlink}
+              onChange={this.handleInputChange}
+            />
           </div>
 
           <div className="proxy-item">
@@ -250,14 +291,16 @@ class Sidebar extends Component {
                 placeholder="url"
                 name="proxyhost"
                 value={this.state.proxyhost}
-                onChange={this.handleInputChange} />
+                onChange={this.handleInputChange}
+              />
               <input
                 type="text"
                 className="topcoat-text-input--large port"
                 placeholder="port"
                 name="proxyport"
                 value={this.state.proxyport}
-                onChange={this.handleInputChange} />
+                onChange={this.handleInputChange}
+              />
             </div>
           </div>
 
@@ -270,177 +313,241 @@ class Sidebar extends Component {
                 placeholder="url"
                 name="coveragehost"
                 value={this.state.coveragehost}
-                onChange={this.handleInputChange} />
+                onChange={this.handleInputChange}
+              />
               <input
                 type="text"
                 className="topcoat-text-input--large field"
                 placeholder="field"
                 name="coveragefield"
                 value={this.state.coveragefield}
-                onChange={this.handleInputChange} />
+                onChange={this.handleInputChange}
+              />
               <input
                 type="text"
                 className="topcoat-text-input--large target"
                 placeholder="target"
                 name="coveragetarget"
                 value={this.state.coveragetarget}
-                onChange={this.handleInputChange} />
+                onChange={this.handleInputChange}
+              />
             </div>
           </div>
 
           <div>
             <label className="topcoat-radio-button req-body-radio">
-              <input type="radio" name="reqBodyContentType" value="text/plain"
-                checked={this.state.reqBodyContentType === 'text/plain'}
-                onChange={this.handleInputChange} />
+              <input
+                type="radio"
+                name="reqBodyContentType"
+                value="text/plain"
+                checked={this.state.reqBodyContentType === "text/plain"}
+                onChange={this.handleInputChange}
+              />
               <div className="topcoat-radio-button__checkmark"></div>
               &nbsp;Request Body as Text
             </label>
             <label className="topcoat-radio-button req-body-radio">
-              <input type="radio" name="reqBodyContentType" value="application/json"
-                checked={this.state.reqBodyContentType === 'application/json'}
-                onChange={this.handleInputChange} />
+              <input
+                type="radio"
+                name="reqBodyContentType"
+                value="application/json"
+                checked={this.state.reqBodyContentType === "application/json"}
+                onChange={this.handleInputChange}
+              />
               <div className="topcoat-radio-button__checkmark"></div>
               &nbsp;Request Body as JSON
             </label>
             <br />
-            <textarea className="topcoat-textarea" name="reqBody"
-              value={this.state.reqBody} onChange={this.handleInputChange}></textarea>
+            <textarea
+              className="topcoat-textarea"
+              name="reqBody"
+              value={this.state.reqBody}
+              onChange={this.handleInputChange}
+            ></textarea>
           </div>
 
           {!this.props.currentItem && authentication}
 
           <div>
-            <label>Key</label><br />
-            <input type="text" className="topcoat-text-input--large" name="mainkey"
-              value={this.state.mainkey} onChange={this.handleInputChange} />
+            <label>Key</label>
+            <br />
+            <input
+              type="text"
+              className="topcoat-text-input--large"
+              name="mainkey"
+              value={this.state.mainkey}
+              onChange={this.handleInputChange}
+            />
           </div>
 
           <div className="compare-item">
             <label>OK</label>
             <div className="rule">
-              <input type="text" className="topcoat-text-input--large"
+              <input
+                type="text"
+                className="topcoat-text-input--large"
                 placeholder="operator"
                 value={this.state.ok.compare}
                 onChange={(e) => {
                   let s = this.state,
-                      o = ['=', '!', '!=', '>', '<', '>=', '<=', ''];
-                  if(o.indexOf(e.target.value) >= 0) {
+                    o = ["=", "!", "!=", ">", "<", ">=", "<=", ""];
+                  if (o.indexOf(e.target.value) >= 0) {
                     s.ok.compare = e.target.value;
                   }
                   this.setState(s);
-                }} />
+                }}
+              />
 
-              <input type="text" className="topcoat-text-input--large"
+              <input
+                type="text"
+                className="topcoat-text-input--large"
                 placeholder="value"
                 value={this.state.ok.value}
                 onChange={(e) => {
                   let s = this.state;
                   s.ok.value = e.target.value;
                   this.setState(s);
-                }} />
+                }}
+              />
 
-              <input type="text" className="topcoat-text-input--large"
+              <input
+                type="text"
+                className="topcoat-text-input--large"
                 placeholder="default message"
                 value={this.state.ok.message}
                 onChange={(e) => {
                   let s = this.state;
                   s.ok.message = e.target.value;
                   this.setState(s);
-                }} />
+                }}
+              />
             </div>
           </div>
 
           <div className="compare-item">
             <label>Warning</label>
             <div className="rule">
-              <input type="text" className="topcoat-text-input--large"
+              <input
+                type="text"
+                className="topcoat-text-input--large"
                 placeholder="operator"
                 value={this.state.warning.compare}
                 onChange={(e) => {
                   let s = this.state,
-                      o = ['=', '!', '!=', '>', '<', '>=', '<=', ''];
-                  if(o.indexOf(e.target.value) >= 0) {
+                    o = ["=", "!", "!=", ">", "<", ">=", "<=", ""];
+                  if (o.indexOf(e.target.value) >= 0) {
                     s.warning.compare = e.target.value;
                   }
                   this.setState(s);
-                }} />
+                }}
+              />
 
-              <input type="text" className="topcoat-text-input--large"
+              <input
+                type="text"
+                className="topcoat-text-input--large"
                 placeholder="value"
                 value={this.state.warning.value}
                 onChange={(e) => {
                   let s = this.state;
                   s.warning.value = e.target.value;
                   this.setState(s);
-                }} />
+                }}
+              />
 
-              <input type="text" className="topcoat-text-input--large"
+              <input
+                type="text"
+                className="topcoat-text-input--large"
                 placeholder="default message"
                 value={this.state.warning.message}
                 onChange={(e) => {
                   let s = this.state;
                   s.warning.message = e.target.value;
                   this.setState(s);
-                }} />
+                }}
+              />
             </div>
           </div>
 
           <div className="compare-item">
-            <label>Critical</label><br />
+            <label>Critical</label>
+            <br />
             <div className="rule">
-              <input type="text" className="topcoat-text-input--large"
+              <input
+                type="text"
+                className="topcoat-text-input--large"
                 placeholder="operator"
                 value={this.state.critical.compare}
                 onChange={(e) => {
                   let s = this.state,
-                      o = ['=', '!', '!=', '>', '<', '>=', '<=', ''];
-                  if(o.indexOf(e.target.value) >= 0) {
+                    o = ["=", "!", "!=", ">", "<", ">=", "<=", ""];
+                  if (o.indexOf(e.target.value) >= 0) {
                     s.critical.compare = e.target.value;
                   }
                   this.setState(s);
-                }} />
+                }}
+              />
 
-              <input type="text" className="topcoat-text-input--large"
+              <input
+                type="text"
+                className="topcoat-text-input--large"
                 placeholder="value"
                 value={this.state.critical.value}
                 onChange={(e) => {
                   let s = this.state;
                   s.critical.value = e.target.value;
                   this.setState(s);
-                }} />
+                }}
+              />
 
-              <input type="text" className="topcoat-text-input--large"
+              <input
+                type="text"
+                className="topcoat-text-input--large"
                 placeholder="default message"
                 value={this.state.critical.message}
                 onChange={(e) => {
                   let s = this.state;
                   s.critical.message = e.target.value;
                   this.setState(s);
-                }} />
+                }}
+              />
             </div>
           </div>
 
           <div>
             <label className="topcoat-radio-button show-radio">
-              <input type="radio" name="show" value="value"
-                checked={this.state.show === 'value'} onChange={this.handleInputChange} />
+              <input
+                type="radio"
+                name="show"
+                value="value"
+                checked={this.state.show === "value"}
+                onChange={this.handleInputChange}
+              />
               <div className="topcoat-radio-button__checkmark"></div>
               &nbsp;Show value
             </label>
 
             <label className="topcoat-radio-button show-radio">
-              <input type="radio" name="show" value="message"
-                checked={this.state.show === 'message'} onChange={this.handleInputChange} />
+              <input
+                type="radio"
+                name="show"
+                value="message"
+                checked={this.state.show === "message"}
+                onChange={this.handleInputChange}
+              />
               <div className="topcoat-radio-button__checkmark"></div>
               &nbsp;Show message
             </label>
           </div>
 
           <div>
-            <label>Description</label><br />
-            <textarea className="topcoat-textarea" name="description"
-              value={this.state.description} onChange={this.handleInputChange}></textarea>
+            <label>Description</label>
+            <br />
+            <textarea
+              className="topcoat-textarea"
+              name="description"
+              value={this.state.description}
+              onChange={this.handleInputChange}
+            ></textarea>
           </div>
 
           <div>
@@ -449,7 +556,8 @@ class Sidebar extends Component {
                 type="checkbox"
                 name="disable"
                 onChange={this.handleInputChange}
-                checked={this.state.disable} />
+                checked={this.state.disable}
+              />
               <div className="topcoat-checkbox__checkmark"></div>
               &nbsp;Disable
             </label>
@@ -457,24 +565,57 @@ class Sidebar extends Component {
         </section>
 
         <section className="form-base">
-          {this.props.currentItem &&
-            <button onClick={this.onShowDelete}
-                    className="delete-btn btn-danger topcoat-button--large">Delete</button>}
+          {this.props.currentItem && (
+            <button
+              onClick={this.onShowDelete}
+              className="delete-btn btn-danger topcoat-button--large"
+            >
+              Delete
+            </button>
+          )}
 
-          <button className="topcoat-button--large" onClick={this.onCheckValue}
-                  disabled={this.state.confirmDelete}>Check Status</button>
-          {this.props.currentItem
-            ? <button className="topcoat-button--large--cta" onClick={this.onEdit}
-                      disabled={this.state.confirmDelete}>Save</button>
-            : <button className="topcoat-button--large--cta" onClick={this.onCreate}>Create</button>}
+          <button
+            className="topcoat-button--large"
+            onClick={this.onCheckValue}
+            disabled={this.state.confirmDelete}
+          >
+            Check Status
+          </button>
+          {this.props.currentItem ? (
+            <button
+              className="topcoat-button--large--cta"
+              onClick={this.onEdit}
+              disabled={this.state.confirmDelete}
+            >
+              Save
+            </button>
+          ) : (
+            <button
+              className="topcoat-button--large--cta"
+              onClick={this.onCreate}
+            >
+              Create
+            </button>
+          )}
         </section>
 
-        {this.state.confirmDelete && this.props.currentItem &&
+        {this.state.confirmDelete && this.props.currentItem && (
           <div className="confirm-delete">
             <span className="warn-message">Are you sure?</span>
-            <button onClick={this.onDeleteItem} className="topcoat-button--large">Yes</button>
-            <button onClick={this.closeConfirmDelete} className="topcoat-button--large">No</button>
-          </div>}
+            <button
+              onClick={this.onDeleteItem}
+              className="topcoat-button--large"
+            >
+              Yes
+            </button>
+            <button
+              onClick={this.closeConfirmDelete}
+              className="topcoat-button--large"
+            >
+              No
+            </button>
+          </div>
+        )}
 
         <div className="preview">
           <AlertItem alert={this.buildItem()} setCurrent={() => false} />
@@ -482,7 +623,6 @@ class Sidebar extends Component {
       </div>
     );
   }
-
 }
 
 export default Sidebar;

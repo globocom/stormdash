@@ -14,41 +14,42 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import './DashList.css';
+import React, { Component } from "react";
+import { Link } from "react-router-dom";
+import "./DashList.css";
 
 class DashList extends Component {
-
   render() {
     const dashList = this.props.dashboards.map((dash, i) => {
       let dashDate = new Date(dash.createdAt),
-          numItems = dash.items.length;
+        numItems = dash.items.length;
 
       return (
-        <li key={'dash'+i}>
+        <li key={"dash" + i}>
           <Link to={`/dash/${dash.name}`}>
-            <span className="dash-name">{dash.name}</span><br />
+            <span className="dash-name">{dash.name}</span>
+            <br />
             <span className="dash-created-at">
               Created at {dashDate.toLocaleDateString()}
             </span>
             <span className="dash-items-count">
-              {numItems} {numItems === 1 ? 'Item' : 'Items'}
+              {numItems} {numItems === 1 ? "Item" : "Items"}
             </span>
           </Link>
         </li>
-      )
+      );
     });
 
     return (
       <div className="dash-list">
         <h3 className="title">Dashboards</h3>
-        <button className="close-btn" onClick={() => this.props.handleList("close")}>
+        <button
+          className="close-btn"
+          onClick={() => this.props.handleList("close")}
+        >
           <i className="fa fa-times fa-1x"></i>
         </button>
-        <ul className="list-container">
-          {dashList}
-        </ul>
+        <ul className="list-container">{dashList}</ul>
       </div>
     );
   }

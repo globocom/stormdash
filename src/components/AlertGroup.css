@@ -53,57 +53,57 @@ limitations under the License.
 }
 
 .dash-alert-group-scale10 {
-  max-height: calc(85vw / .10);
-  width: calc(90vw / .10);
-  transform: scale(.10);
+  max-height: calc(85vw / 0.1);
+  width: calc(90vw / 0.1);
+  transform: scale(0.1);
 }
 
 .dash-alert-group-scale20 {
-  max-height: calc(85vw / .20);
-  width: calc(90vw / .20);
-  transform: scale(.20);
+  max-height: calc(85vw / 0.2);
+  width: calc(90vw / 0.2);
+  transform: scale(0.2);
 }
 
 .dash-alert-group-scale30 {
-  max-height: calc(85vw / .30);
-  width: calc(90vw / .30);
-  transform: scale(.30);
+  max-height: calc(85vw / 0.3);
+  width: calc(90vw / 0.3);
+  transform: scale(0.3);
 }
 
 .dash-alert-group-scale40 {
-  max-height: calc(85vw / .40);
-  width: calc(90vw / .40);
-  transform: scale(.40);
+  max-height: calc(85vw / 0.4);
+  width: calc(90vw / 0.4);
+  transform: scale(0.4);
 }
 
 .dash-alert-group-scale50 {
-  max-height: calc(85vw / .50);
-  width: calc(90vw / .50);
-  transform: scale(.50);
+  max-height: calc(85vw / 0.5);
+  width: calc(90vw / 0.5);
+  transform: scale(0.5);
 }
 
 .dash-alert-group-scale60 {
-  max-height: calc(85vw / .60);
-  width: calc(90vw / .60);
-  transform: scale(.60);
+  max-height: calc(85vw / 0.6);
+  width: calc(90vw / 0.6);
+  transform: scale(0.6);
 }
 
 .dash-alert-group-scale70 {
-  max-height: calc(85vw / .70);
-  width: calc(90vw / .70);
-  transform: scale(.70);
+  max-height: calc(85vw / 0.7);
+  width: calc(90vw / 0.7);
+  transform: scale(0.7);
 }
 
 .dash-alert-group-scale80 {
-  max-height: calc(85vw / .80);
-  width: calc(90vw / .80);
-  transform: scale(.80);
+  max-height: calc(85vw / 0.8);
+  width: calc(90vw / 0.8);
+  transform: scale(0.8);
 }
 
 .dash-alert-group-scale90 {
-  max-height: calc(85vw / .90);
-  width: calc(90vw / .90);
-  transform: scale(.90);
+  max-height: calc(85vw / 0.9);
+  width: calc(90vw / 0.9);
+  transform: scale(0.9);
 }
 
 .dash-alert-group-scale100 {

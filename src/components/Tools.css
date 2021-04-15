@@ -102,15 +102,15 @@ limitations under the License.
 
 @media (min-width: 641px) {
   .dash-tools .updating-spin::after {
-    content: ' updating';
+    content: " updating";
   }
 
   .dash-tools .btn-add-alert::after {
-    content: ' Add Alert';
+    content: " Add Alert";
   }
 
   .dash-tools .btn-options::after {
-    content: ' Options';
+    content: " Options";
   }
 }
 

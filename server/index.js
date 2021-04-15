@@ -14,11 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-const app = require('./app');
-const httpServer = require('http').Server(app);
+const app = require("./app");
+const httpServer = require("http").Server(app);
 
 const PORT = process.env.PORT || 8888;
 
-httpServer.listen(PORT, '0.0.0.0', () => {
+httpServer.listen(PORT, "0.0.0.0", () => {
   console.log(`App listening on port ${PORT}!`);
 });

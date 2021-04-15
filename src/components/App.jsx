@@ -14,11 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import React, { Component } from 'react';
-import axios from 'axios';
-import DashList from './DashList';
-import { host } from '../config';
-import './App.css';
+import React, { Component } from "react";
+import axios from "axios";
+import DashList from "./DashList";
+import { host } from "../config";
+import "./App.css";
 
 class App extends Component {
   constructor(props) {
@@ -28,7 +28,7 @@ class App extends Component {
       dashs: [],
       dashName: "",
       input: null,
-      visibleList: false
+      visibleList: false,
     };
 
     this.createNewDash = this.createNewDash.bind(this);
@@ -39,65 +39,67 @@ class App extends Component {
   }
 
   getDashoboards() {
-    axios.get(`${host}/api/dash/all`)
-    .then((response) => {
-      this.setState({dashs: response.data});
-    })
-    .catch((error) => {
-      console.log(error)
-    });
+    axios
+      .get(`${host}/api/dash/all`)
+      .then((response) => {
+        this.setState({ dashs: response.data });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
-  handleList(action="open") {
+  handleList(action = "open") {
     if (action === "close") {
-      this.setState({visibleList: false});
+      this.setState({ visibleList: false });
       return;
     }
-    this.setState({visibleList: true});
+    this.setState({ visibleList: true });
   }
 
   createNewDash(event) {
     let btn = event.target,
-        name = this.state.dashName;
+      name = this.state.dashName;
 
     btn.disabled = true;
 
-    axios.post(`${host}/api/dash/create/`, {name: name})
-    .then((response) => {
-      if(!response.data) {
-        const msg = `Name ${name} already exists`;
-        this.state.input.setCustomValidity(msg);
-        console.log(msg);
+    axios
+      .post(`${host}/api/dash/create/`, { name: name })
+      .then((response) => {
+        if (!response.data) {
+          const msg = `Name ${name} already exists`;
+          this.state.input.setCustomValidity(msg);
+          console.log(msg);
 
-        btn.disabled = false;
-        return false;
-      }
+          btn.disabled = false;
+          return false;
+        }
 
-      this.props.router.push(`/dash/${response.data.name}`);
-    })
-    .catch((error) => {
-      console.log(error)
-    });
+        this.props.router.push(`/dash/${response.data.name}`);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
   defineName(elem) {
-    elem.setCustomValidity('');
-    this.setState({dashName: elem.value, input: elem});
+    elem.setCustomValidity("");
+    this.setState({ dashName: elem.value, input: elem });
   }
 
   handleKeyDown(event) {
-    if (event.key === 'Escape') {
+    if (event.key === "Escape") {
       event.preventDefault();
-      this.handleList('close');
+      this.handleList("close");
     }
-  };
+  }
 
   componentDidMount() {
-    document.addEventListener('keydown', this.handleKeyDown)
+    document.addEventListener("keydown", this.handleKeyDown);
   }
 
   componentWillUnmount() {
-    document.removeEventListener('keydown', this.handleKeyDown)
+    document.removeEventListener("keydown", this.handleKeyDown);
   }
 
   render() {
@@ -110,24 +112,37 @@ class App extends Component {
           </h1>
         </div>
         <div className="dash-index-form">
-          <input type="text" className="create-dash-name topcoat-text-input--large"
+          <input
+            type="text"
+            className="create-dash-name topcoat-text-input--large"
             value={this.state.dashName}
-            onChange={e => this.defineName(e.target)}
-            placeholder="Dashboard name" />
-          <button className="create-dash-btn topcoat-button--large--cta"
-                  onClick={this.createNewDash}>Create</button>
+            onChange={(e) => this.defineName(e.target)}
+            placeholder="Dashboard name"
+          />
+          <button
+            className="create-dash-btn topcoat-button--large--cta"
+            onClick={this.createNewDash}
+          >
+            Create
+          </button>
         </div>
 
-        <button className="show-all-btn topcoat-button--large--quiet"
-                onClick={this.handleList}>Show all</button>
+        <button
+          className="show-all-btn topcoat-button--large--quiet"
+          onClick={this.handleList}
+        >
+          Show all
+        </button>
 
-        {this.state.visibleList &&
-          <DashList dashboards={this.state.dashs}
-                    handleList={this.handleList} />}
+        {this.state.visibleList && (
+          <DashList
+            dashboards={this.state.dashs}
+            handleList={this.handleList}
+          />
+        )}
       </section>
     );
   }
-
 }
 
 export { App as default };

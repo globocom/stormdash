@@ -14,13 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { useEffect } from 'react';
-import { checkStatus } from '../utils';
-import AlertItem from './AlertItem';
-import './AlertGroup.css';
+import { useEffect } from "react";
+import { checkStatus } from "../utils";
+import AlertItem from "./AlertItem";
+import "./AlertGroup.css";
 
 function AlertGroup(props) {
-
   useEffect(() => {
     // If component's height is too high, "zoom out"
     let element = document.getElementsByClassName("dash-alert-group")[0];
@@ -39,40 +38,44 @@ function AlertGroup(props) {
     //   element.classList.add("dash-alert-group-scale" + zoom);
     //   height = element.clientHeight; // get new height
     // }
-  }, [])
+  }, []);
 
   let items = {
     ok: [],
     warning: [],
-    critical: []
+    critical: [],
   };
 
   props.items.forEach((alert) => {
     if (props.hidden || !alert.disable) {
-        items.[checkStatus(alert)].push(
-          <div key={alert.id}>
-            <AlertItem alert={alert}
-                       setCurrent={props.setCurrent}
-                       handleSidebar={props.handleSidebar} />
-          </div>
-        )
+      items[checkStatus(alert)].push(
+        <div key={alert.id}>
+          <AlertItem
+            alert={alert}
+            setCurrent={props.setCurrent}
+            handleSidebar={props.handleSidebar}
+          />
+        </div>
+      );
     }
   });
 
-  if(items.length < 1) {
+  if (items.length < 1) {
     return null;
   }
 
   return (
-    <div className="dash-alert-group-wrapper" onClick={() => props.clearCurrent()}>
+    <div
+      className="dash-alert-group-wrapper"
+      onClick={() => props.clearCurrent()}
+    >
       <div className="dash-alert-group group-grid">
         {items.critical}
         {items.warning}
         {items.ok}
       </div>
     </div>
-  )
-
+  );
 }
 
 export default AlertGroup;

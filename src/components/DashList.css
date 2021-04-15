@@ -76,8 +76,12 @@ limitations under the License.
   border-bottom: 1px dotted #222;
 }
 
-.dash-list .list-container li:first-child { border-top: 0;}
-.dash-list .list-container li:last-child { border-bottom: 0;}
+.dash-list .list-container li:first-child {
+  border-top: 0;
+}
+.dash-list .list-container li:last-child {
+  border-bottom: 0;
+}
 
 .dash-list .list-container a {
   display: block;

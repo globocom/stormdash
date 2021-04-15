@@ -1,1 +1,1 @@
-export const host = '';
+export const host = "";

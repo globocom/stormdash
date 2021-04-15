@@ -14,17 +14,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import React, { Component } from 'react';
-import { Redirect, useParams } from 'react-router-dom';
-import axios from 'axios';
+import React, { Component } from "react";
+import { Redirect, useParams } from "react-router-dom";
+import axios from "axios";
 
-import Tools from './Tools';
-import Sidebar from './Sidebar';
-import AlertGroup from './AlertGroup';
-import { uuid } from '../utils';
-import { host } from '../config';
+import Tools from "./Tools";
+import Sidebar from "./Sidebar";
+import AlertGroup from "./AlertGroup";
+import { uuid } from "../utils";
+import { host } from "../config";
 
-import './StormDash.css';
+import "./StormDash.css";
 
 class StormDashMain extends Component {
   constructor(props) {
@@ -40,7 +40,7 @@ class StormDashMain extends Component {
       notFound: false,
       currentHour: this.getCurrentHour(),
       reloading: false,
-      dashUpdate: true
+      dashUpdate: true,
     };
 
     this.getDashContent();
@@ -60,26 +60,28 @@ class StormDashMain extends Component {
   }
 
   handleKeyDown(event) {
-    if (event.key === 'Escape') {
+    if (event.key === "Escape") {
       event.preventDefault();
-      this.handleSidebar('close');
+      this.handleSidebar("close");
     }
   }
 
   getCurrentHour() {
     const d = new Date();
-    return d.getHours() + ':' + (d.getMinutes() < 10 ? '0' : '') + d.getMinutes();
+    return (
+      d.getHours() + ":" + (d.getMinutes() < 10 ? "0" : "") + d.getMinutes()
+    );
   }
 
   endAndStartTimer() {
-    window.clearTimeout(this.timer)
+    window.clearTimeout(this.timer);
     this.timer = window.setTimeout(() => {
-      this.setState({ reloading: false })
-    }, 3000)
+      this.setState({ reloading: false });
+    }, 3000);
   }
 
-  handleSidebar(action='open') {
-    if (action === 'close') {
+  handleSidebar(action = "open") {
+    if (action === "close") {
       this.setState({ visibleSidebar: false });
       this.startUpdate();
       this.clearCurrent();
@@ -99,24 +101,25 @@ class StormDashMain extends Component {
     this.endAndStartTimer();
     this.setState({ dashUpdate: false });
 
-    console.log('stop');
+    console.log("stop");
   }
 
   startUpdate() {
     this.endAndStartTimer();
     this.setState({ dashUpdate: true });
 
-    console.log('start');
+    console.log("start");
   }
 
   getDashContent() {
     const current = this.state.currentItem;
     const data = {
-      name: this.state.dashName
-    }
+      name: this.state.dashName,
+    };
 
-    axios.post(`${host}/api/dash/search`, data)
-      .then(response => {
+    axios
+      .post(`${host}/api/dash/search`, data)
+      .then((response) => {
         if (!response.data) {
           this.setState({ notFound: true });
           return;
@@ -126,14 +129,14 @@ class StormDashMain extends Component {
           items: response.data.items,
           mainTitle: response.data.name,
           hidden: response.data.hidden,
-          show: true
+          show: true,
         });
 
         if (current) {
           this.setCurrent(current);
         }
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error);
       });
   }
@@ -145,14 +148,15 @@ class StormDashMain extends Component {
     const data = {
       name: this.state.dashName,
       hidden: this.state.hidden,
-      items: newItems
-    }
+      items: newItems,
+    };
 
-    axios.post(`${host}/api/dash/update`, data)
-      .then(updated => {
+    axios
+      .post(`${host}/api/dash/update`, data)
+      .then((updated) => {
         return updated && this.getDashContent();
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
       });
   }
@@ -170,15 +174,16 @@ class StormDashMain extends Component {
       let data = {
         name: this.state.dashName,
         hidden: this.state.hidden,
-        items: currentItems
-      }
+        items: currentItems,
+      };
 
-      axios.post(`${host}/api/dash/update`, data)
-        .then(updated => {
+      axios
+        .post(`${host}/api/dash/update`, data)
+        .then((updated) => {
           return updated && this.getDashContent();
         })
-        .catch(error => {
-          console.log(error)
+        .catch((error) => {
+          console.log(error);
         });
     }
   }
@@ -193,24 +198,26 @@ class StormDashMain extends Component {
     if (index >= 0) {
       currentItems.splice(index, 1);
 
-      axios.delete(`${host}/api/dash/itemauth`, { itemId: item.id })
-        .then(response => {
+      axios
+        .delete(`${host}/api/dash/itemauth`, { itemId: item.id })
+        .then((response) => {
           if (response.status === 200) {
             const data = {
               name: this.state.dashName,
-              items: currentItems
-            }
+              items: currentItems,
+            };
 
-            axios.post(`${host}/api/dash/update`, data)
-              .then(updated => {
+            axios
+              .post(`${host}/api/dash/update`, data)
+              .then((updated) => {
                 return updated && this.getDashContent();
               })
-              .catch(error => {
+              .catch((error) => {
                 console.log(error);
               });
           }
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
         });
     }
@@ -219,60 +226,64 @@ class StormDashMain extends Component {
   setCurrent(item) {
     let currentItems = this.state.items.slice();
 
-    currentItems.map(i => {
+    currentItems.map((i) => {
       i.current = i.id == item.id ? true : false;
       return i;
     });
 
     this.setState({
       currentItem: item,
-      items: currentItems
+      items: currentItems,
     });
   }
 
   clearCurrent() {
     let currentItems = this.state.items.slice();
 
-    currentItems.map(item => {
+    currentItems.map((item) => {
       item.current = false;
       return item;
     });
 
     this.setState({
       currentItem: null,
-      items: currentItems
+      items: currentItems,
     });
   }
 
   changeHidden() {
     let hidden = this.state.hidden;
-    this.setState({
-      hidden: !hidden
-    }, () => {
-      const data = {
-        name: this.state.dashName,
-        hidden: this.state.hidden,
-        items: this.state.items
-      }
+    this.setState(
+      {
+        hidden: !hidden,
+      },
+      () => {
+        const data = {
+          name: this.state.dashName,
+          hidden: this.state.hidden,
+          items: this.state.items,
+        };
 
-      axios.post(`${host}/api/dash/update`, data)
-        .then(updated => {
-          return updated && this.getDashContent();
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    });
+        axios
+          .post(`${host}/api/dash/update`, data)
+          .then((updated) => {
+            return updated && this.getDashContent();
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    );
   }
 
   componentDidMount() {
-    document.addEventListener('keydown', this.handleKeyDown);
+    document.addEventListener("keydown", this.handleKeyDown);
     this.hourInterval = setInterval(() => {
       if (this.state.dashUpdate) {
         this.endAndStartTimer();
         this.setState({
           currentHour: this.getCurrentHour(),
-          reloading: true
+          reloading: true,
         });
         this.getDashContent();
       }
@@ -280,56 +291,61 @@ class StormDashMain extends Component {
   }
 
   componentWillUnmount() {
-    document.removeEventListener('keydown', this.handleKeyDown);
+    document.removeEventListener("keydown", this.handleKeyDown);
     clearInterval(this.hourInterval);
   }
 
   render() {
-    if(this.state.notFound) {
+    if (this.state.notFound) {
       return <Redirect to="/not-found" />;
     }
 
-    if(this.state.show) {
+    if (this.state.show) {
       let { visibleSidebar, reloading } = this.state;
 
       return (
         <div className="dash-main">
-          <Tools currentItem={this.state.currentItem}
-                 update={this.state.dashUpdate}
-                 dashName={this.state.dashName}
-                 dashHour={this.state.currentHour}
-                 hidden={this.state.hidden}
-                 clearCurrent={this.clearCurrent}
-                 handleSidebar={this.handleSidebar}
-                 changeHidden={this.changeHidden}
-                 changeUpdate={this.changeUpdate}
-                 visibleSidebar={visibleSidebar}
-                 reloading={reloading} />
+          <Tools
+            currentItem={this.state.currentItem}
+            update={this.state.dashUpdate}
+            dashName={this.state.dashName}
+            dashHour={this.state.currentHour}
+            hidden={this.state.hidden}
+            clearCurrent={this.clearCurrent}
+            handleSidebar={this.handleSidebar}
+            changeHidden={this.changeHidden}
+            changeUpdate={this.changeUpdate}
+            visibleSidebar={visibleSidebar}
+            reloading={reloading}
+          />
 
-          {visibleSidebar &&
-            <Sidebar currentItem={this.state.currentItem}
-                     handleSidebar={this.handleSidebar}
-                     addItem={this.addItem}
-                     editItem={this.editItem}
-                     deleteItem={this.deleteItem}
-                     dashName={this.state.dashName} />}
+          {visibleSidebar && (
+            <Sidebar
+              currentItem={this.state.currentItem}
+              handleSidebar={this.handleSidebar}
+              addItem={this.addItem}
+              editItem={this.editItem}
+              deleteItem={this.deleteItem}
+              dashName={this.state.dashName}
+            />
+          )}
 
-          {visibleSidebar &&
-            <div className="dash-sidebar-overlay"></div>}
+          {visibleSidebar && <div className="dash-sidebar-overlay"></div>}
 
-          <AlertGroup key={uuid()}
-                      items={this.state.items}
-                      hidden={this.state.hidden}
-                      setCurrent={this.setCurrent}
-                      clearCurrent={this.clearCurrent}
-                      handleSidebar={this.handleSidebar} />
+          <AlertGroup
+            key={uuid()}
+            items={this.state.items}
+            hidden={this.state.hidden}
+            setCurrent={this.setCurrent}
+            clearCurrent={this.clearCurrent}
+            handleSidebar={this.handleSidebar}
+          />
         </div>
-      )
+      );
     }
 
-    return <div className="dash-main"></div>
+    return <div className="dash-main"></div>;
   }
-
 }
 
 export default function StormDash() {

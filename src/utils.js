@@ -108,7 +108,7 @@ function checkStatus(item) {
     status = {
       ok: item.ok,
       warning: item.warning,
-      critical: item.critical
+      critical: item.critical,
     };
 
   if (item.currentValue === "__jsonurl_error") {

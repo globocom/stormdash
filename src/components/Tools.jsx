@@ -14,9 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import './Tools.css';
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import "./Tools.css";
 
 function Tools(props) {
   const [showOptions, setShowOptions] = useState(false);
@@ -24,16 +24,15 @@ function Tools(props) {
   const onAddItem = () => {
     props.clearCurrent();
     setShowOptions(false);
-    props.handleSidebar('open');
-  }
+    props.handleSidebar("open");
+  };
 
   const toggleShowOptions = () => {
     setShowOptions(!showOptions);
-  }
+  };
 
   return (
     <div className="dash-tools">
-
       <div className="dash-tools-left">
         <span className="dash-tools-breadcrumb">
           <Link to="/">StormDash</Link>
@@ -43,43 +42,56 @@ function Tools(props) {
         </span>
       </div>
 
-      {props.update &&
+      {props.update && (
         <div className="dash-tools-middle">
-          {!props.reloading &&
-            <span>{props.dashHour}</span>}
+          {!props.reloading && <span>{props.dashHour}</span>}
 
-          {props.reloading &&
+          {props.reloading && (
             <span className="updating-spin">
               <i className="fa fa-refresh fa-spin fa-fw"></i>
-            </span>}
-        </div>}
+            </span>
+          )}
+        </div>
+      )}
 
-      {!props.update &&
+      {!props.update && (
         <div className="dash-tools-middle">
-          <span><i className="fa fa-pause"></i></span>
-        </div>}
+          <span>
+            <i className="fa fa-pause"></i>
+          </span>
+        </div>
+      )}
 
       <div className="dash-tools-right">
-        <button onClick={toggleShowOptions} className="topcoat-button--quiet btn-options"
-                disabled={props.visibleSidebar || props.currentItem}>
+        <button
+          onClick={toggleShowOptions}
+          className="topcoat-button--quiet btn-options"
+          disabled={props.visibleSidebar || props.currentItem}
+        >
           <i className="fa fa-cog fa-1x"></i>
         </button>
 
-        <button onClick={onAddItem} className="topcoat-button--cta btn-add-alert"
-                disabled={props.visibleSidebar}>
+        <button
+          onClick={onAddItem}
+          className="topcoat-button--cta btn-add-alert"
+          disabled={props.visibleSidebar}
+        >
           <i className="fa fa-plus fa-1x"></i>
         </button>
       </div>
 
-      {showOptions && !props.visibleSidebar &&
-        <div className="dash-sidebar-overlay"></div>}
+      {showOptions && !props.visibleSidebar && (
+        <div className="dash-sidebar-overlay"></div>
+      )}
 
-      {showOptions && !props.visibleSidebar &&
+      {showOptions && !props.visibleSidebar && (
         <div className="dash-tools-options dash-sidebar">
-
           <div className="dash-sidebar-header">
             <h3 className="dash-sidebar-title">Options</h3>
-            <button className="dash-sidebar-close-btn" onClick={toggleShowOptions}>
+            <button
+              className="dash-sidebar-close-btn"
+              onClick={toggleShowOptions}
+            >
               <i className="fa fa-times fa-1x"></i>
             </button>
           </div>
@@ -88,25 +100,32 @@ function Tools(props) {
             <li>
               <span className="option-name">Show disabled items</span>
               <label className="topcoat-switch">
-                <input type="checkbox" className="topcoat-switch__input"
-                        checked={props.hidden} onChange={props.changeHidden} />
+                <input
+                  type="checkbox"
+                  className="topcoat-switch__input"
+                  checked={props.hidden}
+                  onChange={props.changeHidden}
+                />
                 <div className="topcoat-switch__toggle"></div>
               </label>
             </li>
             <li>
               <span className="option-name">Dashboard update</span>
               <label className="topcoat-switch">
-                <input type="checkbox" className="topcoat-switch__input"
-                        checked={props.update} onChange={props.changeUpdate} />
+                <input
+                  type="checkbox"
+                  className="topcoat-switch__input"
+                  checked={props.update}
+                  onChange={props.changeUpdate}
+                />
                 <div className="topcoat-switch__toggle"></div>
               </label>
             </li>
           </ul>
-        </div>}
-
+        </div>
+      )}
     </div>
   );
-
 }
 
 export default Tools;
