@@ -22,6 +22,7 @@ const HttpsProxyAgent = require("https-proxy-agent");
 
 const mongoUri = process.env.MONGOURI || "mongodb://localhost:27017/stormdash";
 const UPDATE_INTERVAL = process.env.UPDATE_INTERVAL || 15;
+const CHECK_ITEM_TIMEOUT = process.env.CHECK_ITEM_TIMEOUT || 5;
 
 class Server {
   constructor() {
@@ -234,7 +235,7 @@ class Server {
   _requestJSON(item, fn) {
     let config = {
       responseType: "json",
-      timeout: 5000,
+      timeout: CHECK_ITEM_TIMEOUT,
     };
 
     if (item.jsonurl === "") {
