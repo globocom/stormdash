@@ -235,7 +235,7 @@ class Server {
   _requestJSON(item, fn) {
     let config = {
       responseType: "json",
-      timeout: CHECK_ITEM_TIMEOUT,
+      timeout: CHECK_ITEM_TIMEOUT * 1000
     };
 
     if (item.jsonurl === "") {
