@@ -19,7 +19,7 @@
     "axios": "^0.21.1",
     "axios-proxy-fix": "^0.16.3",
     "body-parser": "^1.18.3",
-    "express": "^4.16.3",
+    "express": "^4.17.3",
     "https-proxy-agent": "5.0.0",
     "mongoose": "^5.11.9",
     "react": "^17.0.1",
