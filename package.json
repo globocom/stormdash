@@ -21,7 +21,7 @@
     "body-parser": "^1.18.3",
     "express": "^4.16.3",
     "https-proxy-agent": "5.0.0",
-    "mongoose": "^5.11.9",
+    "mongoose": "^5.13.15",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-router": "^5.2.0",
